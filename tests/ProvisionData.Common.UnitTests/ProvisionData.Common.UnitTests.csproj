@@ -1,0 +1,40 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <RootNamespace>ProvisionData.UnitTests</RootNamespace>
+    <AssemblyName>ProvisionData.Common.UnitTests</AssemblyName>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\source\ProvisionData.Common\ProvisionData.Common.csproj" />
+    <ProjectReference Include="..\..\source\ProvisionData.EntityFramework\ProvisionData.EntityFramework.csproj" />
+    <ProjectReference Include="..\..\source\ProvisionData.Html\ProvisionData.Html.csproj" />
+    <ProjectReference Include="..\..\source\ProvisionData.Serilog\ProvisionData.Serilog.csproj" />
+    <ProjectReference Include="..\..\source\ProvisionData.Specifications\ProvisionData.Specifications.csproj" />
+    <ProjectReference Include="..\..\source\ProvisionData.UnitTesting\ProvisionData.UnitTesting.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentAssertions" Version="5.9.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.4.0" />
+    <PackageReference Include="Serilog" Version="2.9.0" />
+    <PackageReference Include="Serilog.Sinks.Debug" Version="1.0.1" />
+    <PackageReference Include="Serilog.Sinks.TextWriter" Version="2.1.0" />
+    <PackageReference Include="Shouldly" Version="3.0.2" />
+    <PackageReference Include="xunit" Version="2.4.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="GitVersionTask" Version="5.1.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+</Project>
