@@ -21,7 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProvisionData.Common", "sou
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{7EB46C44-A1A6-4ED3-B6CC-45F02F0BCC06}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProvisionData.EntityFramework", "source\ProvisionData.EntityFramework\ProvisionData.EntityFramework.csproj", "{EFB70596-0365-4A1D-AD35-A45C23ABC6B2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProvisionData.EntityFrameworkCore", "source\ProvisionData.EntityFramework\ProvisionData.EntityFrameworkCore.csproj", "{EFB70596-0365-4A1D-AD35-A45C23ABC6B2}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProvisionData.Html", "source\ProvisionData.Html\ProvisionData.Html.csproj", "{EFDCFE6D-F20D-4AA5-8908-9C50AA6393F0}"
 EndProject

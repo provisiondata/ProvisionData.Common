@@ -9,7 +9,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\source\ProvisionData.Common\ProvisionData.Common.csproj" />
-    <ProjectReference Include="..\..\source\ProvisionData.EntityFramework\ProvisionData.EntityFramework.csproj" />
+    <ProjectReference Include="..\..\source\ProvisionData.EntityFramework\ProvisionData.EntityFrameworkCore.csproj" />
     <ProjectReference Include="..\..\source\ProvisionData.Html\ProvisionData.Html.csproj" />
     <ProjectReference Include="..\..\source\ProvisionData.Serilog\ProvisionData.Serilog.csproj" />
     <ProjectReference Include="..\..\source\ProvisionData.Specifications\ProvisionData.Specifications.csproj" />

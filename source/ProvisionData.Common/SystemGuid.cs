@@ -26,7 +26,9 @@
 namespace ProvisionData
 {
     using System;
+#if NETSTANDARD2_1
     using System.Buffers.Text;
+#endif
     using System.Diagnostics;
     using System.Runtime.InteropServices;
 
@@ -53,6 +55,7 @@ namespace ProvisionData
 
         private static Guid GetGuidInternal() => CombGuid.NewGuid();
 
+#if NETSTANDARD2_1
         private const Byte ForwardSlashByte = (Byte)'/';
         private const Byte PlusByte = (Byte)'+';
         private const Char Underscore = '_';
@@ -88,5 +91,6 @@ namespace ProvisionData
 
             return new String(chars);
         }
+#endif
     }
 }
