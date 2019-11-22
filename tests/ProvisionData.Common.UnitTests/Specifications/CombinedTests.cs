@@ -10,7 +10,7 @@
     {
         internal class IsEven : AbstractSpecification<Int32>
         {
-            public override Expression<Func<Int32, Boolean>> SpecificationExpression
+            public override Expression<Func<Int32, Boolean>> Predicate
                 => n => (n % 2) == 0;
         }
 
@@ -20,7 +20,7 @@
 
             public IsMultiple(Int32 factor) => _factor = factor;
 
-            public override Expression<Func<Int32, Boolean>> SpecificationExpression
+            public override Expression<Func<Int32, Boolean>> Predicate
                 => n => (n % _factor) == 0;
         }
 
