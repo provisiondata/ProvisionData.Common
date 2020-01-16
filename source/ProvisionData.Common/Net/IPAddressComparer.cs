@@ -31,31 +31,30 @@ namespace ProvisionData.Net
 
     public class IPAddressComparer : IComparer<String>
     {
-        Int32 IComparer<String>.Compare(String x, String y)
-        {
-            return IPAddressComparer.Compare(x, y);
-        }
+        Int32 IComparer<String>.Compare(String left, String right)
+            => IPAddressComparer.Compare(left, right);
 
-        public static Int32 Compare(String x, String y)
+        public static Int32 Compare(String left, String right)
         {
-            var xT = Split(x);
-            var yT = Split(y);
+            var l = Split(left);
+            var r = Split(right);
 
-            if (xT[0] == yT[0])
+            if (l[0] == r[0])
             {
-                if (xT[1] == yT[1])
+                if (l[1] == r[1])
                 {
-                    if (xT[2] == yT[2])
+                    if (l[2] == r[2])
                     {
-                        return xT[3].CompareTo(yT[3]);
+                        return l[3].CompareTo(r[3]);
                     }
-                    return xT[2].CompareTo(yT[2]);
+                    return l[2].CompareTo(r[2]);
                 }
-                return xT[1].CompareTo(yT[1]);
+                return l[1].CompareTo(r[1]);
             }
-            return xT[0].CompareTo(yT[0]);
+            return l[0].CompareTo(r[0]);
         }
 
-        private static Int32[] Split(String value) => value.Split('.').Select(token => Int32.Parse(token)).ToArray();
+        private static Int32[] Split(String value)
+            => value.Split('.').Select(Int32.Parse).ToArray();
     }
 }
