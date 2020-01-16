@@ -27,11 +27,29 @@ namespace ProvisionData.Extensions
 {
     using System;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
 
     [DebuggerNonUserCode]
     public static class StringExtensions
     {
+        [SuppressMessage("Style", "IDE0046:Convert to conditional expression", Justification = "Readability")]
+        public static String Left(this String input, Int32 length)
+        {
+            if (input is null)
+            {
+                return null;
+            }
+            else if (String.IsNullOrWhiteSpace(input))
+            {
+                return String.Empty;
+            }
+            else
+            {
+                return input.Substring(0, input.Length < length ? input.Length : length);
+            }
+        }
+
         internal static String Format(this String format, params Object[] args)
             => Format(format, CultureInfo.InvariantCulture, args);
 
