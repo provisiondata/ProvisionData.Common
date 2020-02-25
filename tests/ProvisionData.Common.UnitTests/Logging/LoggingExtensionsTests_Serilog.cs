@@ -23,10 +23,11 @@
  *
  *******************************************************************************/
 
-namespace ProvisionData.Logging
+namespace ProvisionData.UnitTests.Logging
 {
     using System.IO;
     using FluentAssertions;
+    using ProvisionData.Logging;
     using Serilog;
     using Xunit;
 

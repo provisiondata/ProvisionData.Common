@@ -23,7 +23,7 @@
  *
  *******************************************************************************/
 
-namespace ProvisionData
+namespace ProvisionData.UnitTests
 {
     using Shouldly;
     using Xunit;

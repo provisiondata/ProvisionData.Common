@@ -23,20 +23,21 @@
  *
  *******************************************************************************/
 
-namespace ProvisionData
+namespace ProvisionData.UnitTests
 {
-    using FluentAssertions;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Text.RegularExpressions;
+    using FluentAssertions;
     using Xunit;
 
     public class EnumerableComparerTest
     {
         private readonly Func<String, Object> _convert = str =>
         {
-            try { return Int32.Parse(str); }
+            try
+            { return Int32.Parse(str); }
             catch { return str; }
         };
 

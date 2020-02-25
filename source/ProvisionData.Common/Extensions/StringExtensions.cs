@@ -57,9 +57,7 @@ namespace ProvisionData.Extensions
             => String.Format(formatProvider, format, args);
 
         public static String Quoted(this String value)
-        {
-            return value.StartsWith("\"", StringComparison.Ordinal) && value.EndsWith("\"", StringComparison.Ordinal) ? value : "\"" + value + "\"";
-        }
+            => value.StartsWith("\"", StringComparison.Ordinal) && value.EndsWith("\"", StringComparison.Ordinal) ? value : "\"" + value + "\"";
 
         public static Guid ToGuid(this String value)
         {

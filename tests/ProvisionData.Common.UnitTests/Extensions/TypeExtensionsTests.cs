@@ -23,11 +23,12 @@
  *
  *******************************************************************************/
 
-namespace ProvisionData.Extensions
+namespace ProvisionData.UnitTests.Extensions
 {
-    using Shouldly;
     using System;
     using System.Linq;
+    using ProvisionData.Extensions;
+    using Shouldly;
     using Xunit;
 
     public class TypeExtensionsTests
