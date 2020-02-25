@@ -23,11 +23,12 @@
  *
  *******************************************************************************/
 
-namespace ProvisionData.Net
+namespace ProvisionData.UnitTests.Net
 {
-    using FluentAssertions;
     using System;
     using System.Collections.Generic;
+    using FluentAssertions;
+    using ProvisionData.Net;
     using Xunit;
 
     public class IPAddressComparerTests

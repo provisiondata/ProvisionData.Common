@@ -1,7 +1,8 @@
-﻿namespace ProvisionData.Extensions
+﻿namespace ProvisionData.UnitTests.Extensions
 {
     using System;
     using FluentAssertions;
+    using ProvisionData.Extensions;
     using Xunit;
 
     public class StringExtentions_Left

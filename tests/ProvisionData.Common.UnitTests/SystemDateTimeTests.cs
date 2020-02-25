@@ -24,12 +24,12 @@
  *******************************************************************************/
 
 #pragma warning disable CS0618 // Type or member is obsolete
-namespace ProvisionData
+namespace ProvisionData.UnitTests
 {
-    using FluentAssertions;
     using System;
     using System.Diagnostics;
     using System.Threading.Tasks;
+    using FluentAssertions;
     using Xunit;
 
     public class SystemDateTimeTests

@@ -23,7 +23,7 @@
  *
  *******************************************************************************/
 
-namespace ProvisionData
+namespace ProvisionData.UnitTests
 {
     using FluentAssertions;
     using ProvisionData.GitVersion;

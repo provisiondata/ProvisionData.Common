@@ -23,8 +23,9 @@
  *
  *******************************************************************************/
 
-namespace ProvisionData.Net
+namespace ProvisionData.UnitTests.Net
 {
+    using ProvisionData.Net;
     using Shouldly;
     using Xunit;
 
