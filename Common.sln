@@ -35,9 +35,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProvisionData.Common.UnitTe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProvisionData.Specifications.IntegrationTests", "tests\ProvisionData.Specifications.IntegrationTests\ProvisionData.Specifications.IntegrationTests.csproj", "{FE02CC18-948C-40D8-8B28-D4C43B0B234A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProvisionData.GELF", "source\ProvisionData.GELF\ProvisionData.GELF.csproj", "{E32CF7BA-E724-4C52-B69F-8CFAD83F009D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProvisionData.GELF", "source\ProvisionData.GELF\ProvisionData.GELF.csproj", "{E32CF7BA-E724-4C52-B69F-8CFAD83F009D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProvisionData.GELF.IntegrationTests", "tests\ProvisionData.GELF.IntegrationTests\ProvisionData.GELF.IntegrationTests.csproj", "{204E9B79-5BE1-439B-9414-96331C6B36E4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProvisionData.GELF.IntegrationTests", "tests\ProvisionData.GELF.IntegrationTests\ProvisionData.GELF.IntegrationTests.csproj", "{204E9B79-5BE1-439B-9414-96331C6B36E4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
