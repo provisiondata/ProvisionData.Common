@@ -106,48 +106,50 @@ namespace ProvisionData.Build
                    });
 
         Target Pack => _ => _
-           .DependsOn(Publish)
-           .Executes(() =>
-           {
-               var changeLog = GetCompleteChangeLog(ChangeLogFile)
-                                 .EscapeStringPropertyForMsBuild();
+            .DependsOn(Test)
+            .Executes(() =>
+            {
+                var changeLog = GetCompleteChangeLog(ChangeLogFile)
+                                    .EscapeStringPropertyForMsBuild();
 
                DotNetPack(s => s
-                                  .SetConfiguration(Configuration)
-                                  .EnableIncludeSymbols()
-                                  .EnableNoBuild()
-                                  .EnableNoRestore()
-                                  .SetOutputDirectory(ArtifactsDirectory / "nuget")
-                                  .SetPackageReleaseNotes(changeLog));
+                    .SetConfiguration(Configuration)
+                    .EnableIncludeSymbols()
+                    .EnableNoBuild()
+                    .EnableNoRestore()
+                    .SetProperty("PackageVersion", GitVersion.AssemblySemVer)
+                    .SetOutputDirectory(ArtifactsDirectory / "nuget")
+                    .SetPackageReleaseNotes(changeLog));
            });
 
-        Target PublishToNuGet => _ => _
-         .DependsOn(Pack)
-         .Requires(() => NuGetApiKey)
-         .Requires(() => Equals(Configuration, Configuration.Release))
-         .Executes(() =>
-         {
-             GlobFiles(ArtifactsDirectory / "nuget", "*.nupkg")
-                            .NotEmpty()
-                            .Where(x => !x.EndsWith(".symbols.nupkg"))
-                            .ForEach(x => DotNetNuGetPush(s => s
-                                .SetTargetPath(x)
-                                .SetSource("https://api.nuget.org/v3/index.json")
-                                .SetApiKey(NuGetApiKey)));
+        Target PushToNuGet => _ => _
+            .DependsOn(Pack)
+            .Requires(() => NuGetApiKey)
+            .Requires(() => Equals(Configuration, Configuration.Release))
+            .Executes(() =>
+            {
+                GlobFiles(ArtifactsDirectory / "nuget", "*.nupkg")
+                    .NotEmpty()
+                    .Where(x => !x.EndsWith(".symbols.nupkg"))
+                    .ForEach(x => DotNetNuGetPush(s => s
+                        .SetTargetPath(x)
+                        .SetSource("https://api.nuget.org/v3/index.json")
+                        .SetApiKey(NuGetApiKey))
+                    );
          });
 
-        Target PublishToPdsi => _ => _
-         .DependsOn(Pack)
-         .Requires(() => PdsiApiKey)
-         .Requires(() => Equals(Configuration, Configuration.Release))
-         .Executes(() =>
-         {
-             GlobFiles(ArtifactsDirectory / "nuget", "*.nupkg")
-                                .NotEmpty()
-                                .ForEach(x => DotNetNuGetPush(s => s
-                                    .SetTargetPath(x)
-                                    .SetSource("https://baget.pdsint.net/v3/index.json")
-                                    .SetApiKey(PdsiApiKey)));
+        Target PushToPdsi => _ => _
+            .DependsOn(Pack)
+            .Requires(() => PdsiApiKey)
+            .Requires(() => Equals(Configuration, Configuration.Release))
+            .Executes(() =>
+            {
+                GlobFiles(ArtifactsDirectory / "nuget", "*.nupkg")
+                    .NotEmpty()
+                    .ForEach(x => DotNetNuGetPush(s => s
+                        .SetTargetPath(x)
+                        .SetSource("https://baget.pdsint.net/v3/index.json")
+                        .SetApiKey(PdsiApiKey)));
          });
     }
 }
