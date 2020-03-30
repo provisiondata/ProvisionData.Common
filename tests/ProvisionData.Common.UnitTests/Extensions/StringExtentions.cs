@@ -25,12 +25,12 @@
 
 namespace ProvisionData.UnitTests.Extensions
 {
-    using System;
     using FluentAssertions;
     using ProvisionData.Extensions;
+    using System;
     using Xunit;
 
-    public class StringExtentions_Left
+    public class StringExtentions
     {
         [Theory]
         [InlineData("", 0, "")]
@@ -41,7 +41,22 @@ namespace ProvisionData.UnitTests.Extensions
         [InlineData("Hello", 1, "H")]
         [InlineData("Hello", 5, "Hello")]
         [InlineData("Hello", 6, "Hello")]
-        public void Should_return_the_correct_result(String input, Int32 length, String expected)
+        public void Left_should_return_the_correct_result(String input, Int32 length, String expected)
            => input.Left(length).Should().Be(expected);
+
+        [Theory]
+        [InlineData(null, null)]
+        [InlineData("", "")]
+        [InlineData(" ", " ")]
+        [InlineData("  ", "  ")]
+        [InlineData("Hello", "Hello")]
+        [InlineData("hello", "Hello")]
+        [InlineData("HelloWorld", "Hello World")]
+        [InlineData("helloWorld", "Hello World")]
+        [InlineData("AB", "AB")]
+        [InlineData("ABC", "ABC")]
+        [InlineData("IPAddress", "IP Address")]
+        public void ToProperCase_should_return_the_correct_result(String input, String expected)
+           => input.ToProperCase().Should().Be(expected);
     }
 }
