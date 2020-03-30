@@ -29,10 +29,12 @@ namespace ProvisionData.Extensions
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
+    using System.Text.RegularExpressions;
 
     [DebuggerNonUserCode]
     public static class StringExtensions
     {
+
         [SuppressMessage("Style", "IDE0046:Convert to conditional expression", Justification = "Readability")]
         public static String Left(this String input, Int32 length)
         {
@@ -56,17 +58,70 @@ namespace ProvisionData.Extensions
         internal static String Format(this String format, IFormatProvider formatProvider, params Object[] args)
             => String.Format(formatProvider, format, args);
 
-        public static String Quoted(this String value)
-            => value.StartsWith("\"", StringComparison.Ordinal) && value.EndsWith("\"", StringComparison.Ordinal) ? value : "\"" + value + "\"";
+        public static String Quoted(this String input)
+            => input.StartsWith("\"", StringComparison.Ordinal) && input.EndsWith("\"", StringComparison.Ordinal) ? input : "\"" + input + "\"";
 
-        public static Guid ToGuid(this String value)
+        public static Guid ToGuid(this String input)
         {
-            if (Guid.TryParse(value, out var guid))
+            if (Guid.TryParse(input, out var guid))
             {
                 return guid;
             }
 
-            throw new ArgumentException($"Don't know how to parse '{value}' into a GUID.");
+            throw new ArgumentException($"Don't know how to parse '{input}' into a GUID.");
         }
+
+        private const String Ellipsis = " ...";
+        /// <summary>
+        /// Truncates <paramref name="input"/> to <paramref name="maxLength"/> and append an ellipsis (...) to the end.
+        /// </summary>
+        /// <param name="input">value to be truncated</param>
+        /// <param name="maxLength">length to return including the ellipsis (...)</param>
+        // ToDo: Make it so it doesn't truncate in the middle of a word. -dw
+        public static String Truncate(this String input, Int32 maxLength)
+            => String.IsNullOrEmpty(input) || maxLength <= 0
+                ? String.Empty
+                : input.Length > maxLength - Ellipsis.Length
+                    ? input.Substring(0, maxLength - Ellipsis.Length) + Ellipsis
+                    : input;
+
+        /// <summary>
+        /// Turn a pascal case or camel case string into proper case.
+        /// If the input is an abbreviation, the input is return unmodified.
+        /// </summary>
+        /// <param name="input"></param>
+        /// <example>
+        /// input : HelloWorld
+        /// output : Hello World
+        /// </example>
+        /// <example>
+        /// input : BBC
+        /// output : BBC
+        /// </example>
+        /// <example>
+        /// input : IPAddress
+        /// output : IP Address
+        /// </example>
+        public static String ToProperCase(this String input)
+        {
+            // If there are 0 or 1 characters, just return the string.
+            if (input == null) return input;
+            if (input.Length < 2) return input.ToUpper();
+            //return as is if the input is just an abbreviation
+            if (AllCaps.IsMatch(input)) return input;
+
+            // Start with the first character.
+            var result = input.Substring(0, 1).ToUpper();
+
+            // Add the remaining characters.
+            for (var i = 1; i < input.Length; i++)
+            {
+                if (Char.IsUpper(input[i]) && i + 1 < input.Length && Char.IsLower(input[i + 1])) result += " ";
+                result += input[i];
+            }
+
+            return result;
+        }
+        private static readonly Regex AllCaps = new Regex("[0-9A-Z]+$", RegexOptions.Compiled);
     }
 }
