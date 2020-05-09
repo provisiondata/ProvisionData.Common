@@ -23,24 +23,56 @@
  *
  *******************************************************************************/
 
-namespace ProvisionData.UnitTests.Extensions
+namespace ProvisionData
 {
     using System;
-    using FluentAssertions;
-    using ProvisionData.Extensions;
-    using Xunit;
+    using System.Collections.Generic;
+    using System.Linq;
 
-    public class HtmlToTextTests
+    // https://enterprisecraftsmanship.com/posts/value-object-better-implementation/
+    public abstract class ValueObject
     {
-        [Theory]
-        [InlineData("<p>Hello, World!</p>", "Hello, World!")]
-        [InlineData("<p>Hello<br />World!</p>", "Hello\r\nWorld!")]
-        [InlineData("<ul><li>Hello, World!</li></ul>", "* Hello, World!")]
-        [InlineData("<ol><li>Hello, World!</li></ol>", "1. Hello, World!")]
-        [InlineData("<ol><li>Hello, World!</li><li>Goodbye, World!</li></ol>", "1. Hello, World!\r\n2. Goodbye, World!")]
-        public void Test(String input, String expected)
+        protected abstract IEnumerable<Object> GetEqualityComponents();
+
+        public override Boolean Equals(Object obj)
         {
-            input.HtmlToText().Should().Be(expected);
+            if (obj == null)
+                return false;
+
+            if (GetType() != obj.GetType())
+                return false;
+
+            var valueObject = (ValueObject)obj;
+
+            return GetEqualityComponents().SequenceEqual(valueObject.GetEqualityComponents());
+        }
+
+        public override Int32 GetHashCode()
+        {
+            return GetEqualityComponents()
+                .Aggregate(1, (current, obj) =>
+                {
+                    unchecked
+                    {
+                        return (current * 23) + (obj?.GetHashCode() ?? 0);
+                    }
+                });
+        }
+
+        public static Boolean operator ==(ValueObject a, ValueObject b)
+        {
+            if (a is null && b is null)
+                return true;
+
+            if (a is null || b is null)
+                return false;
+
+            return a.Equals(b);
+        }
+
+        public static Boolean operator !=(ValueObject a, ValueObject b)
+        {
+            return !(a == b);
         }
     }
 }

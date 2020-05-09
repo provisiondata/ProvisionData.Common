@@ -33,6 +33,7 @@ namespace ProvisionData.Extensions
     [DebuggerNonUserCode]
     public static class GlobalExtensions
     {
+        [Obsolete]
         public static Boolean As<TInterface>(this Object implementation, Action<TInterface> doThis, Action otherwiseThis = null)
         {
             if (doThis == null)

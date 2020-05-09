@@ -25,22 +25,21 @@
 
 namespace ProvisionData.UnitTests.Extensions
 {
-    using System;
     using FluentAssertions;
     using ProvisionData.Extensions;
+    using System;
     using Xunit;
 
-    public class HtmlToTextTests
+    public class TextToHtmlTests
     {
+        private const String CR = "\r\n";
+
         [Theory]
-        [InlineData("<p>Hello, World!</p>", "Hello, World!")]
-        [InlineData("<p>Hello<br />World!</p>", "Hello\r\nWorld!")]
-        [InlineData("<ul><li>Hello, World!</li></ul>", "* Hello, World!")]
-        [InlineData("<ol><li>Hello, World!</li></ol>", "1. Hello, World!")]
-        [InlineData("<ol><li>Hello, World!</li><li>Goodbye, World!</li></ol>", "1. Hello, World!\r\n2. Goodbye, World!")]
+        [InlineData("Hello, World!", "<p>Hello, World!</p>")]
+        [InlineData("Hello" + CR + "World!", "<p>Hello</p>" + CR + "<p>World!</p>")]
         public void Test(String input, String expected)
         {
-            input.HtmlToText().Should().Be(expected);
+            input.ToHtmlParagraphs().Should().Be(expected);
         }
     }
 }

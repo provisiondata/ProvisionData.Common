@@ -34,7 +34,6 @@ namespace ProvisionData.Extensions
     [DebuggerNonUserCode]
     public static class StringExtensions
     {
-
         [SuppressMessage("Style", "IDE0046:Convert to conditional expression", Justification = "Readability")]
         public static String Left(this String input, Int32 length)
         {

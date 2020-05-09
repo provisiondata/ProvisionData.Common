@@ -1,7 +1,5 @@
 namespace ProvisionData.Build
 {
-    using System;
-    using System.Linq;
     using Nuke.Common;
     using Nuke.Common.Execution;
     using Nuke.Common.Git;
@@ -11,6 +9,8 @@ namespace ProvisionData.Build
     using Nuke.Common.Tools.DotNet;
     using Nuke.Common.Tools.GitVersion;
     using Nuke.Common.Utilities.Collections;
+    using System;
+    using System.Linq;
     using static Nuke.Common.IO.FileSystemTasks;
     using static Nuke.Common.IO.PathConstruction;
     using static Nuke.Common.Tools.DotNet.DotNetTasks;
@@ -37,7 +37,8 @@ namespace ProvisionData.Build
 
         [Solution] readonly Solution Solution;
         [GitRepository] readonly GitRepository GitRepository;
-        [GitVersion] readonly GitVersion GitVersion;
+        [GitVersion(Framework = "netcoreapp3.1")]
+        readonly GitVersion GitVersion;
 
         AbsolutePath SourceDirectory => RootDirectory / "source";
         AbsolutePath TestsDirectory => RootDirectory / "tests";
@@ -112,15 +113,15 @@ namespace ProvisionData.Build
                 var changeLog = GetCompleteChangeLog(ChangeLogFile)
                                     .EscapeStringPropertyForMsBuild();
 
-               DotNetPack(s => s
-                    .SetConfiguration(Configuration)
-                    .EnableIncludeSymbols()
-                    .EnableNoBuild()
-                    .EnableNoRestore()
-                    .SetProperty("PackageVersion", GitVersion.NuGetVersionV2)
-                    .SetOutputDirectory(ArtifactsDirectory / "nuget")
-                    .SetPackageReleaseNotes(changeLog));
-           });
+                DotNetPack(s => s
+                     .SetConfiguration(Configuration)
+                     .EnableIncludeSymbols()
+                     .EnableNoBuild()
+                     .EnableNoRestore()
+                     .SetProperty("PackageVersion", GitVersion.NuGetVersionV2)
+                     .SetOutputDirectory(ArtifactsDirectory / "nuget")
+                     .SetPackageReleaseNotes(changeLog));
+            });
 
         Target PushToNuGet => _ => _
             .DependsOn(Pack)
@@ -136,7 +137,7 @@ namespace ProvisionData.Build
                         .SetSource("https://api.nuget.org/v3/index.json")
                         .SetApiKey(NuGetApiKey))
                     );
-         });
+            });
 
         Target PushToPdsi => _ => _
             .DependsOn(Pack)
@@ -150,6 +151,6 @@ namespace ProvisionData.Build
                         .SetTargetPath(x)
                         .SetSource("https://baget.pdsint.net/v3/index.json")
                         .SetApiKey(PdsiApiKey)));
-         });
+            });
     }
 }
