@@ -132,6 +132,8 @@ class Build : NukeBuild
 		});
 
 	Target Push => _ => _
+		.DependsOn(Pack)
+		.Requires(() => Configuration == Configuration.Release)
 		.Executes(() =>
 		{
 			DotNetNuGetPush(s => s
