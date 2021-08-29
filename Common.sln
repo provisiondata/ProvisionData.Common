@@ -45,6 +45,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProvisionData.GELF.Integrat
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProvisionData.Specifications.EntityFrameworkCore", "source\ProvisionData.Specifications.EntityFrameworkCore\ProvisionData.Specifications.EntityFrameworkCore.csproj", "{55573A29-549F-48F4-A631-C2D73AE5C154}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProvisionData.EntityFrameworkCore.IntegrationTests", "tests\ProvisionData.EntityFrameworkCore.IntegrationTests\ProvisionData.EntityFrameworkCore.IntegrationTests.csproj", "{9EB32B26-9D07-4961-8205-636ED1A0BCCA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProvisionData.EntityFrameworkCore.IntegrationTests.SqlServer", "tests\ProvisionData.EntityFrameworkCore.IntegrationTests.SqlServer\ProvisionData.EntityFrameworkCore.IntegrationTests.SqlServer.csproj", "{7504FBEF-0D22-41BB-9F1B-6D4C5416FD4B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProvisionData.EntityFrameworkCore.IntegrationTests.PostgreSQL", "tests\ProvisionData.EntityFrameworkCore.IntegrationTests.PostgreSQL\ProvisionData.EntityFrameworkCore.IntegrationTests.PostgreSQL.csproj", "{BCA7C64A-3441-4492-AD54-A63EE847014F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -97,6 +103,18 @@ Global
 		{55573A29-549F-48F4-A631-C2D73AE5C154}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{55573A29-549F-48F4-A631-C2D73AE5C154}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{55573A29-549F-48F4-A631-C2D73AE5C154}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9EB32B26-9D07-4961-8205-636ED1A0BCCA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9EB32B26-9D07-4961-8205-636ED1A0BCCA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9EB32B26-9D07-4961-8205-636ED1A0BCCA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9EB32B26-9D07-4961-8205-636ED1A0BCCA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7504FBEF-0D22-41BB-9F1B-6D4C5416FD4B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7504FBEF-0D22-41BB-9F1B-6D4C5416FD4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7504FBEF-0D22-41BB-9F1B-6D4C5416FD4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7504FBEF-0D22-41BB-9F1B-6D4C5416FD4B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BCA7C64A-3441-4492-AD54-A63EE847014F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BCA7C64A-3441-4492-AD54-A63EE847014F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BCA7C64A-3441-4492-AD54-A63EE847014F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BCA7C64A-3441-4492-AD54-A63EE847014F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -106,6 +124,9 @@ Global
 		{0A3EB6C2-AF85-4B95-A321-2067DD494910} = {7EB46C44-A1A6-4ED3-B6CC-45F02F0BCC06}
 		{FE02CC18-948C-40D8-8B28-D4C43B0B234A} = {7EB46C44-A1A6-4ED3-B6CC-45F02F0BCC06}
 		{204E9B79-5BE1-439B-9414-96331C6B36E4} = {7EB46C44-A1A6-4ED3-B6CC-45F02F0BCC06}
+		{9EB32B26-9D07-4961-8205-636ED1A0BCCA} = {7EB46C44-A1A6-4ED3-B6CC-45F02F0BCC06}
+		{7504FBEF-0D22-41BB-9F1B-6D4C5416FD4B} = {7EB46C44-A1A6-4ED3-B6CC-45F02F0BCC06}
+		{BCA7C64A-3441-4492-AD54-A63EE847014F} = {7EB46C44-A1A6-4ED3-B6CC-45F02F0BCC06}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E58667A9-72FE-4BE9-998F-F7640FED2AAC}

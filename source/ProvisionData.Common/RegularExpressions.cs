@@ -25,10 +25,7 @@
 
 namespace ProvisionData
 {
-    using System;
-    using System.Text.RegularExpressions;
-
-    public static class RegularExpressions
+	public static class RegularExpressions
     {
     }
 }

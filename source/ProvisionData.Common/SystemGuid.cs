@@ -25,14 +25,13 @@
 
 namespace ProvisionData
 {
-    using System;
+	using System;
 #if NETSTANDARD2_1
     using System.Buffers.Text;
 #endif
-    using System.Diagnostics;
-    using System.Runtime.InteropServices;
+	using System.Diagnostics;
 
-    [DebuggerNonUserCode]
+	[DebuggerNonUserCode]
     public static class SystemGuid
     {
         private static Func<Guid> GetGuid = GetGuidInternal;

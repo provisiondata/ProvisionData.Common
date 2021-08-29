@@ -1,30 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
-    <RootNamespace>ProvisionData.UnitTests</RootNamespace>
-    <AssemblyName>ProvisionData.Common.UnitTests</AssemblyName>
-    <IsPackable>false</IsPackable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net5.0</TargetFramework>
+		<RootNamespace>ProvisionData.UnitTests</RootNamespace>
+		<AssemblyName>ProvisionData.Common.UnitTests</AssemblyName>
+		<IsPackable>false</IsPackable>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="GitVersionTask" Version="5.3.2">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\source\ProvisionData.Common\ProvisionData.Common.csproj" />
-    <ProjectReference Include="..\..\source\ProvisionData.EntityFramework\ProvisionData.EntityFrameworkCore.csproj" />
-    <ProjectReference Include="..\..\source\ProvisionData.Html\ProvisionData.Html.csproj" />
-    <ProjectReference Include="..\..\source\ProvisionData.Serilog\ProvisionData.Serilog.csproj" />
-    <ProjectReference Include="..\..\source\ProvisionData.Specifications\ProvisionData.Specifications.csproj" />
-    <ProjectReference Include="..\..\source\ProvisionData.UnitTesting\ProvisionData.UnitTesting.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Update="Microsoft.NET.Test.Sdk" Version="16.6.1" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\source\ProvisionData.Common\ProvisionData.Common.csproj" />
+		<ProjectReference Include="..\..\source\ProvisionData.EntityFramework\ProvisionData.EntityFrameworkCore.csproj" />
+		<ProjectReference Include="..\..\source\ProvisionData.Html\ProvisionData.Html.csproj" />
+		<ProjectReference Include="..\..\source\ProvisionData.Serilog\ProvisionData.Serilog.csproj" />
+		<ProjectReference Include="..\..\source\ProvisionData.Specifications\ProvisionData.Specifications.csproj" />
+		<ProjectReference Include="..\..\source\ProvisionData.UnitTesting\ProvisionData.UnitTesting.csproj" />
+	</ItemGroup>
 
 </Project>

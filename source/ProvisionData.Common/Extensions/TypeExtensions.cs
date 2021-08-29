@@ -60,9 +60,6 @@ namespace ProvisionData.Extensions
         public static IEnumerable<TypeInfo> GetAllNestedTypes(this Type type)
                 => GetAll(type, ti => ti.DeclaredNestedTypes);
 
-        //public static IEnumerable<PropertyInfo> GetAllProperties(this Type type)
-        //        => GetAll(type, ti => ti.DeclaredProperties);
-
         public static IEnumerable<Type> GetAllTypesImplementingOpenGenericType(this IEnumerable<Assembly> assemblies, Type openGenericType) => GetAllTypesImplementingOpenGenericType(assemblies, openGenericType, _ => true);
 
         public static IEnumerable<Type> GetAllTypesImplementingOpenGenericType(this IEnumerable<Assembly> assemblies, Type openGenericType, Predicate<Assembly> predicate)
