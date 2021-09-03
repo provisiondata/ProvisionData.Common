@@ -134,6 +134,7 @@ class Build : NukeBuild
 	Target Push => _ => _
 		.DependsOn(Pack)
 		.Requires(() => Configuration == Configuration.Release)
+		.Requires(() => !String.IsNullOrWhiteSpace(NugetApiKey))
 		.Executes(() =>
 		{
 			DotNetNuGetPush(s => s
