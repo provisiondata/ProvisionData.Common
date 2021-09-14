@@ -330,3 +330,5 @@ ASALocalRun/
 .mfractor/
 
 tests/results/
+
+publish.ps1
