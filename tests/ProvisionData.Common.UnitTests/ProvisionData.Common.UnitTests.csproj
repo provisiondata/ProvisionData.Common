@@ -8,6 +8,14 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <PackageReference Include="Bogus" Version="33.1.1" />
+	  <PackageReference Include="Bogus.Tools.Analyzer" Version="33.1.1">
+	    <PrivateAssets>all</PrivateAssets>
+	    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	  </PackageReference>
+	</ItemGroup>
+
+	<ItemGroup>
 		<ProjectReference Include="..\..\source\ProvisionData.Common\ProvisionData.Common.csproj" />
 		<ProjectReference Include="..\..\source\ProvisionData.EntityFramework\ProvisionData.EntityFrameworkCore.csproj" />
 		<ProjectReference Include="..\..\source\ProvisionData.Html\ProvisionData.Html.csproj" />
