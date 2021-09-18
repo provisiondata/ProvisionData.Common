@@ -28,10 +28,27 @@ namespace ProvisionData.UnitTests.Specifications
 	using FluentAssertions;
 	using ProvisionData.Specifications;
 	using System;
+	using System.Linq.Expressions;
 	using Xunit;
 
 	public class Specifications
 	{
+		[Fact]
+		public void Behaves_appropriately_when_Specification_is_null()
+		{
+			var spec = new PoorlyBehaved();
+			spec.IsSatisfiedBy(null).Should().BeFalse();
+			spec.IsSatisfiedBy(String.Empty).Should().BeFalse();
+			spec.IsSatisfiedBy("Something").Should().BeFalse();
+		}
+
+		[Fact]
+		public void Throws_when_constructed_with_null_parameters()
+		{
+			Assert.Throws<InvalidOperationException>(() => new PoorlyBehaved((IQuerySpecification<String>)null));
+			Assert.Throws<ArgumentNullException>(() => new PoorlyBehaved((Expression<Func<String, Boolean>>)null));
+		}
+
 		internal class IsEven : AbstractSpecification<Int32>
 		{
 			public IsEven() : base(n => (n % 2) == 0) { }
@@ -55,6 +72,15 @@ namespace ProvisionData.UnitTests.Specifications
 			ISpecification<Int32> isTen = new IsEven().And(new IsMultiple(5));
 
 			isTen.IsSatisfiedBy(input).Should().Be(expected);
+		}
+
+		internal class PoorlyBehaved : AbstractSpecification<String>
+		{
+			public PoorlyBehaved() { }
+
+			public PoorlyBehaved(IQuerySpecification<String> specification) : base(specification) { }
+
+			public PoorlyBehaved(Expression<Func<String, Boolean>> predicate) : base(predicate) { }
 		}
 	}
 }
