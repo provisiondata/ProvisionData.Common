@@ -44,10 +44,10 @@ namespace ProvisionData
 		/// <param name="resource"></param>
 		/// <returns></returns>
 		[DebuggerStepThrough]
-		public static String GS<T>(String resource)
+		public static String GetString<T>(String resource)
 		{
 			var type = typeof(T);
-			return GS(resource, type);
+			return GetString(resource, type);
 		}
 
 
@@ -63,7 +63,7 @@ namespace ProvisionData
 		/// Subsequent requests for the same <paramref name="resource"/> are returned directly from the cache.
 		/// </remarks>
 		[DebuggerStepThrough]
-		public static String GS(String resource, Type type)
+		public static String GetString(String resource, Type type)
 		{
 			var cachekey = type.AssemblyQualifiedName + "::" + resource;
 			return Cache.GetOrAdd(cachekey, k =>
@@ -112,7 +112,7 @@ namespace ProvisionData
 		[DebuggerStepThrough]
 		public static Byte[] GetBytes(String resource, Type type)
 		{
-			using (var stream = GRS(resource, type))
+			using (var stream = GetStream(resource, type))
 			{
 				using (var ms = new MemoryStream())
 				{
@@ -131,10 +131,10 @@ namespace ProvisionData
 		/// See <see cref="Assembly.GetManifestResourceStream"/> for the underlying implementation.
 		/// </remarks>
 		[DebuggerStepThrough]
-		public static Stream GRS<T>(String resource)
+		public static Stream GetStream<T>(String resource)
 		{
 			var type = typeof(T);
-			return GRS(resource, type);
+			return GetStream(resource, type);
 		}
 
 		/// <summary>
@@ -147,7 +147,7 @@ namespace ProvisionData
 		/// See <see cref="Assembly.GetManifestResourceStream"/> for the underlying implementation.
 		/// </remarks>
 		[DebuggerStepThrough]
-		public static Stream GRS(String resource, Type type)
+		public static Stream GetStream(String resource, Type type)
 		{
 			if (String.IsNullOrWhiteSpace(resource))
 			{
