@@ -28,8 +28,9 @@ namespace ProvisionData
     using System;
     using System.Diagnostics;
 
-    // https://github.com/nhibernate/nhibernate-core/blob/master/src/NHibernate/Id/GuidCombGenerator.cs
-    [DebuggerStepThrough]
+	// https://github.com/nhibernate/nhibernate-core/blob/master/src/NHibernate/Id/GuidCombGenerator.cs
+	// GNU LESSER GENERAL PUBLIC LICENSE
+	[DebuggerStepThrough]
     public static class CombGuid
     {
         public static Guid NewGuid()
