@@ -1,0 +1,207 @@
+{
+  "settings": {
+    "components": {
+      "code": false,
+      "binaries": false
+    },
+    "targetId": "net10.0",
+    "targetDisplayName": ".NETCoreApp,Version=v10.0"
+  },
+  "analysisStartTime": "2026-01-26T22:14:32.8271139Z",
+  "analysisEndTime": "2026-01-26T22:14:37.5805614Z",
+  "privacyModeHelpUrl": "https://go.microsoft.com/fwlink/?linkid=2270980",
+  "stats": {
+    "summary": {
+      "projects": 3,
+      "issues": 1,
+      "incidents": 3,
+      "effort": 3
+    },
+    "charts": {
+      "severity": {
+        "Mandatory": 3,
+        "Optional": 0,
+        "Potential": 0,
+        "Information": 0
+      },
+      "category": {
+        "Project": 3
+      }
+    }
+  },
+  "projects": [
+    {
+      "path": "build\\_build.csproj",
+      "startingProject": true,
+      "issues": 1,
+      "storyPoints": 1,
+      "properties": {
+        "appName": "_build",
+        "projectKind": "DotNetCoreApp",
+        "frameworks": [
+          "net5.0"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "numberOfFiles": 3,
+        "numberOfCodeFiles": 3,
+        "linesTotal": 162,
+        "linesOfCode": 162,
+        "totalApiScanned": 279,
+        "minLinesOfCodeToChange": 0,
+        "maxLinesOfCodeToChange": 0
+      },
+      "ruleInstances": [
+        {
+          "incidentId": "88292bb3-b6cb-4a6d-892e-99bf0c029f88",
+          "ruleId": "Project.0002",
+          "projectPath": "build\\_build.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Current target framework: net5.0\nRecommended target framework: net10.0",
+              "protected": "Current target framework: net5.0\nRecommended target framework: net10.0"
+            },
+            "kind": "File",
+            "path": "build\\_build.csproj",
+            "snippet": "Current target framework: net5.0\nRecommended target framework: net10.0",
+            "protectedSnippet": "Current target framework: net5.0\nRecommended target framework: net10.0",
+            "properties": {
+              "CurrentTargetFramework": "net5.0",
+              "RecommendedTargetFramework": "net10.0"
+            }
+          }
+        }
+      ],
+      "features": []
+    },
+    {
+      "path": "source\\ProvisionData.Common\\ProvisionData.Common.csproj",
+      "startingProject": true,
+      "issues": 1,
+      "storyPoints": 1,
+      "properties": {
+        "appName": "ProvisionData.Common",
+        "projectKind": "ClassLibrary",
+        "frameworks": [
+          "net5.0",
+          "net48"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "numberOfFiles": 20,
+        "numberOfCodeFiles": 20,
+        "linesTotal": 1750,
+        "linesOfCode": 1750,
+        "totalApiScanned": 1168,
+        "minLinesOfCodeToChange": 0,
+        "maxLinesOfCodeToChange": 0
+      },
+      "ruleInstances": [
+        {
+          "incidentId": "3fa1b9c3-c51f-47db-87c0-1cbf6cf5820d",
+          "ruleId": "Project.0002",
+          "projectPath": "source\\ProvisionData.Common\\ProvisionData.Common.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Current target framework: net5.0;net48\nRecommended target framework: net5.0;net48;net10.0",
+              "protected": "Current target framework: net5.0;net48\nRecommended target framework: net5.0;net48;net10.0"
+            },
+            "kind": "File",
+            "path": "source\\ProvisionData.Common\\ProvisionData.Common.csproj",
+            "snippet": "Current target framework: net5.0;net48\nRecommended target framework: net5.0;net48;net10.0",
+            "protectedSnippet": "Current target framework: net5.0;net48\nRecommended target framework: net5.0;net48;net10.0",
+            "properties": {
+              "CurrentTargetFramework": "net5.0;net48",
+              "RecommendedTargetFramework": "net5.0;net48;net10.0"
+            }
+          }
+        }
+      ],
+      "features": []
+    },
+    {
+      "path": "tests\\ProvisionData.Common.UnitTests\\ProvisionData.Common.UnitTests.csproj",
+      "startingProject": true,
+      "issues": 1,
+      "storyPoints": 1,
+      "properties": {
+        "appName": "ProvisionData.Common.UnitTests",
+        "projectKind": "DotNetCoreApp",
+        "frameworks": [
+          "net5.0"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "numberOfFiles": 14,
+        "numberOfCodeFiles": 11,
+        "linesTotal": 2633,
+        "linesOfCode": 685,
+        "totalApiScanned": 895,
+        "minLinesOfCodeToChange": 0,
+        "maxLinesOfCodeToChange": 0
+      },
+      "ruleInstances": [
+        {
+          "incidentId": "02d16a6f-6bb6-47b0-833b-0c53d297bb86",
+          "ruleId": "Project.0002",
+          "projectPath": "tests\\ProvisionData.Common.UnitTests\\ProvisionData.Common.UnitTests.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Current target framework: net5.0\nRecommended target framework: net10.0",
+              "protected": "Current target framework: net5.0\nRecommended target framework: net10.0"
+            },
+            "kind": "File",
+            "path": "tests\\ProvisionData.Common.UnitTests\\ProvisionData.Common.UnitTests.csproj",
+            "snippet": "Current target framework: net5.0\nRecommended target framework: net10.0",
+            "protectedSnippet": "Current target framework: net5.0\nRecommended target framework: net10.0",
+            "properties": {
+              "CurrentTargetFramework": "net5.0",
+              "RecommendedTargetFramework": "net10.0"
+            }
+          }
+        }
+      ],
+      "features": []
+    }
+  ],
+  "rules": {
+    "Project.0002": {
+      "id": "Project.0002",
+      "isFeature": false,
+      "description": "Project\u0027s target framework(s) needs to be changed to the new target framework that you selected for this upgrade.\n\nDuring upgrade target framework will be adjusted to corresponding platform when applicable. In some cases project would result in multiple target frameworks after the upgrade if it was using features that now have their own platforms in modern .NET frameworks (windows, iOS, Android etc).",
+      "label": "Project\u0027s target framework(s) needs to be changed",
+      "severity": "Mandatory",
+      "effort": 1,
+      "links": [
+        {
+          "title": "Overview of porting from .NET Framework to .NET",
+          "url": "https://go.microsoft.com/fwlink/?linkid=2265227",
+          "isCustom": false
+        },
+        {
+          "title": ".NET project SDKs",
+          "url": "https://go.microsoft.com/fwlink/?linkid=2265226",
+          "isCustom": false
+        }
+      ]
+    }
+  }
+}
