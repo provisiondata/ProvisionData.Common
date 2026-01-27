@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+    <PropertyGroup>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <LangVersion>latest</LangVersion>
+        <DebugType>full</DebugType>
+        <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+        <NoWarn>1701;1702;NU5105</NoWarn>
+
+        <!-- NuGet package metadata -->
+        <Authors>ProvisionData</Authors>
+        <Company>Provision Data Systems Inc.</Company>
+        <Copyright>2026 Provision Data Systems Inc.</Copyright>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+        <ApplicationIcon>..\..\pdsi.ico</ApplicationIcon>
+        <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+        <RepositoryType>git</RepositoryType>
+        <RepositoryUrl>https://github.com/provisiondata/ProvisionData.Common.git</RepositoryUrl>
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+        <!--<GenerateDocumentationFile>false</GenerateDocumentationFile>-->
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
+        <RepositoryBranch>main</RepositoryBranch>
+        <RepositoryCommit>$(SourceRevisionId)</RepositoryCommit>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+
+        <!-- GitVersioning -->
+        <GitVersionBaseDirectory>$(MSBuildThisFileDirectory)</GitVersionBaseDirectory>
+        <NBGV_ThisAssemblyNamespace>ProvisionData</NBGV_ThisAssemblyNamespace>
+        <NBGV_ThisAssemblyIncludesPackageVersion>true</NBGV_ThisAssemblyIncludesPackageVersion>
+    </PropertyGroup>
+
+    <!-- Ensure README and LICENSE are packed -->
+    <ItemGroup>
+        <None Include="../../README.md" Pack="true" PackagePath="/" />
+        <None Include="../../LICENSE.md" Pack="true" PackagePath="/" />
+        <None Include="../../pdsi.png" Pack="true" PackagePath="\"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Nerdbank.GitVersioning" Condition="!Exists('packages.config')">
+            <PrivateAssets>all</PrivateAssets>
+            <Version>3.9.50</Version>
+        </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="10.0.102">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.14.15">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+
+</Project>

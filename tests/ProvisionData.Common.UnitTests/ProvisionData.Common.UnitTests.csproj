@@ -6,75 +6,46 @@
 		<AssemblyName>ProvisionData.Common.UnitTests</AssemblyName>
 		<Title>Provision Data</Title>
 		<Description>Just basic stuff</Description>
-		<Product>Provision Data</Product>
-		<Authors>Doug Wilson</Authors>
-		<Company>Provision Data Systems Inc.</Company>
-		<Copyright>Copyright 2019</Copyright>
-		<ApplicationIcon>..\..\pdsi.ico</ApplicationIcon>
-		<PackageTags></PackageTags>
-		<RepositoryType>Git</RepositoryType>
-		<RepositoryUrl>https://git.pdsint.net/PDSI/Common</RepositoryUrl>
-		<PublishRepositoryUrl>true</PublishRepositoryUrl>
-		<PackageProjectUrl>https://wiki.pdsint.net/research-development/common</PackageProjectUrl>
-		<PackageIcon>..\..\pdsi.png</PackageIcon>
-		<PackageLicenseExpression>MIT</PackageLicenseExpression>
-		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-		<NeutralLanguage>en-US</NeutralLanguage>
-		<NeutralResourcesLanguage>en-US</NeutralResourcesLanguage>
 
-		<LangVersion>latest</LangVersion>
-		<DebugType>full</DebugType>
-		<IsPackable>false</IsPackable>
-
-		<TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-		<NoWarn>1701;1702;NU5105</NoWarn>
-
-		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-
-		<EmbedUntrackedSources>false</EmbedUntrackedSources>
+        <IsPackable>false</IsPackable>
 	</PropertyGroup>
 
-	<ItemGroup>
-		<None Include="..\..\pdsi.png" Pack="true" PackagePath="\"/>
+    <ItemGroup>
+        <Using Include="FluentAssertions"/>
+        <Using Include="Xunit"/>
+    </ItemGroup>
+    
+    <ItemGroup>
+		<PackageReference Include="Bogus" Version="35.6.5" />
+		<PackageReference Include="FluentAssertions" Version="8.8.0" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
+		<PackageReference Include="Serilog" Version="4.3.0" />
+		<PackageReference Include="Serilog.Sinks.Debug" Version="3.0.0" />
+		<PackageReference Include="Serilog.Sinks.TextWriter" Version="3.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Bogus" Version="33.1.1" />
-		<PackageReference Include="FluentAssertions" Version="6.1.0" />
-		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
-		<PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="16.10.56" />
-		<PackageReference Include="Serilog" Version="2.10.0" />
-		<PackageReference Include="Serilog.Sinks.Debug" Version="2.0.0" />
-		<PackageReference Include="Serilog.Sinks.TextWriter" Version="2.1.0" />
-		<PackageReference Include="Shouldly" Version="4.0.3" />
+		<PackageReference Include="xunit.runner.visualstudio" Version="3.1.5">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="xunit.v3" Version="3.2.2" />
 	</ItemGroup>
 
-	<ItemGroup>
-		<PackageReference Include="Bogus.Tools.Analyzer" Version="33.1.1">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
-		<PackageReference Include="GitVersion.MsBuild" Version="5.7.0">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
-		<PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="16.10.56">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
-	</ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Bogus.Tools.Analyzer" Version="35.6.5">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="xunit.analyzers" Version="1.27.0">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
 
-	<ItemGroup>
-		<PackageReference Include="xunit" Version="2.4.1" />
-		<PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
-	</ItemGroup>
-
-	<ItemGroup>
-		<ProjectReference Include="..\..\source\ProvisionData.Common\ProvisionData.Common.csproj" />
+    <ItemGroup>
+		<ProjectReference Include="..\..\src\ProvisionData.Common\ProvisionData.Common.csproj" />
 	</ItemGroup>
 
 </Project>
+
