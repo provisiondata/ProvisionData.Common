@@ -39,7 +39,7 @@ jobs:
         run: dotnet test --configuration Release --no-build --verbosity normal --filter "FullyQualifiedName!~Integration"
 
       - name: Pack
-        run: dotnet pack src/ProvisionData.HaloPSA.ApiClient/ProvisionData.HaloPSA.ApiClient.csproj --configuration Release --no-build --output ./artifacts /p:ContinuousIntegrationBuild=true /p:PublicRelease=true
+        run: dotnet pack --configuration Release --no-build --output ./artifacts /p:ContinuousIntegrationBuild=true /p:PublicRelease=true
 
       - name: Save Artifacts
         uses: actions/upload-artifact@v4
