@@ -14,7 +14,7 @@
 
 using System.Diagnostics;
 
-namespace ProvisionData.Testing;
+namespace ProvisionData;
 
 [DebuggerNonUserCode]
 public static class TestableGuid

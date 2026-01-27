@@ -1,4 +1,4 @@
-﻿// ProvisionData.Common
+// Provision Data HaloPSA API Client
 // Copyright (C) 2026 Provision Data Systems Inc.
 //
 // This program is free software: you can redistribute it and/or modify it under the terms of
@@ -12,9 +12,14 @@
 // You should have received a copy of the GNU Affero General Public License along with this
 // program. If not, see <https://www.gnu.org/licenses/>.
 
-namespace ProvisionData.Testing.Integration;
+using Microsoft.Extensions.Configuration;
 
-public class Class1
+namespace ProvisionData.Testing;
+
+public interface ITestFixture
 {
-
+    IConfiguration Configuration { get; }
+    IServiceProvider Services { get; }
+    void BeginTest();
+    void EndTest();
 }
