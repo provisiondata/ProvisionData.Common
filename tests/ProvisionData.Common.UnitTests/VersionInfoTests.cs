@@ -23,7 +23,7 @@ public class VersionInfoTests(ITestOutputHelper output)
     {
         var version = VersionInfo.ForAssemblyContaining<VersionInfo>();
 
-        output.WriteLine($"AssemblyConfiguration: {version.AssemblyConfiguration}");
+        output.WriteLine($"AssemblyConfiguration: {version!.AssemblyConfiguration}");
 
 #if DEBUG
         version.IsPrerelease.Should().BeTrue();
