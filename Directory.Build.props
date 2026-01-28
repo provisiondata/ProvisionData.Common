@@ -26,14 +26,16 @@
         <ApplicationIcon>..\..\pdsi.ico</ApplicationIcon>
         <PackageIcon>pdsi.png</PackageIcon>
         <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-        <PublishRepositoryUrl>true</PublishRepositoryUrl>
         <RepositoryBranch>main</RepositoryBranch>
         <RepositoryCommit>$(SourceRevisionId)</RepositoryCommit>
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <EmbedUntrackedSources>true</EmbedUntrackedSources>
-        <IncludeSymbols>true</IncludeSymbols>
-        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
 
+        <GeneratePackageOnBuild Condition="'$(Configuration)' == 'Debug'">false</GeneratePackageOnBuild>
+        <PublishRepositoryUrl Condition="'$(Configuration)' == 'Debug'">false</PublishRepositoryUrl>
+        <IncludeSymbols Condition="'$(Configuration)' == 'Debug'">false</IncludeSymbols>
+
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+        
         <NuGetAuditMode>direct</NuGetAuditMode>
         <NeutralLanguage>en</NeutralLanguage>
         <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
