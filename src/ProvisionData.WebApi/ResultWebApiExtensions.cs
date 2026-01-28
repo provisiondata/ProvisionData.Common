@@ -12,6 +12,7 @@
 // You should have received a copy of the GNU Affero General Public License along with this
 // program. If not, see <https://www.gnu.org/licenses/>.
 
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -29,9 +30,7 @@ public static class ResultWebApiExtensions
             NotFoundError => Results.NotFound(CreateProblemDetails(result.Error, 404)),
             ValidationError => Results.BadRequest(CreateProblemDetails(result.Error, 400)),
             ConflictError => Results.Conflict(CreateProblemDetails(result.Error, 409)),
-            UnauthorizedError => Results.Json(
-                CreateProblemDetails(result.Error, 401),
-                statusCode: 401),
+            UnauthorizedError => CreateUnauthorizedResult(result.Error),
             _ => Results.BadRequest(CreateProblemDetails(result.Error, 400))
         };
     }
@@ -61,6 +60,13 @@ public static class ResultWebApiExtensions
 
         return result.ToApiResult();
     }
+
+    [UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "ProblemDetails is a well-known type that will be preserved by the trimmer")]
+    [UnconditionalSuppressMessage("AOT", "IL3050:Calling members annotated with 'RequiresDynamicCodeAttribute' may break functionality when AOT compiling", Justification = "ProblemDetails is a simple DTO that doesn't require runtime code generation")]
+    private static IResult CreateUnauthorizedResult(Error error)
+        => Results.Json(
+            CreateProblemDetails(error, 401),
+            statusCode: 401);
 
     private static ProblemDetails CreateProblemDetails(Error error, Int32 statusCode)
         => new()

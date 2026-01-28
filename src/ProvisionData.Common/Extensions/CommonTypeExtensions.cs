@@ -12,12 +12,23 @@
 // You should have received a copy of the GNU Affero General Public License along with this
 // program. If not, see <https://www.gnu.org/licenses/>.
 
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 namespace ProvisionData.Extensions;
 
+/// <summary>
+/// 
+/// </summary>
 public static class CommonTypeExtensions
 {
+    /// <summary>
+    /// Validates that a GUID is not empty; throws an exception if it is.
+    /// </summary>
+    /// <param name="g">The GUID to validate.</param>
+    /// <param name="parameter">The name of the parameter, used in the exception message.</param>
+    /// <returns>The original GUID if validation succeeds.</returns>
+    /// <exception cref="ArgumentException">Thrown when <paramref name="g"/> is <see cref="Guid.Empty"/>.</exception>
     public static Guid ThrowIfEmpty(this Guid g, String parameter)
     {
         if (g == Guid.Empty)
@@ -28,26 +39,155 @@ public static class CommonTypeExtensions
         return g;
     }
 
-    public static IEnumerable<ConstructorInfo> GetAllConstructors(this Type type)
-            => GetAll(type, ti => ti.DeclaredConstructors);
+    /// <summary>
+    /// Gets all constructors from a type and its base types.
+    /// </summary>
+    /// <param name="type">The type to inspect.</param>
+    /// <returns>An enumerable of all constructors in the type and its base types.</returns>
+    [UnconditionalSuppressMessage("Trimming", "IL2072:Target parameter argument does not satisfy 'DynamicallyAccessedMembersAttribute' in call to target method", Justification = "Recursively accessing base types is intentional and annotations are preserved through the parameter")]
+    public static IEnumerable<ConstructorInfo> GetAllConstructors(
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.NonPublicConstructors)]
+        this Type type)
+    {
+        while (type != null)
+        {
+            var typeInfo = type.GetTypeInfo();
+            foreach (var ctor in typeInfo.DeclaredConstructors)
+            {
+                yield return ctor;
+            }
 
-    public static IEnumerable<EventInfo> GetAllEvents(this Type type)
-            => GetAll(type, ti => ti.DeclaredEvents);
+            type = typeInfo.BaseType!;
+        }
+    }
 
-    public static IEnumerable<FieldInfo> GetAllFields(this Type type)
-            => GetAll(type, ti => ti.DeclaredFields);
+    /// <summary>
+    /// Gets all events from a type and its base types.
+    /// </summary>
+    /// <param name="type">The type to inspect.</param>
+    /// <returns>An enumerable of all events in the type and its base types.</returns>
+    [UnconditionalSuppressMessage("Trimming", "IL2072:Target parameter argument does not satisfy 'DynamicallyAccessedMembersAttribute' in call to target method", Justification = "Recursively accessing base types is intentional and annotations are preserved through the parameter")]
+    public static IEnumerable<EventInfo> GetAllEvents(
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicEvents | DynamicallyAccessedMemberTypes.NonPublicEvents)]
+        this Type type)
+    {
+        while (type != null)
+        {
+            var typeInfo = type.GetTypeInfo();
+            foreach (var evt in typeInfo.DeclaredEvents)
+            {
+                yield return evt;
+            }
 
-    public static IEnumerable<MemberInfo> GetAllMembers(this Type type)
-            => GetAll(type, ti => ti.DeclaredMembers);
+            type = typeInfo.BaseType!;
+        }
+    }
 
-    public static IEnumerable<MethodInfo> GetAllMethods(this Type type)
-            => GetAll(type, ti => ti.DeclaredMethods);
+    /// <summary>
+    /// Gets all fields from a type and its base types.
+    /// </summary>
+    /// <param name="type">The type to inspect.</param>
+    /// <returns>An enumerable of all fields in the type and its base types.</returns>
+    [UnconditionalSuppressMessage("Trimming", "IL2072:Target parameter argument does not satisfy 'DynamicallyAccessedMembersAttribute' in call to target method", Justification = "Recursively accessing base types is intentional and annotations are preserved through the parameter")]
+    public static IEnumerable<FieldInfo> GetAllFields(
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicFields | DynamicallyAccessedMemberTypes.NonPublicFields)]
+        this Type type)
+    {
+        while (type != null)
+        {
+            var typeInfo = type.GetTypeInfo();
+            foreach (var field in typeInfo.DeclaredFields)
+            {
+                yield return field;
+            }
 
-    public static IEnumerable<TypeInfo> GetAllNestedTypes(this Type type)
-            => GetAll(type, ti => ti.DeclaredNestedTypes);
+            type = typeInfo.BaseType!;
+        }
+    }
 
+    /// <summary>
+    /// Gets all members from a type and its base types.
+    /// </summary>
+    /// <param name="type">The type to inspect.</param>
+    /// <returns>An enumerable of all members in the type and its base types.</returns>
+    [UnconditionalSuppressMessage("Trimming", "IL2072:Target parameter argument does not satisfy 'DynamicallyAccessedMembersAttribute' in call to target method", Justification = "Recursively accessing base types is intentional and annotations are preserved through the parameter")]
+    public static IEnumerable<MemberInfo> GetAllMembers(
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
+        this Type type)
+    {
+        while (type != null)
+        {
+            var typeInfo = type.GetTypeInfo();
+            foreach (var member in typeInfo.DeclaredMembers)
+            {
+                yield return member;
+            }
+
+            type = typeInfo.BaseType!;
+        }
+    }
+
+    /// <summary>
+    /// Gets all methods from a type and its base types.
+    /// </summary>
+    /// <param name="type">The type to inspect.</param>
+    /// <returns>An enumerable of all methods in the type and its base types.</returns>
+    [UnconditionalSuppressMessage("Trimming", "IL2072:Target parameter argument does not satisfy 'DynamicallyAccessedMembersAttribute' in call to target method", Justification = "Recursively accessing base types is intentional and annotations are preserved through the parameter")]
+    public static IEnumerable<MethodInfo> GetAllMethods(
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicMethods | DynamicallyAccessedMemberTypes.NonPublicMethods)]
+        this Type type)
+    {
+        while (type != null)
+        {
+            var typeInfo = type.GetTypeInfo();
+            foreach (var method in typeInfo.DeclaredMethods)
+            {
+                yield return method;
+            }
+
+            type = typeInfo.BaseType!;
+        }
+    }
+
+    /// <summary>
+    /// Gets all nested types from a type and its base types.
+    /// </summary>
+    /// <param name="type">The type to inspect.</param>
+    /// <returns>An enumerable of all nested types in the type and its base types.</returns>
+    [UnconditionalSuppressMessage("Trimming", "IL2072:Target parameter argument does not satisfy 'DynamicallyAccessedMembersAttribute' in call to target method", Justification = "Recursively accessing base types is intentional and annotations are preserved through the parameter")]
+    public static IEnumerable<TypeInfo> GetAllNestedTypes(
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicNestedTypes | DynamicallyAccessedMemberTypes.NonPublicNestedTypes)]
+        this Type type)
+    {
+        while (type != null)
+        {
+            var typeInfo = type.GetTypeInfo();
+            foreach (var nestedType in typeInfo.DeclaredNestedTypes)
+            {
+                yield return nestedType;
+            }
+
+            type = typeInfo.BaseType!;
+        }
+    }
+
+    /// <summary>
+    /// Gets all types implementing an open generic type from the specified assemblies.
+    /// </summary>
+    /// <param name="assemblies">The assemblies to search.</param>
+    /// <param name="openGenericType">The open generic type to match.</param>
+    /// <returns>An enumerable of types that implement the specified open generic type.</returns>
     public static IEnumerable<Type> GetAllTypesImplementingOpenGenericType(this IEnumerable<Assembly> assemblies, Type openGenericType) => GetAllTypesImplementingOpenGenericType(assemblies, openGenericType, _ => true);
 
+    /// <summary>
+    /// Gets all types implementing an open generic type from the specified assemblies, filtered by a predicate.
+    /// </summary>
+    /// <param name="assemblies">The assemblies to search.</param>
+    /// <param name="openGenericType">The open generic type to match.</param>
+    /// <param name="predicate">A predicate to filter assemblies.</param>
+    /// <returns>An enumerable of types that implement the specified open generic type and match the predicate.</returns>
+    [UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "This method is designed to work with dynamic type discovery and requires unreferenced code")]
+    [UnconditionalSuppressMessage("Trimming", "IL2075:Target parameter argument does not satisfy 'DynamicallyAccessedMembersAttribute' in call to target method", Justification = "Dynamic type discovery requires interface inspection")]
     public static IEnumerable<Type> GetAllTypesImplementingOpenGenericType(this IEnumerable<Assembly> assemblies, Type openGenericType, Predicate<Assembly> predicate)
     {
         return from assembly in assemblies
@@ -61,6 +201,13 @@ public static class CommonTypeExtensions
                select g.Key;
     }
 
+    /// <summary>
+    /// Gets all subtypes of a specified type from assemblies with a specific prefix.
+    /// </summary>
+    /// <typeparam name="T">The base type to find subtypes of.</typeparam>
+    /// <param name="assemblyPrefix">The prefix to filter assemblies by. Defaults to "PDSI".</param>
+    /// <returns>An array of types that are assignable to <typeparamref name="T"/>.</returns>
+    [UnconditionalSuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "This method is designed to work with dynamic type discovery and requires unreferenced code")]
     public static Type[] GetSubTypes<T>(String assemblyPrefix = "PDSI")
     {
         var t = typeof(T);
@@ -73,24 +220,13 @@ public static class CommonTypeExtensions
         return sts;
     }
 
-    private static IEnumerable<T> GetAll<T>(Type type, Func<TypeInfo, IEnumerable<T>> accessor)
-    {
-        while (type != null)
-        {
-            var typeInfo = type.GetTypeInfo();
-            foreach (var ti in accessor(typeInfo))
-            {
-                yield return ti;
-            }
-
-            type = typeInfo.BaseType!;
-        }
-    }
-
     /// <summary>
     /// Returns all properties on the given type, going up the inheritance hierarchy.
     /// </summary>
-    public static IEnumerable<PropertyInfo> GetAllProperties(this Type type)
+    /// <param name="type">The type to inspect.</param>
+    /// <returns>An enumerable of properties from the type and its base types and interfaces, with duplicates removed.</returns>
+    [UnconditionalSuppressMessage("Trimming", "IL2072:Target parameter argument does not satisfy 'DynamicallyAccessedMembersAttribute' in call to target method", Justification = "Recursive call with same annotations is safe")]
+    public static IEnumerable<PropertyInfo> GetAllProperties([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties | DynamicallyAccessedMemberTypes.NonPublicProperties | DynamicallyAccessedMemberTypes.Interfaces)] this Type type)
     {
         var props = new List<PropertyInfo>(type.GetProperties());
         foreach (var interfaceType in type.GetInterfaces())

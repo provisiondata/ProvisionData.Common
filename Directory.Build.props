@@ -18,13 +18,14 @@
         <Authors>ProvisionData</Authors>
         <Company>Provision Data Systems Inc.</Company>
         <Copyright>2026 Provision Data Systems Inc.</Copyright>
+        <RepositoryUrl>https://github.com/provisiondata/ProvisionData.Common.git</RepositoryUrl>
+        <PackageProjectUrl>https://github.com/provisiondata/ProvisionData.Common</PackageProjectUrl>
+        <RepositoryType>git</RepositoryType>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
         <ApplicationIcon>..\..\pdsi.ico</ApplicationIcon>
-        <PackageIcon>..\..\pdsi.png</PackageIcon>
+        <PackageIcon>pdsi.png</PackageIcon>
         <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-        <RepositoryType>git</RepositoryType>
-        <RepositoryUrl>https://github.com/provisiondata/ProvisionData.Common.git</RepositoryUrl>
         <PublishRepositoryUrl>true</PublishRepositoryUrl>
         <RepositoryBranch>main</RepositoryBranch>
         <RepositoryCommit>$(SourceRevisionId)</RepositoryCommit>
@@ -50,10 +51,9 @@
     
     <!-- Ensure README and LICENSE are packed -->
     <ItemGroup>
-        <None Include="../../README.md" Pack="true" PackagePath="/" />
-        <None Include="../../LICENSE.md" Pack="true" PackagePath="/" />
-        <None Include="../../pdsi.png" Pack="true" PackagePath="/"/>
-        <None Include="../../pdsi.ico" Pack="true" PackagePath="/"/>
+        <None Include="$(MSBuildThisFileDirectory)README.md" Pack="true" PackagePath="/" />
+        <None Include="$(MSBuildThisFileDirectory)LICENSE.md" Pack="true" PackagePath="/" />
+        <None Include="$(MSBuildThisFileDirectory)pdsi.png" Pack="true" PackagePath="/"/>
     </ItemGroup>
 
     <ItemGroup>

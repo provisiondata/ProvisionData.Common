@@ -18,16 +18,33 @@ using Microsoft.Extensions.Hosting;
 
 namespace ProvisionData.Testing;
 
+/// <summary>
+/// Provides a concrete implementation of a test fixture that sets up a full .NET host with dependency injection for integration tests.
+/// </summary>
 public class IntegrationTestFixture : TestFixtureBase
 {
     private readonly IHost _host;
 
+    /// <summary>
+    /// Gets the configuration for the test fixture.
+    /// </summary>
     public override IConfiguration Configuration { get; }
+
+    /// <summary>
+    /// Gets the dependency injection service provider for the current test scope.
+    /// </summary>
+    /// <exception cref="InvalidOperationException">Thrown when <see cref="BeginTest"/> has not been called.</exception>
     public override IServiceProvider Services => _testScope?.ServiceProvider
         ?? throw new InvalidOperationException("Test scope has not been started. Call BeginTest() before accessing Services.");
 
     private IServiceScope? _testScope;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="IntegrationTestFixture"/> class.
+    /// </summary>
+    /// <remarks>
+    /// This constructor builds the host and loads configuration from appsettings.Testing.json.
+    /// </remarks>
     public IntegrationTestFixture()
     {
         var settings = new HostApplicationBuilderSettings()
@@ -48,10 +65,25 @@ public class IntegrationTestFixture : TestFixtureBase
         Configuration = _host.Services.GetRequiredService<IConfiguration>();
     }
 
+    /// <summary>
+    /// Called to configure host application builder settings before the host is created.
+    /// </summary>
+    /// <param name="settings">The host application builder settings to configure.</param>
+    /// <remarks>
+    /// Override this method in derived classes to customize host settings.
+    /// </remarks>
     protected virtual void ConfigureSettings(HostApplicationBuilderSettings settings)
     {
     }
 
+    /// <summary>
+    /// Called to configure the configuration builder before services are configured.
+    /// </summary>
+    /// <param name="builder">The configuration builder to configure.</param>
+    /// <remarks>
+    /// By default, this loads appsettings.Testing.json from the current directory.
+    /// Override this method in derived classes to customize configuration loading.
+    /// </remarks>
     protected virtual void ConfigureTest(IConfigurationBuilder builder)
     {
         var basePath = Directory.GetCurrentDirectory();
@@ -60,20 +92,38 @@ public class IntegrationTestFixture : TestFixtureBase
             .AddJsonFile("appsettings.Testing.json", optional: false);
     }
 
+    /// <summary>
+    /// Called to configure dependency injection services for the test fixture.
+    /// </summary>
+    /// <param name="services">The service collection to configure.</param>
+    /// <param name="configuration">The configuration instance to use.</param>
+    /// <remarks>
+    /// Override this method in derived classes to register services needed for tests.
+    /// </remarks>
     protected virtual void ConfigureServices(IServiceCollection services, IConfiguration configuration)
     { }
 
+    /// <summary>
+    /// Called before each test to initialize the test scope.
+    /// </summary>
     public override void BeginTest()
     {
         _testScope = _host.Services.CreateScope();
     }
 
+    /// <summary>
+    /// Called after each test to dispose of the test scope.
+    /// </summary>
     public override void EndTest()
     {
         _testScope?.Dispose();
         _testScope = null;
     }
 
+    /// <summary>
+    /// Releases the unmanaged resources used by the test fixture and optionally releases the managed resources.
+    /// </summary>
+    /// <param name="disposing"><see langword="true"/> to release both managed and unmanaged resources; <see langword="false"/> to release only unmanaged resources.</param>
     protected override void Dispose(Boolean disposing)
     {
         if (disposing)

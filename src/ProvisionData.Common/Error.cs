@@ -14,23 +14,60 @@
 
 namespace ProvisionData;
 
+/// <summary>
+/// Represents an error with a code and description.
+/// </summary>
+/// <param name="Code">A code identifying the error.</param>
+/// <param name="Description">A human-readable description of the error.</param>
 public record Error(String Code, String Description)
 {
+    /// <summary>
+    /// Gets a special <see cref="Error"/> instance representing no error.
+    /// </summary>
     public static readonly Error None = new(String.Empty, String.Empty);
 
-    // Factory methods for common error types
+    /// <summary>
+    /// Creates a <see cref="NotFoundError"/> with the specified code and description.
+    /// </summary>
+    /// <param name="code">The error code.</param>
+    /// <param name="description">The error description.</param>
+    /// <returns>A <see cref="NotFoundError"/> instance.</returns>
     public static Error NotFound(String code, String description)
         => new NotFoundError(code, description);
 
+    /// <summary>
+    /// Creates a <see cref="ValidationError"/> with the specified code and description.
+    /// </summary>
+    /// <param name="code">The error code.</param>
+    /// <param name="description">The error description.</param>
+    /// <returns>A <see cref="ValidationError"/> instance.</returns>
     public static Error Validation(String code, String description)
         => new ValidationError(code, description);
 
+    /// <summary>
+    /// Creates a <see cref="ConflictError"/> with the specified code and description.
+    /// </summary>
+    /// <param name="code">The error code.</param>
+    /// <param name="description">The error description.</param>
+    /// <returns>A <see cref="ConflictError"/> instance.</returns>
     public static Error Conflict(String code, String description)
         => new ConflictError(code, description);
 
+    /// <summary>
+    /// Creates an <see cref="UnauthorizedError"/> with the specified code and description.
+    /// </summary>
+    /// <param name="code">The error code.</param>
+    /// <param name="description">The error description.</param>
+    /// <returns>An <see cref="UnauthorizedError"/> instance.</returns>
     public static Error Unauthorized(String code, String description)
         => new UnauthorizedError(code, description);
 
+    /// <summary>
+    /// Creates a generic <see cref="Error"/> with the specified code and description.
+    /// </summary>
+    /// <param name="code">The error code.</param>
+    /// <param name="description">The error description.</param>
+    /// <returns>An <see cref="Error"/> instance.</returns>
     public static Error Failure(String code, String description)
         => new(code, description);
 }

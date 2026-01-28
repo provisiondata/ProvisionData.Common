@@ -16,14 +16,25 @@ using System.Diagnostics;
 
 namespace ProvisionData;
 
+/// <summary>
+/// Provides a testable implementation of GUID generation that allows tests to override the GUID value.
+/// </summary>
 [DebuggerNonUserCode]
 public static class TestableGuid
 {
     private static Func<Guid> GetGuid = GetGuidInternal;
 
+    /// <summary>
+    /// Sets the GUID value that will be returned by all subsequent calls to <see cref="NewGuid"/>.
+    /// </summary>
+    /// <param name="guid">The GUID value to return.</param>
     [DebuggerNonUserCode]
     public static void GuidIs(Guid guid) => GetGuid = () => guid;
 
+    /// <summary>
+    /// Sets the GUID value that will be returned by all subsequent calls to <see cref="NewGuid"/>.
+    /// </summary>
+    /// <param name="guid">A string representation of the GUID value to return.</param>
     [DebuggerNonUserCode]
     public static void GuidIs(String guid)
     {
@@ -31,11 +42,22 @@ public static class TestableGuid
         GetGuid = () => g;
     }
 
+    /// <summary>
+    /// Generates a new GUID, using the overridden value if one has been set, otherwise generates a sequential GUID.
+    /// </summary>
+    /// <returns>A GUID value.</returns>
     [DebuggerNonUserCode]
     public static Guid NewGuid() => GetGuid?.Invoke() ?? GetGuidInternal();
 
+    /// <summary>
+    /// Resets the GUID generator to use the default sequential GUID generation.
+    /// </summary>
     [DebuggerNonUserCode]
     public static void Reset() => GetGuid = GetGuidInternal;
 
+    /// <summary>
+    /// Generates a new sequential GUID using the <see cref="CombGuid"/> implementation.
+    /// </summary>
+    /// <returns>A sequential GUID.</returns>
     private static Guid GetGuidInternal() => CombGuid.NewGuid();
 }

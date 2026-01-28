@@ -16,20 +16,24 @@ using System.Net;
 
 namespace ProvisionData.Extensions;
 
+/// <summary>
+/// Extension methods for IP address operations.
+/// </summary>
 public static class IPAddressExtensions
 {
     // Modified from [Saeb Amini](https://stackoverflow.com/users/68080/saeb-amini) via [StackOverflow](https://stackoverflow.com/a/13350494/32588)
 
     /// <summary>
-    /// Converts a valid IPv4 Address to a <see cref="UInt32"/>.
+    /// Converts a valid IPv4 address string to a <see cref="UInt32"/>.
     /// </summary>
-    /// <param name="ipAddress">A string that contains an IPv4 Address in dotted-quad notation.</param>
-    /// <returns>a <see cref="UInt32"/></returns>
-    /// <exception cref="ArgumentNullException"><paramref name="ipAddress"/> is <code>null</code></exception>
-    /// <exception cref="FormatException"><paramref name="ipAddress"/> is not a valid IP Address</exception>
+    /// <param name="ipAddress">A string that contains an IPv4 address in dotted-quad notation.</param>
+    /// <returns>A <see cref="UInt32"/> representing the IP address.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="ipAddress"/> is <see langword="null"/>.</exception>
+    /// <exception cref="FormatException"><paramref name="ipAddress"/> is not a valid IPv4 address.</exception>
     /// <remarks>
-    /// <para>IP Addresses are in Network Order (big-endian), while <see cref="Int32"/> are little-endian on Windows. To get a correct value on a little-endian system you must reverse the bytes before converting.</para>
-    /// <para>Also, even for IPv4, an <see cref="Int32"/> can't hold addresses bigger than 127.255.255.255 so use a <see cref="UInt32"/>.</para>
+    /// <para>IP addresses are in network byte order (big-endian), while <see cref="UInt32"/> values are stored in the system's native byte order. 
+    /// On little-endian systems (such as Windows), the bytes are reversed to ensure correct conversion.</para>
+    /// <para>A <see cref="UInt32"/> is used because even for IPv4, a <see cref="Int32"/> cannot hold addresses larger than 127.255.255.255.</para>
     /// </remarks>
     public static UInt32 IpAddressToUInt32(this String ipAddress)
     {
@@ -45,10 +49,14 @@ public static class IPAddressExtensions
     }
 
     /// <summary>
-    /// Converts a <see cref="UInt32"/> to an IP Address.
+    /// Converts a <see cref="UInt32"/> to an IPv4 address string.
     /// </summary>
-    /// <param name="ipAddress"></param>
-    /// <returns>a <see cref="String"/></returns>
+    /// <param name="ipAddress">The <see cref="UInt32"/> value to convert.</param>
+    /// <returns>A string representation of the IPv4 address.</returns>
+    /// <remarks>
+    /// This method reverses the byte conversion process performed by <see cref="IpAddressToUInt32"/>,
+    /// handling endianness conversion as needed.
+    /// </remarks>
     public static String UInt32ToIpAddress(this UInt32 ipAddress)
     {
         var bytes = BitConverter.GetBytes(ipAddress);

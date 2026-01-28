@@ -17,18 +17,23 @@ using System.Diagnostics;
 using System.Reflection;
 
 namespace ProvisionData;
-/// <summary>ResourceHelper</summary>
+
+/// <summary>Resource helper for loading embedded resources from assemblies.</summary>
 [DebuggerStepThrough]
 public static class RH
 {
     private static readonly ConcurrentDictionary<String, String> Cache = new();
 
     /// <summary>
-    /// Looks in the assembly and namespace that contains <typeparamref name="T"/> for a resource named <paramref name="resource"/> and returns it as a <seealso cref="String"/>.
+    /// Looks in the assembly and namespace that contains <typeparamref name="T"/> for a resource named <paramref name="resource"/> and returns it as a <see cref="String"/>.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="resource"></param>
-    /// <returns></returns>
+    /// <typeparam name="T">The type used to locate the assembly and namespace for the resource.</typeparam>
+    /// <param name="resource">The case-sensitive name of the manifest resource being requested.</param>
+    /// <returns>The manifest resource as a string; or throws if not found.</returns>
+    /// <remarks>
+    /// Strings returned by this method are cached in memory the first time they are accessed.
+    /// Subsequent requests for the same resource are returned directly from the cache.
+    /// </remarks>
     [DebuggerStepThrough]
     public static String GetString<T>(String resource)
     {
@@ -38,14 +43,14 @@ public static class RH
 
     /// <summary>
     /// Looks in the assembly and namespace that contains <paramref name="type"/> for an embedded 
-    /// resource named <paramref name="resource"/> and returns it as a <seealso cref="String"/>, if found.
+    /// resource named <paramref name="resource"/> and returns it as a <see cref="String"/>, if found.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="resource"></param>
-    /// <returns></returns>
+    /// <param name="resource">The case-sensitive name of the manifest resource being requested.</param>
+    /// <param name="type">The type used to locate the assembly and namespace for the resource.</param>
+    /// <returns>The manifest resource as a string; or throws if not found.</returns>
     /// <remarks>
     /// Strings returned by this method are cached in memory the first time they are accessed.
-    /// Subsequent requests for the same <paramref name="resource"/> are returned directly from the cache.
+    /// Subsequent requests for the same resource are returned directly from the cache.
     /// </remarks>
     [DebuggerStepThrough]
     public static String GetString(String resource, Type type)
@@ -74,24 +79,20 @@ public static class RH
     }
 
     /// <summary>
-    /// Loads the specified manifest <paramref name="resource"/>, scoped by the namespace of the specified <typeparamref name="T"/>, from the assembly containing <typeparamref name="T"/>.
+    /// Loads the specified manifest resource, scoped by the namespace of the specified type, from the assembly containing the type as a byte array.
     /// </summary>
+    /// <typeparam name="T">The type used to locate the assembly and namespace for the resource.</typeparam>
     /// <param name="resource">The case-sensitive name of the manifest resource being requested.</param>
-    /// <returns>The manifest resource; or <see langword="null"/> if no resources were specified during compilation or if the resource is not visible to the caller. You are responsible for disposing the stream.</returns>
-    /// <remarks>
-    /// See <see cref="Assembly.GetManifestResourceStream"/> for the underlying implementation.
-    /// </remarks>
+    /// <returns>A byte array containing the manifest resource; or throws if not found.</returns>
     [DebuggerStepThrough]
     public static Byte[] GetBytes<T>(String resource) => GetBytes(resource, typeof(T));
 
     /// <summary>
-    /// Loads the specified manifest <paramref name="resource"/>, scoped by the namespace of the specified <typeparamref name="T"/>, from the assembly containing <typeparamref name="T"/>.
+    /// Loads the specified manifest resource, scoped by the namespace of the specified type, from the assembly containing the type as a byte array.
     /// </summary>
     /// <param name="resource">The case-sensitive name of the manifest resource being requested.</param>
-    /// <returns>The manifest resource; or <see langword="null"/> if no resources were specified during compilation or if the resource is not visible to the caller. You are responsible for disposing the stream.</returns>
-    /// <remarks>
-    /// See <see cref="Assembly.GetManifestResourceStream"/> for the underlying implementation.
-    /// </remarks>
+    /// <param name="type">The type used to locate the assembly and namespace for the resource.</param>
+    /// <returns>A byte array containing the manifest resource; or throws if not found.</returns>
     [DebuggerStepThrough]
     public static Byte[] GetBytes(String resource, Type type)
     {
@@ -106,13 +107,11 @@ public static class RH
     }
 
     /// <summary>
-    /// Loads the specified manifest <paramref name="resource"/>, scoped by the namespace of the specified <typeparamref name="T"/>, from the assembly containing <typeparamref name="T"/>.
+    /// Loads the specified manifest resource, scoped by the namespace of the specified type, from the assembly containing the type as a stream.
     /// </summary>
+    /// <typeparam name="T">The type used to locate the assembly and namespace for the resource.</typeparam>
     /// <param name="resource">The case-sensitive name of the manifest resource being requested.</param>
-    /// <returns>The manifest resource; or <see langword="null"/> if no resources were specified during compilation or if the resource is not visible to the caller. You are responsible for disposing the stream.</returns>
-    /// <remarks>
-    /// See <see cref="Assembly.GetManifestResourceStream"/> for the underlying implementation.
-    /// </remarks>
+    /// <returns>A stream containing the manifest resource; or throws if not found. The caller is responsible for disposing the stream.</returns>
     [DebuggerStepThrough]
     public static Stream GetStream<T>(String resource)
     {
@@ -121,14 +120,11 @@ public static class RH
     }
 
     /// <summary>
-    /// Loads the specified manifest <paramref name="resource"/>, scoped by the namespace of the specified <paramref name="type"/>, from the assembly containing <paramref name="type"/>. You are responsible for disposing the stream.
+    /// Loads the specified manifest resource, scoped by the namespace of the specified type, from the assembly containing the type as a stream.
     /// </summary>
-    /// <param name="type">The type whose namespace is used to scope the manifest resource name.</param>
     /// <param name="resource">The case-sensitive name of the manifest resource being requested.</param>
-    /// <returns>The manifest resource; or <see langword="null"/> if no resources were specified during compilation or if the resource is not visible to the caller. You are responsible for disposing the stream.</returns>
-    /// <remarks>
-    /// See <see cref="Assembly.GetManifestResourceStream"/> for the underlying implementation.
-    /// </remarks>
+    /// <param name="type">The type used to locate the assembly and namespace for the resource.</param>
+    /// <returns>A stream containing the manifest resource; or throws if not found. The caller is responsible for disposing the stream.</returns>
     [DebuggerStepThrough]
     public static Stream GetStream(String resource, Type type)
     {

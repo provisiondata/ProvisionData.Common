@@ -16,10 +16,28 @@ using Microsoft.Extensions.Configuration;
 
 namespace ProvisionData.Testing;
 
+/// <summary>
+/// Defines the contract for test fixtures used in integration testing.
+/// </summary>
 public interface ITestFixture
 {
+    /// <summary>
+    /// Gets the configuration for the test fixture.
+    /// </summary>
     IConfiguration Configuration { get; }
+
+    /// <summary>
+    /// Gets the dependency injection service provider for the test fixture.
+    /// </summary>
     IServiceProvider Services { get; }
+
+    /// <summary>
+    /// Called before each test to initialize the test fixture.
+    /// </summary>
     void BeginTest();
+
+    /// <summary>
+    /// Called after each test to clean up the test fixture.
+    /// </summary>
     void EndTest();
 }

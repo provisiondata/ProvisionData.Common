@@ -16,16 +16,37 @@ using System.Text.RegularExpressions;
 
 namespace ProvisionData;
 
+/// <summary>
+/// Compares objects using natural ordering, where numeric sequences are compared numerically rather than lexicographically.
+/// </summary>
+/// <typeparam name="T">The type of objects to compare.</typeparam>
+/// <remarks>
+/// This comparer is useful for sorting alphanumeric strings in a human-friendly way.
+/// For example, "file2.txt" comes before "file10.txt" in natural order.
+/// </remarks>
 public partial class NaturalComparer<T> : IComparer<T>
 {
     private readonly EnumerableComparer<Object> _comparer = new();
 
+    /// <summary>
+    /// Gets a compiled regular expression for splitting numeric sequences.
+    /// </summary>
+    /// <returns>A compiled regex for identifying numeric sequences.</returns>
     [GeneratedRegex("([0-9]+)", RegexOptions.Compiled)]
     private partial Regex SplitRegex();
 
+    /// <summary>
+    /// Gets a compiled regular expression for replacing multiple whitespace characters.
+    /// </summary>
+    /// <returns>A compiled regex matching one or more whitespace characters.</returns>
     [GeneratedRegex(@"\s+", RegexOptions.Compiled)]
     private partial Regex ReplaceRegex();
 
+    /// <summary>
+    /// Converts a sequence of strings to an array of objects, parsing numeric strings as integers.
+    /// </summary>
+    /// <param name="str">The sequence of strings to convert.</param>
+    /// <returns>An array of objects containing integers or strings.</returns>
     private static Object[] ConvertToObjects(IEnumerable<String> str)
     {
         var list = new List<Object>();
@@ -49,6 +70,12 @@ public partial class NaturalComparer<T> : IComparer<T>
         return list.ToArray();
     }
 
+    /// <summary>
+    /// Compares two objects using natural ordering.
+    /// </summary>
+    /// <param name="x">The first object to compare.</param>
+    /// <param name="y">The second object to compare.</param>
+    /// <returns>A value indicating the relative order of the objects.</returns>
     public Int32 Compare(T? x, T? y)
     {
         if (x == null && y == null)

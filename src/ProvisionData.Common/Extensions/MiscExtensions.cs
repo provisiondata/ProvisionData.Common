@@ -14,8 +14,20 @@
 
 namespace ProvisionData.Extensions;
 
+/// <summary>
+/// Miscellaneous extension methods.
+/// </summary>
 public static class MiscExtensions
 {
+    /// <summary>
+    /// Visits the exception and all its inner exceptions, executing an action on each.
+    /// </summary>
+    /// <param name="ex">The exception to visit.</param>
+    /// <param name="action">An action to execute on each exception in the hierarchy.</param>
+    /// <remarks>
+    /// This method traverses the <see cref="Exception.InnerException"/> chain and executes
+    /// the specified action on the original exception and all inner exceptions.
+    /// </remarks>
     public static void Visit(this Exception ex, Action<Exception> action)
     {
         action(ex);
@@ -27,6 +39,14 @@ public static class MiscExtensions
         }
     }
 
+    /// <summary>
+    /// Clamps a value between a minimum and maximum value.
+    /// </summary>
+    /// <typeparam name="T">The type of value to clamp. Must implement <see cref="IComparable{T}"/>.</typeparam>
+    /// <param name="val">The value to clamp.</param>
+    /// <param name="min">The minimum allowed value.</param>
+    /// <param name="max">The maximum allowed value.</param>
+    /// <returns>The original value if it is within the range, otherwise the minimum or maximum value.</returns>
     public static T Clamp<T>(this T val, T min, T max) where T : IComparable<T>
     {
         if (val.CompareTo(min) < 0)

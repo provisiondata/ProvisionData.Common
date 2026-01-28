@@ -15,13 +15,21 @@
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.Text.RegularExpressions;
 
 namespace ProvisionData.Extensions;
 
+/// <summary>
+/// Extension methods for <see cref="String"/> type.
+/// </summary>
 [DebuggerNonUserCode]
 public static partial class StringExtensions
 {
+    /// <summary>
+    /// Returns the leftmost <paramref name="length"/> characters from the input string.
+    /// </summary>
+    /// <param name="input">The input string. If null, returns null.</param>
+    /// <param name="length">The number of characters to return from the left.</param>
+    /// <returns>The leftmost <paramref name="length"/> characters, or the entire string if it is shorter than <paramref name="length"/>.</returns>
     [SuppressMessage("Style", "IDE0057:Convert to conditional expression", Justification = "Readability")]
     public static String Left(this String input, Int32 length)
     {
@@ -39,15 +47,39 @@ public static partial class StringExtensions
         }
     }
 
+    /// <summary>
+    /// Formats the string using the specified arguments and the invariant culture.
+    /// </summary>
+    /// <param name="format">A composite format string.</param>
+    /// <param name="args">An object array that contains zero or more objects to format.</param>
+    /// <returns>A copy of format in which the format items have been replaced by the string representation of the corresponding objects.</returns>
     internal static String Format(this String format, params Object[] args)
         => Format(format, CultureInfo.InvariantCulture, args);
 
+    /// <summary>
+    /// Formats the string using the specified arguments and format provider.
+    /// </summary>
+    /// <param name="format">A composite format string.</param>
+    /// <param name="formatProvider">An object that supplies culture-specific formatting information.</param>
+    /// <param name="args">An object array that contains zero or more objects to format.</param>
+    /// <returns>A copy of format in which the format items have been replaced by the string representation of the corresponding objects.</returns>
     internal static String Format(this String format, IFormatProvider formatProvider, params Object[] args)
         => String.Format(formatProvider, format, args);
 
+    /// <summary>
+    /// Ensures the string is enclosed in double quotes.
+    /// </summary>
+    /// <param name="input">The input string.</param>
+    /// <returns>The input string enclosed in double quotes if not already quoted.</returns>
     public static String Quoted(this String input)
         => input.StartsWith('"') && input.EndsWith('"') ? input : $"\"{input}\"";
 
+    /// <summary>
+    /// Converts a string representation of a GUID to a <see cref="Guid"/>.
+    /// </summary>
+    /// <param name="input">A string representation of a GUID.</param>
+    /// <returns>A <see cref="Guid"/> parsed from the input string.</returns>
+    /// <exception cref="ArgumentException">Thrown when the input cannot be parsed as a GUID.</exception>
     public static Guid ToGuid(this String input)
     {
         if (Guid.TryParse(input, out var guid))
@@ -59,12 +91,13 @@ public static partial class StringExtensions
     }
 
     private const String Ellipsis = " ...";
+
     /// <summary>
-    /// Truncates <paramref name="input"/> to <paramref name="maxLength"/> and append an ellipsis (...) to the end.
+    /// Truncates the input string to the specified maximum length and appends an ellipsis (...).
     /// </summary>
-    /// <param name="input">value to be truncated</param>
-    /// <param name="maxLength">length to return including the ellipsis (...)</param>
-    // ToDo: Make it so it doesn't truncate in the middle of a word. -dw
+    /// <param name="input">The string to be truncated.</param>
+    /// <param name="maxLength">The maximum length of the returned string, including the ellipsis.</param>
+    /// <returns>The truncated string with an ellipsis appended, or an empty string if maxLength is less than or equal to zero.</returns>
     public static String Truncate(this String input, Int32 maxLength)
         => String.IsNullOrEmpty(input) || maxLength <= 0
             ? String.Empty
@@ -73,21 +106,17 @@ public static partial class StringExtensions
                 : input;
 
     /// <summary>
-    /// Turn a pascal case or camel case string into proper case.
-    /// If the input is an abbreviation, the input is return unmodified.
+    /// Converts a pascal case or camel case string into proper case (space-separated).
+    /// Abbreviations are returned unmodified.
     /// </summary>
-    /// <param name="input"></param>
+    /// <param name="input">The input string in pascal or camel case.</param>
+    /// <returns>A proper case version of the input string with spaces between words.</returns>
     /// <example>
-    /// input : HelloWorld
-    /// output : Hello World
-    /// </example>
-    /// <example>
-    /// input : BBC
-    /// output : BBC
-    /// </example>
-    /// <example>
-    /// input : IPAddress
-    /// output : IP Address
+    /// <code>
+    /// "HelloWorld".ToProperCase() // Returns "Hello World"
+    /// "BBC".ToProperCase()        // Returns "BBC"
+    /// "IPAddress".ToProperCase()  // Returns "IP Address"
+    /// </code>
     /// </example>
     public static String ToProperCase(this String input)
     {
@@ -102,7 +131,7 @@ public static partial class StringExtensions
             return input.ToUpper();
         }
         //return as is if the input is just an abbreviation
-        if (AllCaps().IsMatch(input))
+        if (Rgx.AllCaps().IsMatch(input))
         {
             return input;
         }
@@ -123,7 +152,4 @@ public static partial class StringExtensions
 
         return result;
     }
-
-    [GeneratedRegex("[0-9A-Z]+$", RegexOptions.Compiled)]
-    private static partial Regex AllCaps();
 }

@@ -14,9 +14,19 @@
 
 namespace ProvisionData;
 
+/// <summary>
+/// Extension methods for working with <see cref="Result"/> and <see cref="Result{T}"/> types.
+/// </summary>
 public static class ResultExtensions
 {
-    // Transform the value if successful
+    /// <summary>
+    /// Transforms the value of a successful result using the specified mapping function.
+    /// </summary>
+    /// <typeparam name="TIn">The type of the input result value.</typeparam>
+    /// <typeparam name="TOut">The type of the output result value.</typeparam>
+    /// <param name="result">The result to transform.</param>
+    /// <param name="mapper">A function to transform the value.</param>
+    /// <returns>A successful result with the transformed value, or a failed result with the original error.</returns>
     public static Result<TOut> Map<TIn, TOut>(
         this Result<TIn> result,
         Func<TIn, TOut> mapper)
@@ -27,22 +37,24 @@ public static class ResultExtensions
     }
 
     /// <summary>
-    /// Chain operations that return Results
+    /// Chains operations that return results, allowing for sequential composition of result-returning functions.
     /// </summary>
-    /// <typeparam name="TIn"></typeparam>
-    /// <typeparam name="TOut"></typeparam>
-    /// <param name="result"></param>
-    /// <param name="binder"></param>
-    /// <returns></returns>
+    /// <typeparam name="TIn">The type of the input result value.</typeparam>
+    /// <typeparam name="TOut">The type of the output result value.</typeparam>
+    /// <param name="result">The result to bind.</param>
+    /// <param name="binder">A function that takes a value and returns a result.</param>
+    /// <returns>The result returned by the binder function, or a failed result with the original error.</returns>
     /// <example>
-    /// public Result<OrderConfirmation> ProcessOrder(CreateOrderRequest request)
+    /// <code>
+    /// public Result&lt;OrderConfirmation&gt; ProcessOrder(CreateOrderRequest request)
     /// {
     ///     return ValidateOrder(request)
-    ///         .Bind(order => CheckInventory(order))
-    ///         .Bind(order => ProcessPayment(order))
-    ///         .Bind(order => CreateShipment(order))
-    ///         .Map(shipment => new OrderConfirmation(shipment.TrackingNumber));
+    ///         .Bind(order =&gt; CheckInventory(order))
+    ///         .Bind(order =&gt; ProcessPayment(order))
+    ///         .Bind(order =&gt; CreateShipment(order))
+    ///         .Map(shipment =&gt; new OrderConfirmation(shipment.TrackingNumber));
     /// }
+    /// </code>
     /// </example>
     public static Result<TOut> Bind<TIn, TOut>(
         this Result<TIn> result,
@@ -53,7 +65,15 @@ public static class ResultExtensions
             : Result<TOut>.Failure(result.Error);
     }
 
-    // Handle both success and failure cases
+    /// <summary>
+    /// Handles both success and failure cases of a result, returning a single value.
+    /// </summary>
+    /// <typeparam name="TIn">The type of the result value.</typeparam>
+    /// <typeparam name="TOut">The type of the return value.</typeparam>
+    /// <param name="result">The result to match on.</param>
+    /// <param name="onSuccess">A function to handle the success case.</param>
+    /// <param name="onFailure">A function to handle the failure case.</param>
+    /// <returns>The value returned by either the success or failure handler.</returns>
     public static TOut Match<TIn, TOut>(
         this Result<TIn> result,
         Func<TIn, TOut> onSuccess,
@@ -64,7 +84,13 @@ public static class ResultExtensions
             : onFailure(result.Error);
     }
 
-    // Execute action on success
+    /// <summary>
+    /// Executes an action on a successful result without transforming the value.
+    /// </summary>
+    /// <typeparam name="T">The type of the result value.</typeparam>
+    /// <param name="result">The result to tap into.</param>
+    /// <param name="action">An action to execute if the result is successful.</param>
+    /// <returns>The original result, allowing for method chaining.</returns>
     public static Result<T> Tap<T>(
         this Result<T> result,
         Action<T> action)
@@ -74,7 +100,13 @@ public static class ResultExtensions
         return result;
     }
 
-    // Convert Result to Result<T>
+    /// <summary>
+    /// Converts a result to a typed result with the specified value.
+    /// </summary>
+    /// <typeparam name="T">The type of the result value.</typeparam>
+    /// <param name="result">The result to convert.</param>
+    /// <param name="value">The value for the successful result.</param>
+    /// <returns>A successful <see cref="Result{T}"/> with the specified value, or a failed result with the original error.</returns>
     public static Result<T> ToResult<T>(this Result result, T value)
     {
         return result.IsSuccess
@@ -82,6 +114,13 @@ public static class ResultExtensions
             : Result<T>.Failure(result.Error);
     }
 
+    /// <summary>
+    /// Gets the value from a successful result or throws an exception if the result failed.
+    /// </summary>
+    /// <typeparam name="T">The type of the result value.</typeparam>
+    /// <param name="result">The result to extract the value from.</param>
+    /// <returns>The value of a successful result.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when the result is failed.</exception>
     public static T GetValueOrThrow<T>(this Result<T> result)
     {
         if (result.IsFailure)
