@@ -1,6 +1,6 @@
 {
   "$schema": "https://raw.githubusercontent.com/dotnet/Nerdbank.GitVersioning/main/src/NerdBank.GitVersioning/version.schema.json",
-  "version": "4.0.1-beta.1",
+  "version": "4.0.0-rc.3",
   "assemblyVersion": {
     "precision": "build"
   },
@@ -22,6 +22,6 @@
   "release": {
     "branchName": "release/v{version}",
     "versionIncrement": "build",
-    "firstUnstableTag": "beta"
+    "firstUnstableTag": "rc"
   }
 }
