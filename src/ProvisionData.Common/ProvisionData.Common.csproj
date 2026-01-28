@@ -9,6 +9,7 @@
         <Description>Basic classes and utilities used across all PDSI projects.</Description>
 		<PackageTags></PackageTags>
 		<IsPackable>true</IsPackable>
-	</PropertyGroup>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    </PropertyGroup>
 
 </Project>
