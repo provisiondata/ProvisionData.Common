@@ -3,10 +3,6 @@
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
 		<RootNamespace>ProvisionData.UnitTests</RootNamespace>
-		<AssemblyName>ProvisionData.Common.UnitTests</AssemblyName>
-		<Title>Provision Data</Title>
-		<Description>Just basic stuff</Description>
-
         <IsPackable>false</IsPackable>
 	</PropertyGroup>
 
