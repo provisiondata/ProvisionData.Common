@@ -1,6 +1,6 @@
 # GitHub Actions workflow to build, test, pack, and publish a .NET project to NuGet.org
 # Do not rename this file! You will break publishing and the badges in the README.md.
-name: BuildTestPackPublish
+name: Test and Publish
 
 on:
   push:
@@ -12,7 +12,7 @@ on:
 
 jobs:
   build-test-pack-publish:
-    runs-on: windows-latest
+    runs-on: self-hosted
     permissions:
       contents: read
       id-token: write  # enable GitHub OIDC token issuance for this job
