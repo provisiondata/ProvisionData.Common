@@ -17,9 +17,22 @@ using System.Diagnostics;
 namespace ProvisionData;
 // https://github.com/nhibernate/nhibernate-core/blob/master/src/NHibernate/Id/GuidCombGenerator.cs
 // GNU LESSER GENERAL PUBLIC LICENSE
+
+/// <summary>
+/// Generates sequential GUIDs (Comb GUIDs) using a combination of timestamp and random values.
+/// Sequential GUIDs are optimized for database insertion operations.
+/// </summary>
 [DebuggerStepThrough]
 public static class CombGuid
 {
+    /// <summary>
+    /// Generates a new sequential GUID (Comb GUID) that combines a timestamp with a random GUID.
+    /// </summary>
+    /// <returns>A new sequential GUID.</returns>
+    /// <remarks>
+    /// Sequential GUIDs are particularly useful in databases as they result in better performance
+    /// than random GUIDs when used as primary keys due to improved index locality.
+    /// </remarks>
     public static Guid NewGuid()
     {
         var guidArray = Guid.NewGuid().ToByteArray();

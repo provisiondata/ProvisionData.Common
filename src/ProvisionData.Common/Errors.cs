@@ -14,10 +14,44 @@
 
 namespace ProvisionData;
 
-// Typed errors for better categorisation
+/// <summary>
+/// Represents a configuration error.
+/// </summary>
+/// <param name="Code">A code identifying the configuration error.</param>
+/// <param name="Description">A human-readable description of the configuration error.</param>
 public sealed record ConfigurationError(String Code, String Description) : Error(Code, Description);
+
+/// <summary>
+/// Represents a conflict error.
+/// </summary>
+/// <param name="Code">A code identifying the conflict error.</param>
+/// <param name="Description">A human-readable description of the conflict error.</param>
 public sealed record ConflictError(String Code, String Description) : Error(Code, Description);
+
+/// <summary>
+/// Represents a not found error.
+/// </summary>
+/// <param name="Code">A code identifying the not found error.</param>
+/// <param name="Description">A human-readable description of the not found error.</param>
 public sealed record NotFoundError(String Code, String Description) : Error(Code, Description);
+
+/// <summary>
+/// Represents a business rule violation error.
+/// </summary>
+/// <param name="Code">A code identifying the business rule violation error.</param>
+/// <param name="Description">A human-readable description of the business rule violation error.</param>
 public sealed record BusinessRuleViolationError(String Code, String Description) : Error(Code, Description);
+
+/// <summary>
+/// Represents an unauthorized error.
+/// </summary>
+/// <param name="Code">A code identifying the unauthorized error.</param>
+/// <param name="Description">A human-readable description of the unauthorized error.</param>
 public sealed record UnauthorizedError(String Code, String Description) : Error(Code, Description);
+
+/// <summary>
+/// Represents a validation error.
+/// </summary>
+/// <param name="Code">A code identifying the validation error.</param>
+/// <param name="Description">A human-readable description of the validation error.</param>
 public sealed record ValidationError(String Code, String Description) : Error(Code, Description);

@@ -8,27 +8,37 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <LangVersion>latest</LangVersion>
-        <DebugType>full</DebugType>
-        <NoWarn>1701;1702;NU5105</NoWarn>
+        <DebugType>portable</DebugType>
+        <IsTrimmable>True</IsTrimmable>
+        <IsAotCompatible>True</IsAotCompatible>
+        <IsPublishable>False</IsPublishable>
+        <NoWarn>1701;1702</NoWarn>
 
         <!-- NuGet package metadata -->
         <Authors>ProvisionData</Authors>
         <Company>Provision Data Systems Inc.</Company>
         <Copyright>2026 Provision Data Systems Inc.</Copyright>
+        <RepositoryUrl>https://github.com/provisiondata/ProvisionData.Common.git</RepositoryUrl>
+        <PackageProjectUrl>https://github.com/provisiondata/ProvisionData.Common</PackageProjectUrl>
+        <RepositoryType>git</RepositoryType>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
         <ApplicationIcon>..\..\pdsi.ico</ApplicationIcon>
+        <PackageIcon>pdsi.png</PackageIcon>
         <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-        <RepositoryType>git</RepositoryType>
-        <RepositoryUrl>https://github.com/provisiondata/ProvisionData.Common.git</RepositoryUrl>
-        <IncludeSymbols>true</IncludeSymbols>
-        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-        <!--<GenerateDocumentationFile>false</GenerateDocumentationFile>-->
-        <PublishRepositoryUrl>true</PublishRepositoryUrl>
-        <EmbedUntrackedSources>true</EmbedUntrackedSources>
         <RepositoryBranch>main</RepositoryBranch>
         <RepositoryCommit>$(SourceRevisionId)</RepositoryCommit>
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+
+        <GeneratePackageOnBuild Condition="'$(Configuration)' == 'Debug'">false</GeneratePackageOnBuild>
+        <PublishRepositoryUrl Condition="'$(Configuration)' == 'Debug'">false</PublishRepositoryUrl>
+        <IncludeSymbols Condition="'$(Configuration)' == 'Debug'">false</IncludeSymbols>
+
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+        
+        <NuGetAuditMode>direct</NuGetAuditMode>
+        <NeutralLanguage>en</NeutralLanguage>
+        <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
 
         <!-- GitVersioning -->
         <GitVersionBaseDirectory>$(MSBuildThisFileDirectory)</GitVersionBaseDirectory>
@@ -38,15 +48,14 @@
 
     <!-- CI build settings -->
     <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
-        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
         <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
     </PropertyGroup>
     
     <!-- Ensure README and LICENSE are packed -->
     <ItemGroup>
-        <None Include="../../README.md" Pack="true" PackagePath="/" />
-        <None Include="../../LICENSE.md" Pack="true" PackagePath="/" />
-        <None Include="../../pdsi.png" Pack="true" PackagePath="\"/>
+        <None Include="$(MSBuildThisFileDirectory)README.md" Pack="true" PackagePath="/" />
+        <None Include="$(MSBuildThisFileDirectory)LICENSE.md" Pack="true" PackagePath="/" />
+        <None Include="$(MSBuildThisFileDirectory)pdsi.png" Pack="true" PackagePath="/"/>
     </ItemGroup>
 
     <ItemGroup>
@@ -54,9 +63,6 @@
             <PrivateAssets>all</PrivateAssets>
             <Version>3.9.50</Version>
         </PackageReference>
-    </ItemGroup>
-
-    <ItemGroup>
         <PackageReference Include="Microsoft.SourceLink.GitHub" Version="10.0.102">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

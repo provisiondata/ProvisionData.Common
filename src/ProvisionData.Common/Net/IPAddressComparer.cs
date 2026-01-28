@@ -14,11 +14,30 @@
 
 namespace ProvisionData.Net;
 
+/// <summary>
+/// Compares IPv4 addresses represented as strings by comparing each octet numerically.
+/// </summary>
 public class IPAddressComparer : IComparer<String>
 {
+    /// <summary>
+    /// Compares two IPv4 address strings.
+    /// </summary>
+    /// <param name="left">The first IPv4 address string to compare.</param>
+    /// <param name="right">The second IPv4 address string to compare.</param>
+    /// <returns>A value indicating the relative order of the addresses.</returns>
     Int32 IComparer<String>.Compare(String? left, String? right)
         => IPAddressComparer.Compare(left, right);
 
+    /// <summary>
+    /// Compares two IPv4 address strings.
+    /// </summary>
+    /// <param name="left">The first IPv4 address string to compare.</param>
+    /// <param name="right">The second IPv4 address string to compare.</param>
+    /// <returns>A value indicating the relative order of the addresses.</returns>
+    /// <remarks>
+    /// Null values are considered less than non-null values.
+    /// IP addresses are compared octet-by-octet from left to right.
+    /// </remarks>
     public static Int32 Compare(String? left, String? right)
     {
         if (left == null && right == null)
@@ -57,6 +76,11 @@ public class IPAddressComparer : IComparer<String>
         return l[0].CompareTo(r[0]);
     }
 
+    /// <summary>
+    /// Splits an IPv4 address string into four octets as integers.
+    /// </summary>
+    /// <param name="value">An IPv4 address string in dotted-quad notation.</param>
+    /// <returns>An array of four integers representing the octets.</returns>
     private static Int32[] Split(String value)
         => value.Split('.').Select(Int32.Parse).ToArray();
 }
