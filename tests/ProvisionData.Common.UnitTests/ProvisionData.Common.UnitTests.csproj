@@ -3,6 +3,7 @@
 	<PropertyGroup>
 		<RootNamespace>ProvisionData.UnitTests</RootNamespace>
         <IsPackable>false</IsPackable>
+        <UseAppHost>true</UseAppHost>
 	</PropertyGroup>
 
     <ItemGroup>

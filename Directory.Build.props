@@ -4,12 +4,11 @@
     <PropertyGroup>
 
         <TargetFrameworks>net10.0</TargetFrameworks>
-        
+
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <LangVersion>latest</LangVersion>
         <DebugType>full</DebugType>
-        <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
         <NoWarn>1701;1702;NU5105</NoWarn>
 
         <!-- NuGet package metadata -->
@@ -37,6 +36,12 @@
         <NBGV_ThisAssemblyIncludesPackageVersion>true</NBGV_ThisAssemblyIncludesPackageVersion>
     </PropertyGroup>
 
+    <!-- CI build settings -->
+    <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+    </PropertyGroup>
+    
     <!-- Ensure README and LICENSE are packed -->
     <ItemGroup>
         <None Include="../../README.md" Pack="true" PackagePath="/" />

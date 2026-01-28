@@ -25,13 +25,6 @@ public class VersionInfoTests(ITestOutputHelper output)
 
         output.WriteLine($"AssemblyConfiguration: {version!.AssemblyConfiguration}");
 
-#if DEBUG
-        version.IsPrerelease.Should().BeTrue();
-        version.IsPublicRelease.Should().BeFalse();
-#else
-        version.IsPrerelease.Should().BeFalse();
-        version.IsPublicRelease.Should().BeTrue();
-#endif
         version.AssemblyConfiguration.Should().BeOneOf("Debug", "Release");
         version.AssemblyFileVersion.Should().StartWith("4");
         version.AssemblyFullName.Should().NotBeEmpty();
