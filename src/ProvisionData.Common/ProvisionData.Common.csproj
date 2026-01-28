@@ -1,22 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-        
-		<RootNamespace>ProvisionData</RootNamespace>
-        <TargetFrameworks>net10.0</TargetFrameworks>
-
-		<IsPackable>true</IsPackable>
+	<PropertyGroup>        
+		<RootNamespace>ProvisionData</RootNamespace>        
 
         <!-- NuGet package metadata -->
         <PackageId>ProvisionData.Common</PackageId>
         <Title>Provision Data Core Library</Title>
         <Description>Basic classes and utilities used across all PDSI projects.</Description>
 		<PackageTags></PackageTags>
-
+		<IsPackable>true</IsPackable>
 	</PropertyGroup>
-
-    <ItemGroup>
-        <FrameworkReference Include="Microsoft.AspNetCore.App" />
-    </ItemGroup>
 
 </Project>

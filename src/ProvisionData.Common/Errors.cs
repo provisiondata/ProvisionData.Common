@@ -14,23 +14,10 @@
 
 namespace ProvisionData;
 
-public record Error(String Code, String Description)
-{
-    public static readonly Error None = new(String.Empty, String.Empty);
-
-    // Factory methods for common error types
-    public static Error NotFound(String code, String description)
-        => new NotFoundError(code, description);
-
-    public static Error Validation(String code, String description)
-        => new ValidationError(code, description);
-
-    public static Error Conflict(String code, String description)
-        => new ConflictError(code, description);
-
-    public static Error Unauthorized(String code, String description)
-        => new UnauthorizedError(code, description);
-
-    public static Error Failure(String code, String description)
-        => new(code, description);
-}
+// Typed errors for better categorisation
+public sealed record ConfigurationError(String Code, String Description) : Error(Code, Description);
+public sealed record ConflictError(String Code, String Description) : Error(Code, Description);
+public sealed record NotFoundError(String Code, String Description) : Error(Code, Description);
+public sealed record BusinessRuleViolationError(String Code, String Description) : Error(Code, Description);
+public sealed record UnauthorizedError(String Code, String Description) : Error(Code, Description);
+public sealed record ValidationError(String Code, String Description) : Error(Code, Description);

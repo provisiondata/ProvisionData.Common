@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <RootNamespace>ProvisionData</RootNamespace>
+
+        <!-- NuGet package metadata -->
+        <PackageId>ProvisionData.AspNetCore</PackageId>
+        <Title>Provision Data ASP.NET Library</Title>
+        <Description>Basic classes and utilities used across all PDSI projects.</Description>
+        <PackageTags></PackageTags>
+        <IsPackable>true</IsPackable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\ProvisionData.Common\ProvisionData.Common.csproj" />
+    </ItemGroup>
+
+</Project>

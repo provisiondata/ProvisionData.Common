@@ -16,10 +16,10 @@ using ProvisionData.Versioning;
 
 namespace ProvisionData.UnitTests;
 
-public class NerdBankGitVersioningTests(ITestOutputHelper output)
+public class VersionInfoTests(ITestOutputHelper output)
 {
     [Fact]
-    public void Works()
+    public void ForAssemblyContaining_ShouldReturn_VersionInfo()
     {
         var version = VersionInfo.ForAssemblyContaining<VersionInfo>();
 

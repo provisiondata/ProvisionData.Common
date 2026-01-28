@@ -36,7 +36,7 @@ public static class ResultWebApiExtensions
         };
     }
 
-    public static IResult ToApiResult(this Result result, object? successValue = null)
+    public static IResult ToApiResult(this Result result, Object? successValue = null)
     {
         if (result.IsSuccess)
             return successValue is not null
@@ -54,7 +54,7 @@ public static class ResultWebApiExtensions
 
     public static IResult ToCreatedResult<T>(
         this Result<T> result,
-        string location)
+        String location)
     {
         if (result.IsSuccess)
             return Results.Created(location, result.Value);
@@ -62,7 +62,7 @@ public static class ResultWebApiExtensions
         return result.ToApiResult();
     }
 
-    private static ProblemDetails CreateProblemDetails(Error error, int statusCode)
+    private static ProblemDetails CreateProblemDetails(Error error, Int32 statusCode)
         => new()
         {
             Status = statusCode,

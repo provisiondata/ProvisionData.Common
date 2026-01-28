@@ -18,11 +18,11 @@ namespace ProvisionData;
 
 public class Result
 {
-    public bool IsSuccess { get; }
-    public bool IsFailure => !IsSuccess;
+    public Boolean IsSuccess { get; }
+    public Boolean IsFailure => !IsSuccess;
     public Error Error { get; }
 
-    protected Result(bool isSuccess, Error error)
+    protected Result(Boolean isSuccess, Error error)
     {
         if (isSuccess && error != Error.None)
             throw new ArgumentException("Success result cannot have an error", nameof(error));
