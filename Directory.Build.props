@@ -9,9 +9,6 @@
         <Nullable>enable</Nullable>
         <LangVersion>latest</LangVersion>
         <DebugType>portable</DebugType>
-        <IsTrimmable>True</IsTrimmable>
-        <IsAotCompatible>True</IsAotCompatible>
-        <IsPublishable>False</IsPublishable>
         <NoWarn>1701;1702</NoWarn>
 
         <!-- NuGet package metadata -->
@@ -21,7 +18,6 @@
         <RepositoryUrl>https://github.com/provisiondata/ProvisionData.Common.git</RepositoryUrl>
         <PackageProjectUrl>https://github.com/provisiondata/ProvisionData.Common</PackageProjectUrl>
         <RepositoryType>git</RepositoryType>
-        <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
         <ApplicationIcon>..\..\pdsi.ico</ApplicationIcon>
         <PackageIcon>pdsi.png</PackageIcon>
@@ -51,9 +47,8 @@
         <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
     </PropertyGroup>
     
-    <!-- Ensure README and LICENSE are packed -->
+    <!-- Ensure LICENSE and Icon are packed -->
     <ItemGroup>
-        <None Include="$(MSBuildThisFileDirectory)README.md" Pack="true" PackagePath="/" />
         <None Include="$(MSBuildThisFileDirectory)LICENSE.md" Pack="true" PackagePath="/" />
         <None Include="$(MSBuildThisFileDirectory)pdsi.png" Pack="true" PackagePath="/"/>
     </ItemGroup>

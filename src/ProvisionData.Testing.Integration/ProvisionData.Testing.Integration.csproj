@@ -8,12 +8,17 @@
         <Title>Provision Data Core Library</Title>
         <Description>Basic classes and utilities used across all PDSI projects.</Description>
         <PackageTags></PackageTags>
+        <PackageReadmeFile>./README.md</PackageReadmeFile>
         <IsPackable>true</IsPackable>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
     </PropertyGroup>
 
     <ItemGroup>
         <Using Include="Xunit" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="./README.md" Pack="true" PackagePath="/" />
     </ItemGroup>
 
     <ItemGroup>

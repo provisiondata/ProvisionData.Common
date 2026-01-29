@@ -8,8 +8,17 @@
         <Title>Provision Data Core Library</Title>
         <Description>Basic classes and utilities used across all PDSI projects.</Description>
 		<PackageTags></PackageTags>
-		<IsPackable>true</IsPackable>
+        <PackageReadmeFile>./README.md</PackageReadmeFile>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <IsPackable>true</IsPackable>
+        <IsTrimmable>True</IsTrimmable>
+        <IsAotCompatible>True</IsAotCompatible>
+        <IsPublishable>False</IsPublishable>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
     </PropertyGroup>
 
+    <ItemGroup>
+        <None Include="./README.md" Pack="true" PackagePath="/" />
+    </ItemGroup>
+    
 </Project>
