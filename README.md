@@ -1,5 +1,8 @@
 # ProvisionData.Common
 
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/provisiondata/ProvisionData.Common/build.yml?link=https%3A%2F%2Fgithub.com%2Fprovisiondata%2FProvisionData.Common)
+![NuGet Version](https://img.shields.io/nuget/v/ProvisionData.Common?link=https%3A%2F%2Fgithub.com%2Fprovisiondata%2FProvisionData.Common)
+
 A collection of NuGet packages commonly used in software by [Provision Data Systems Inc.](https://provisiondata.com)
 
 ## Packages
