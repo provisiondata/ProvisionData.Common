@@ -12,7 +12,7 @@ on:
 
 jobs:
   build-test-pack-publish:
-    runs-on: [windows, self-hosted, x64]
+    runs-on: [Windows, self-hosted, X64]
     permissions:
       contents: read
       id-token: write  # enable GitHub OIDC token issuance for this job
