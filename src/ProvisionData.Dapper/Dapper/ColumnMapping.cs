@@ -15,7 +15,6 @@
 using Dapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 namespace ProvisionData.Dapper;
@@ -38,7 +37,7 @@ public static class ColumnMapping
     /// This method resolves all <see cref="INeedColumnMapping"/> services from the container
     /// and calls <see cref="INeedColumnMapping.ApplyMap"/> on each one to configure Dapper's type mappings.
     /// </remarks>
-    public static void MapColumns(IServiceProvider services)
+    public static void MapColumns(this IServiceProvider services)
     {
         var columnMaps = services.GetServices<INeedColumnMapping>();
         foreach (var map in columnMaps)
@@ -83,17 +82,13 @@ public static class ColumnMapping
     /// After calling this method, Dapper will use <see cref="ColumnMapAttribute.Name"/> values
     /// to match database columns to properties on type <typeparamref name="T"/>.
     /// </remarks>
-    public static void ApplyMap<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] T>()
+    public static void ApplyMap<T>()
     {
-        SqlMapper.SetTypeMap(
-            typeof(T),
-            new CustomPropertyTypeMap(
-                typeof(T),
-                (_, columnName) => typeof(T).GetProperties()
-                    .FirstOrDefault(prop =>
-                        prop.GetCustomAttribute<ColumnMapAttribute>(false)?.Name == columnName)!
-            )
-        );
+        Type type = typeof(T);
+
+        CustomPropertyTypeMap map = new(type, (_, columnName) => type.GetProperties().FirstOrDefault(prop => prop.GetCustomAttribute<ColumnMapAttribute>(false)?.Name == columnName)!);
+
+        SqlMapper.SetTypeMap(type, map);
     }
 
     /// <summary>
@@ -104,7 +99,7 @@ public static class ColumnMapping
     /// After calling this method, Dapper will use <see cref="ColumnMapAttribute.Name"/> values
     /// to match database columns to properties on the specified type.
     /// </remarks>
-    public static void ApplyMap([DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicProperties)] this Type type)
+    public static void ApplyMap(this Type type)
     {
         SqlMapper.SetTypeMap(
             type,

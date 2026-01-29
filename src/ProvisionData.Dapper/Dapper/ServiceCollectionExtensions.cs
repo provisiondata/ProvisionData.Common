@@ -13,7 +13,6 @@
 // program. If not, see <https://www.gnu.org/licenses/>.
 
 using Microsoft.Extensions.DependencyInjection;
-using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 namespace ProvisionData.Dapper;
@@ -43,7 +42,7 @@ public static class ServiceCollectionExtensions
     /// <typeparam name="T">The type whose containing assembly will be scanned for column mapping definitions.</typeparam>
     /// <param name="services">The service collection to which the column mapping services will be added.</param>
     /// <returns>The same <see cref="IServiceCollection"/> instance so that additional calls can be chained.</returns>
-    public static IServiceCollection AddColumnMapFromAssemblyContaining<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T>(this IServiceCollection services)
+    public static IServiceCollection AddColumnMapFromAssemblyContaining<T>(this IServiceCollection services)
     {
         return services.AddColumnMapFromAssembly(typeof(T).Assembly);
     }
