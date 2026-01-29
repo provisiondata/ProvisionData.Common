@@ -18,6 +18,28 @@ dotnet add package ProvisionData.Common
 
 ## Features
 
+### Dapper Column Mapping
+
+Decorate your class properties with the `[DapperColumn]` attribute to specify custom column mappings for Dapper ORM.
+
+```csharp
+public class Invoice : INeedColumnMapping<Invoice>
+{
+    [DapperColumn("id")]
+    public Int32 InvoiceNumber { get; set; }
+
+    public required InvoiceLineItem[] LineItems { get; set; } = [];
+
+    [DapperColumn("customer_fk")]
+    public Int32 CustomerId { get; set; }
+
+    [DapperColumn("site_number")]
+    public Int32 SiteNumber { get; set; }
+}
+```
+
+
+
 ### Result Pattern
 
 > [Result Pattern in C#]( https://adrianbailador.github.io/blog/44-result-pattern-)

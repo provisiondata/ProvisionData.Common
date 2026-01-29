@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <RootNamespace>ProvisionData</RootNamespace>
+
+        <!-- NuGet package metadata -->
+        <PackageId>ProvisionData.Dapper</PackageId>
+        <Title>Provision Data Dapper Mapper</Title>
+        <Description>Provides simple mapping of properties to database columns for use by Dapper.</Description>
+        <PackageTags>Dapper,Mapping</PackageTags>
+        <IsPackable>true</IsPackable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Dapper" Version="2.1.66" />
+        <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.9" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.2" />
+        <PackageReference Include="Scrutor" Version="7.0.0" />
+    </ItemGroup>
+
+</Project>
