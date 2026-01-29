@@ -1,4 +1,4 @@
-// Provision Data HaloPSA API Client
+// ProvisionData.Common
 // Copyright (C) 2026 Provision Data Systems Inc.
 //
 // This program is free software: you can redistribute it and/or modify it under the terms of
@@ -19,14 +19,14 @@ using Microsoft.Extensions.Hosting;
 namespace ProvisionData.Testing;
 
 /// <summary>
-/// Provides a concrete implementation of a test fixture that sets up a full .NET host with dependency injection for integration tests.
+/// Provides a concrete implementation of a test services that sets up a full .NET services with dependency injection for integration tests.
 /// </summary>
 public class IntegrationTestFixture : TestFixtureBase
 {
     private readonly IHost _host;
 
     /// <summary>
-    /// Gets the configuration for the test fixture.
+    /// Gets the configuration for the test services.
     /// </summary>
     public override IConfiguration Configuration { get; }
 
@@ -43,7 +43,7 @@ public class IntegrationTestFixture : TestFixtureBase
     /// Initializes a new instance of the <see cref="IntegrationTestFixture"/> class.
     /// </summary>
     /// <remarks>
-    /// This constructor builds the host and loads configuration from appsettings.Testing.json.
+    /// This constructor builds the services and loads configuration from appsettings.Testing.json.
     /// </remarks>
     public IntegrationTestFixture()
     {
@@ -63,14 +63,26 @@ public class IntegrationTestFixture : TestFixtureBase
         _host = builder.Build();
 
         Configuration = _host.Services.GetRequiredService<IConfiguration>();
+
+        InitializeFixture(_host.Services);
     }
 
     /// <summary>
-    /// Called to configure host application builder settings before the host is created.
+    /// Provides an opportunity to configure the services instance before tests run.
     /// </summary>
-    /// <param name="settings">The host application builder settings to configure.</param>
+    /// <remarks>Override this method in a derived class to apply custom configuration to the services. This
+    /// method is called before the tests are started, allowing for additional setup or service registration.</remarks>
+    /// <param name="services">The services to configure. Cannot be null.</param>
+    protected virtual void InitializeFixture(IServiceProvider services)
+    {
+    }
+
+    /// <summary>
+    /// Called to configure services application builder settings before the services is created.
+    /// </summary>
+    /// <param name="settings">The services application builder settings to configure.</param>
     /// <remarks>
-    /// Override this method in derived classes to customize host settings.
+    /// Override this method in derived classes to customize services settings.
     /// </remarks>
     protected virtual void ConfigureSettings(HostApplicationBuilderSettings settings)
     {
@@ -93,7 +105,7 @@ public class IntegrationTestFixture : TestFixtureBase
     }
 
     /// <summary>
-    /// Called to configure dependency injection services for the test fixture.
+    /// Called to configure dependency injection services for the test services.
     /// </summary>
     /// <param name="services">The service collection to configure.</param>
     /// <param name="configuration">The configuration instance to use.</param>
@@ -121,7 +133,7 @@ public class IntegrationTestFixture : TestFixtureBase
     }
 
     /// <summary>
-    /// Releases the unmanaged resources used by the test fixture and optionally releases the managed resources.
+    /// Releases the unmanaged resources used by the test services and optionally releases the managed resources.
     /// </summary>
     /// <param name="disposing"><see langword="true"/> to release both managed and unmanaged resources; <see langword="false"/> to release only unmanaged resources.</param>
     protected override void Dispose(Boolean disposing)
