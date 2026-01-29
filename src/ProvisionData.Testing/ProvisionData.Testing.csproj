@@ -8,9 +8,14 @@
         <Title>Provision Data Core Library</Title>
         <Description>Basic classes and utilities used across all PDSI projects.</Description>
         <PackageTags></PackageTags>
-        <IsPackable>false</IsPackable>
+        <PackageReadmeFile>./README.md</PackageReadmeFile>
+        <IsPackable>false</IsPackable> <!-- Temporary. Set to True when ready to pack. -->
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
     </PropertyGroup>
+
+    <ItemGroup>
+        <Using Include="Xunit" />
+    </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="coverlet.collector" Version="6.0.4" />
@@ -20,11 +25,11 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\ProvisionData.Common\ProvisionData.Common.csproj" />
+        <None Include="./README.md" Pack="true" PackagePath="/" />
     </ItemGroup>
 
     <ItemGroup>
-        <Using Include="Xunit" />
+        <ProjectReference Include="..\ProvisionData.Common\ProvisionData.Common.csproj" />
     </ItemGroup>
 
 </Project>

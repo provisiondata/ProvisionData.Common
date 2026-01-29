@@ -8,11 +8,19 @@
         <Title>Provision Data Library</Title>
         <Description>Enables using the Result pattern in ASP.NET Core applications.</Description>
         <PackageTags></PackageTags>
+        <PackageReadmeFile>./README.md</PackageReadmeFile>
         <IsPackable>true</IsPackable>
+        <IsTrimmable>True</IsTrimmable>
+        <IsAotCompatible>True</IsAotCompatible>
+        <IsPublishable>False</IsPublishable>
     </PropertyGroup>
 
     <ItemGroup>
         <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="./README.md" Pack="true" PackagePath="/" />
     </ItemGroup>
 
     <ItemGroup>

@@ -18,6 +18,13 @@ using System.Reflection;
 
 namespace ProvisionData.Dapper;
 
+/// <summary>
+/// Provides extension methods for registering column mapping in an IServiceCollection.
+/// </summary>
+/// <remarks>These extension methods simplify the process of scanning assemblies and registering all types that
+/// require column mapping into the dependency injection container. Each discovered implementation is registered as all
+/// of its implemented interfaces with a transient lifetime. These methods are typically used to automate service
+/// registration for applications that utilize column mapping.</remarks>
 public static class ServiceCollectionExtensions
 {
     /// <summary>
@@ -55,6 +62,8 @@ public static class ServiceCollectionExtensions
     /// <exception cref="ArgumentException">Thrown if no assemblies are provided in the assembly parameter.</exception>
     public static IServiceCollection AddColumnMapFromAssembly(this IServiceCollection services, params Assembly[] assembly)
     {
+        // TODO: Consider adding support for filtering by namespace or type name patterns, etc.
+
         ArgumentNullException.ThrowIfNull(assembly);
 
         if (assembly.Length == 0)

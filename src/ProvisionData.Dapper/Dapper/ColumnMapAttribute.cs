@@ -14,8 +14,32 @@
 
 namespace ProvisionData.Dapper;
 
+/// <summary>
+/// Specifies the database column name that a property should be mapped to when using Dapper.
+/// </summary>
+/// <remarks>
+/// Apply this attribute to properties in your model classes to define custom mappings between
+/// database column names and property names. This is useful when database column names differ
+/// from your C# property naming conventions.
+/// </remarks>
+/// <example>
+/// <code>
+/// public class Customer
+/// {
+///     [ColumnMap("customer_id")]
+///     public Int32 Id { get; set; }
+///
+///     [ColumnMap("full_name")]
+///     public String Name { get; set; }
+/// }
+/// </code>
+/// </example>
+/// <param name="columnName">The name of the database column to map to this property.</param>
 [AttributeUsage(AttributeTargets.Property)]
 public class ColumnMapAttribute(String columnName) : Attribute
 {
+    /// <summary>
+    /// Gets the database column name that this property maps to.
+    /// </summary>
     public String Name { get; } = columnName;
 }
