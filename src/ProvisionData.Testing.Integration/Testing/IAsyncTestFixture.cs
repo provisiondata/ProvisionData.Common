@@ -1,4 +1,4 @@
-// Provision Data HaloPSA API Client
+// ProvisionData.Common
 // Copyright (C) 2026 Provision Data Systems Inc.
 //
 // This program is free software: you can redistribute it and/or modify it under the terms of
@@ -12,32 +12,20 @@
 // You should have received a copy of the GNU Affero General Public License along with this
 // program. If not, see <https://www.gnu.org/licenses/>.
 
-using Microsoft.Extensions.Configuration;
-
 namespace ProvisionData.Testing;
 
 /// <summary>
 /// Defines the contract for test fixtures used in integration testing.
 /// </summary>
-public interface ITestFixture
+internal interface IAsyncTestFixture
 {
-    /// <summary>
-    /// Gets the configuration for the test fixture.
-    /// </summary>
-    IConfiguration Configuration { get; }
-
-    /// <summary>
-    /// Gets the dependency injection service provider for the test fixture.
-    /// </summary>
-    IServiceProvider Services { get; }
-
     /// <summary>
     /// Called before each test to initialize the test fixture.
     /// </summary>
-    void BeginTest();
+    ValueTask BeginTestAsync();
 
     /// <summary>
     /// Called after each test to clean up the test fixture.
     /// </summary>
-    void EndTest();
+    ValueTask EndTestAsync();
 }

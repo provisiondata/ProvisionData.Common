@@ -12,7 +12,6 @@
 // You should have received a copy of the GNU Affero General Public License along with this
 // program. If not, see <https://www.gnu.org/licenses/>.
 
-using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -23,15 +22,13 @@ namespace ProvisionData.Testing;
 /// </summary>
 /// <typeparam name="TSut">The type of the System Under Test (SUT) to be tested.</typeparam>
 /// <typeparam name="TFixture">The type of the test fixture providing services and configuration.</typeparam>
-public abstract class IntegrationTestBase<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TSut, TFixture> :
-    IClassFixture<TFixture>,
-    IDisposable
+public abstract class IntegrationTestBase<TSut, TFixture>
+    : DisposableBase, IClassFixture<TFixture>, IAsyncLifetime
     where TSut : notnull
-    where TFixture : class, ITestFixture
+    where TFixture : IntegrationTestFixture
 {
     private readonly TFixture _fixture;
     private readonly Lazy<TSut> _lazySut;
-    private Boolean _disposed;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="IntegrationTestBase{TSut, TFixture}"/> class.
@@ -40,8 +37,19 @@ public abstract class IntegrationTestBase<[DynamicallyAccessedMembers(Dynamicall
     public IntegrationTestBase(TFixture fixture)
     {
         _fixture = fixture;
-        _fixture.BeginTest();
         _lazySut = new Lazy<TSut>(() => _fixture.Services.GetRequiredService<TSut>());
+    }
+
+    /// <summary>
+    /// Asynchronously initializes the test fixture, preparing it for use in test execution.
+    /// </summary>
+    /// <returns>A task that represents the asynchronous initialization operation.</returns>
+    public async ValueTask InitializeAsync()
+    {
+        if (_fixture is IAsyncTestFixture asyncFixture)
+        {
+            await asyncFixture.BeginTestAsync();
+        }
     }
 
     /// <summary>
@@ -68,29 +76,13 @@ public abstract class IntegrationTestBase<[DynamicallyAccessedMembers(Dynamicall
     protected TSut SUT => _lazySut.Value;
 
     /// <summary>
-    /// Releases the unmanaged resources used by the test and optionally releases the managed resources.
+    /// Releases managed resources used by the test.
     /// </summary>
-    /// <param name="disposing"><see langword="true"/> to release both managed and unmanaged resources; <see langword="false"/> to release only unmanaged resources.</param>
-    protected virtual void Dispose(Boolean disposing)
+    protected async override ValueTask DisposeAsyncCore()
     {
-        if (!_disposed)
+        if (_fixture is IAsyncTestFixture asyncFixture)
         {
-            if (disposing)
-            {
-                // Managed resources are disposed by the fixture
-            }
-
-            _disposed = true;
+            await asyncFixture.EndTestAsync();
         }
-    }
-
-    /// <summary>
-    /// Releases all resources used by the test.
-    /// </summary>
-    public void Dispose()
-    {
-        _fixture.EndTest();
-        Dispose(disposing: true);
-        GC.SuppressFinalize(this);
     }
 }

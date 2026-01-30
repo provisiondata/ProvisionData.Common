@@ -21,23 +21,27 @@ namespace ProvisionData.Testing;
 /// <summary>
 /// Provides a concrete implementation of a test services that sets up a full .NET services with dependency injection for integration tests.
 /// </summary>
-public class IntegrationTestFixture : TestFixtureBase
+public class IntegrationTestFixture : DisposableBase, IAsyncTestFixture, IAsyncLifetime
 {
     private readonly IHost _host;
 
+    private IServiceScope? _testScope;
+    private Int32 _initializationCount;
+    private Int32 _beginCount;
+    private Int32 _disposalCount;
+    private Int32 _endCount;
+
     /// <summary>
-    /// Gets the configuration for the test services.
+    /// Gets the configuration for the test fixture.
     /// </summary>
-    public override IConfiguration Configuration { get; }
+    public IConfiguration Configuration { get; }
 
     /// <summary>
     /// Gets the dependency injection service provider for the current test scope.
     /// </summary>
-    /// <exception cref="InvalidOperationException">Thrown when <see cref="BeginTest"/> has not been called.</exception>
-    public override IServiceProvider Services => _testScope?.ServiceProvider
-        ?? throw new InvalidOperationException("Test scope has not been started. Call BeginTest() before accessing Services.");
-
-    private IServiceScope? _testScope;
+    /// <exception cref="InvalidOperationException">Thrown when the fixture has not been initialized.</exception>
+    public IServiceProvider Services => _testScope?.ServiceProvider
+        ?? throw new InvalidOperationException("Test scope has not been started. Call BeginTestAsync() before accessing Services.");
 
     /// <summary>
     /// Initializes a new instance of the <see cref="IntegrationTestFixture"/> class.
@@ -56,15 +60,23 @@ public class IntegrationTestFixture : TestFixtureBase
 
         var builder = Host.CreateEmptyApplicationBuilder(settings);
 
-        ConfigureTest(builder.Configuration);
+        ConfigureBuilder(builder.Configuration);
 
         ConfigureServices(builder.Services, builder.Configuration);
 
         _host = builder.Build();
 
         Configuration = _host.Services.GetRequiredService<IConfiguration>();
+    }
 
-        InitializeFixture(_host.Services);
+    /// <summary>
+    /// Configures the fixture before tests run. Implementers should override <see cref="InitializeFixtureAsync(IServiceProvider)"/> to customize initialization.
+    /// </summary>
+    public async ValueTask InitializeAsync()
+    {
+        _initializationCount++;
+        using var scope = _host.Services.CreateScope();
+        await InitializeFixtureAsync(scope.ServiceProvider);
     }
 
     /// <summary>
@@ -73,8 +85,9 @@ public class IntegrationTestFixture : TestFixtureBase
     /// <remarks>Override this method in a derived class to apply custom configuration to the services. This
     /// method is called before the tests are started, allowing for additional setup or service registration.</remarks>
     /// <param name="services">The services to configure. Cannot be null.</param>
-    protected virtual void InitializeFixture(IServiceProvider services)
+    protected virtual ValueTask InitializeFixtureAsync(IServiceProvider services)
     {
+        return ValueTask.CompletedTask;
     }
 
     /// <summary>
@@ -96,7 +109,7 @@ public class IntegrationTestFixture : TestFixtureBase
     /// By default, this loads appsettings.Testing.json from the current directory.
     /// Override this method in derived classes to customize configuration loading.
     /// </remarks>
-    protected virtual void ConfigureTest(IConfigurationBuilder builder)
+    protected virtual void ConfigureBuilder(IConfigurationBuilder builder)
     {
         var basePath = Directory.GetCurrentDirectory();
         builder.SetBasePath(basePath)
@@ -113,36 +126,46 @@ public class IntegrationTestFixture : TestFixtureBase
     /// Override this method in derived classes to register services needed for tests.
     /// </remarks>
     protected virtual void ConfigureServices(IServiceCollection services, IConfiguration configuration)
-    { }
+    {
+    }
 
     /// <summary>
     /// Called before each test to initialize the test scope.
     /// </summary>
-    public override void BeginTest()
+    ValueTask IAsyncTestFixture.BeginTestAsync()
     {
+        if (_initializationCount != 1)
+        {
+            throw new InvalidOperationException("Fixture has not been initialized. Ensure your fixture is overriding InitializeFixtureAsync(IServiceProvider) and not InitializeFixtureAsync() before beginning tests.");
+        }
+
+        _beginCount++;
         _testScope = _host.Services.CreateScope();
+        return ValueTask.CompletedTask;
     }
 
     /// <summary>
     /// Called after each test to dispose of the test scope.
     /// </summary>
-    public override void EndTest()
+    ValueTask IAsyncTestFixture.EndTestAsync()
     {
+        _endCount++;
         _testScope?.Dispose();
         _testScope = null;
+        return ValueTask.CompletedTask;
     }
 
     /// <summary>
-    /// Releases the unmanaged resources used by the test services and optionally releases the managed resources.
+    /// Asynchronously disposes resources used by the fixture.
     /// </summary>
-    /// <param name="disposing"><see langword="true"/> to release both managed and unmanaged resources; <see langword="false"/> to release only unmanaged resources.</param>
-    protected override void Dispose(Boolean disposing)
+    /// <returns>A ValueTask that represents the asynchronous dispose operation.</returns>
+    protected override ValueTask DisposeAsyncCore()
     {
-        if (disposing)
-        {
-            _host?.Dispose();
-        }
+        _disposalCount++;
+        _host?.Dispose();
 
-        base.Dispose(disposing);
+        Console.WriteLine($"IntegrationTestFixture disposed. InitializationCount={_initializationCount}, BeginCount={_beginCount}, EndCount={_endCount}, DisposalCount={_disposalCount}");
+
+        return base.DisposeAsyncCore();
     }
 }
