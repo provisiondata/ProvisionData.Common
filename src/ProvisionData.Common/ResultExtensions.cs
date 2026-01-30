@@ -116,11 +116,15 @@ public static class ResultExtensions
 
     /// <summary>
     /// Gets the value from a successful result or throws an exception if the result failed.
+    /// This method defeats the purpose of using the Result pattern. Only use it
+    /// for debugging or troubleshooting.
     /// </summary>
     /// <typeparam name="T">The type of the result value.</typeparam>
     /// <param name="result">The result to extract the value from.</param>
     /// <returns>The value of a successful result.</returns>
     /// <exception cref="InvalidOperationException">Thrown when the result is failed.</exception>
+    /// <remarks>
+    /// </remarks>
     public static T GetValueOrThrow<T>(this Result<T> result)
     {
         if (result.IsFailure)
@@ -128,4 +132,3 @@ public static class ResultExtensions
         return result.Value;
     }
 }
-

@@ -42,7 +42,7 @@ public class PdException : Exception
     /// Initializes a new instance of the <see cref="PdException"/> class with a specified
     /// error message.
     /// </summary>
-    public PdException(string? message) : base(message)
+    public PdException(String? message) : base(message)
     {
     }
 
@@ -52,7 +52,7 @@ public class PdException : Exception
     /// </summary>
     /// <param name="message">The error message that explains the reason for the exception.</param>
     /// <param name="error">An optional <see cref="Error"/> instance with structured error details.</param>
-    public PdException(string? message, Error? error) : base(message)
+    public PdException(String? message, Error? error) : base(message)
     {
         Error = error;
     }
@@ -63,7 +63,7 @@ public class PdException : Exception
     /// </summary>
     /// <param name="message">The error message that explains the reason for the exception.</param>
     /// <param name="innerException">The exception that is the cause of the current exception.</param>
-    public PdException(string? message, Exception? innerException) : base(message, innerException)
+    public PdException(String? message, Exception? innerException) : base(message, innerException)
     {
     }
 
@@ -75,7 +75,7 @@ public class PdException : Exception
     /// <param name="message">The error message that explains the reason for the exception.</param>
     /// <param name="error">An optional <see cref="Error"/> instance with structured error details.</param>
     /// <param name="innerException">The exception that is the cause of the current exception.</param>
-    public PdException(string? message, Error? error, Exception? innerException) : base(message, innerException)
+    public PdException(String? message, Error? error, Exception? innerException) : base(message, innerException)
     {
         Error = error;
     }

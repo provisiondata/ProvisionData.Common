@@ -18,6 +18,9 @@ dotnet add package ProvisionData.Common
 
 ## Features
 
+- [Result Pattern](#result-pattern) for handling operation outcomes
+- [Safe IAsyncDisposable and IDisposable pattern](#safe-iasyncdisposable-and-idisposable-pattern)
+
 ### Result Pattern
 
 > [Result Pattern in C#]( https://adrianbailador.github.io/blog/44-result-pattern-)
@@ -181,3 +184,60 @@ app.MapPost("/api/orders", (CreateOrderRequest request, OrderService orderServic
     );
 });
 ```
+
+### Safe IAsyncDisposable and IDisposable pattern
+
+```csharp
+public class MyTestFixture : DisposableBase
+{
+    private HttpClient? _httpClient;           // IDisposable only
+    private DbConnection? _dbConnection;       // IAsyncDisposable
+
+    protected override void Dispose(Boolean disposing)
+    {
+        if (disposing)
+        {
+            _httpClient?.Dispose();
+            _httpClient = null;
+        }
+ 
+        base.Dispose(disposing);
+    }
+
+    protected override async ValueTask DisposeAsyncCore()
+    {
+        if (_dbConnection is not null)
+        {
+            await _dbConnection.DisposeAsync().ConfigureAwait(false);
+            _dbConnection = null;
+        }
+
+        // HttpClient also implements IAsyncDisposable in modern .NET
+        if (_httpClient is IAsyncDisposable asyncDisposable)
+        {
+            await asyncDisposable.DisposeAsync().ConfigureAwait(false);
+        }
+        else
+        {
+            _httpClient?.Dispose();
+        }
+ 
+        _httpClient = null;
+
+        await base.DisposeAsyncCore().ConfigureAwait(false);
+    }
+}
+```
+
+**How does a derived class know which dispose to override?**
+
+| Scenario                                                            | Override             |
+| ------------------------------------------------------------------- | -------------------- |
+| Async resources (e.g., `IAsyncDisposable` fields, async streams)    | `DisposeAsyncCore()` |
+| Sync-only resources (e.g., `IDisposable` fields, unmanaged handles) | `Dispose(Boolean)`   |
+| Mixed resources                                                     | Both methods         |
+
+The key insight: when `DisposeAsync()` is called, it calls `DisposeAsyncCore()` first (cleaning
+managed resources async), then `Dispose(false)` (cleaning only unmanaged resources). This 
+prevents double-disposal of managed resources.
+
