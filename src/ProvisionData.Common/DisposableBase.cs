@@ -1,4 +1,4 @@
-// Provision Data HaloPSA API Client
+// ProvisionData.Common
 // Copyright (C) 2026 Provision Data Systems Inc.
 //
 // This program is free software: you can redistribute it and/or modify it under the terms of
@@ -12,56 +12,19 @@
 // You should have received a copy of the GNU Affero General Public License along with this
 // program. If not, see <https://www.gnu.org/licenses/>.
 
-using Microsoft.Extensions.Configuration;
-
-namespace ProvisionData.Testing;
+namespace ProvisionData;
 
 /// <summary>
 /// Provides a base implementation for test fixtures with standard disposal patterns.
 /// </summary>
-public abstract class TestFixtureBase : IDisposable, ITestFixture
+public abstract class DisposableBase : IAsyncDisposable, IDisposable
 {
-    private Boolean _disposedValue;
+    private Boolean _isDisposed;
 
     /// <summary>
-    /// Gets the configuration for the test fixture.
+    /// Gets a value indicating whether the object has been disposed.
     /// </summary>
-    public abstract IConfiguration Configuration { get; }
-
-    /// <summary>
-    /// Gets the dependency injection service provider for the test fixture.
-    /// </summary>
-    public abstract IServiceProvider Services { get; }
-
-    /// <summary>
-    /// Called before each test to initialize the test fixture.
-    /// </summary>
-    public abstract void BeginTest();
-
-    /// <summary>
-    /// Called after each test to clean up the test fixture.
-    /// </summary>
-    public abstract void EndTest();
-
-    /// <summary>
-    /// Releases the unmanaged resources used by the test fixture and optionally releases the managed resources.
-    /// </summary>
-    /// <param name="disposing"><see langword="true"/> to release both managed and unmanaged resources; <see langword="false"/> to release only unmanaged resources.</param>
-    /// <remarks>
-    /// Derived classes should override this method to dispose of their specific managed resources.
-    /// </remarks>
-    protected virtual void Dispose(Boolean disposing)
-    {
-        if (!_disposedValue)
-        {
-            if (disposing)
-            {
-                // Dispose managed resources in derived classes
-            }
-
-            _disposedValue = true;
-        }
-    }
+    protected Boolean IsDisposed => _isDisposed;
 
     /// <summary>
     /// Releases all resources used by the test fixture.
@@ -70,5 +33,51 @@ public abstract class TestFixtureBase : IDisposable, ITestFixture
     {
         Dispose(disposing: true);
         GC.SuppressFinalize(this);
+    }
+
+    /// <summary>
+    /// Asynchronously releases all resources used by the test fixture.
+    /// </summary>
+    /// <returns>A task that represents the asynchronous dispose operation.</returns>
+    public async ValueTask DisposeAsync()
+    {
+        await DisposeAsyncCore().ConfigureAwait(false);
+
+        // Dispose unmanaged resources only; managed already handled by DisposeAsyncCore
+        Dispose(disposing: false);
+        GC.SuppressFinalize(this);
+    }
+
+    /// <summary>
+    /// Releases the unmanaged resources used by the test fixture and optionally releases the managed resources.
+    /// </summary>
+    /// <param name="disposing"><see langword="true"/> to release both managed and unmanaged resources; <see langword="false"/> to release only unmanaged resources.</param>
+    /// <remarks>
+    /// Derived classes should override this method to dispose of their specific managed resources synchronously.
+    /// </remarks>
+    protected virtual void Dispose(Boolean disposing)
+    {
+        if (!_isDisposed)
+        {
+            if (disposing)
+            {
+                // Dispose managed resources in derived classes
+            }
+
+            _isDisposed = true;
+        }
+    }
+
+    /// <summary>
+    /// Asynchronously releases managed resources.
+    /// </summary>
+    /// <returns>A task that represents the asynchronous dispose operation.</returns>
+    /// <remarks>
+    /// Derived classes should override this method to asynchronously dispose of their specific managed resources.
+    /// </remarks>
+    protected virtual ValueTask DisposeAsyncCore()
+    {
+        // Dispose managed resources asynchronously in derived classes
+        return ValueTask.CompletedTask;
     }
 }

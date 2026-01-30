@@ -12,11 +12,9 @@
 // You should have received a copy of the GNU Affero General Public License along with this
 // program. If not, see <https://www.gnu.org/licenses/>.
 
-using System.Diagnostics.CodeAnalysis;
-
 namespace ProvisionData.Testing.Integration.Examples.Customers;
 
-public class CustomerTestBase<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TSUT>(CustomersFixture fixture)
+public class CustomerTestBase<TSUT>(CustomersFixture fixture)
     : IntegrationTestBase<TSUT, CustomersFixture>(fixture)
     where TSUT : class
 {

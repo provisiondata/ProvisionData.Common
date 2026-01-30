@@ -10,6 +10,8 @@
         <PackageTags></PackageTags>
         <PackageReadmeFile>./README.md</PackageReadmeFile>
         <IsPackable>true</IsPackable>
+        <IsTrimmable>false</IsTrimmable>
+        <IsAotCompatible>false</IsAotCompatible>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
     </PropertyGroup>
 
@@ -30,6 +32,10 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
         </PackageReference>
         <PackageReference Include="xunit.v3.extensibility.core" Version="3.2.2" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\ProvisionData.Common\ProvisionData.Common.csproj" />
     </ItemGroup>
 
 </Project>

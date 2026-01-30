@@ -37,21 +37,14 @@ public class CustomersFixture : IntegrationTestFixture
     }
 
     [SuppressMessage("AOT", "IL3050:Calling members annotated with 'RequiresDynamicCodeAttribute' may break functionality when AOT compiling.", Justification = "<Pending>")]
-    protected override void InitializeFixture(IServiceProvider services)
+    protected override async ValueTask InitializeFixtureAsync(IServiceProvider services)
     {
         // Ensure database schema exists
-        using var scope = services.CreateScope();
-        var dbContext = scope.ServiceProvider.GetRequiredService<CustomerDbContext>();
-        dbContext.Database.EnsureCreated();
-    }
+        var dbContext = services.GetRequiredService<CustomerDbContext>();
+        await dbContext.Database.EnsureCreatedAsync();
 
-    public override void BeginTest()
-    {
-        base.BeginTest();
-
-        // Clear data for test isolation
-        var dbContext = Services.GetRequiredService<CustomerDbContext>();
+        // And no data left from previous tests
         dbContext.Customers.RemoveRange(dbContext.Customers);
-        dbContext.SaveChanges();
+        await dbContext.SaveChangesAsync();
     }
 }

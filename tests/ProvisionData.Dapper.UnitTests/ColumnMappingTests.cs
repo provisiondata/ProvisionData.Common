@@ -68,9 +68,9 @@ public class ColumnMappingTests : IAsyncLifetime
 
         // Insert test data using database column names
         var productId = 1;
-        const string productName = "Widget";
-        const decimal unitPrice = 19.99m;
-        const int quantityInStock = 100;
+        const String productName = "Widget";
+        const Decimal unitPrice = 19.99m;
+        const Int32 quantityInStock = 100;
 
         await _connection.ExecuteAsync("""
             INSERT INTO products (id, product_name, unit_price, quantity_in_stock)
@@ -101,9 +101,9 @@ public class ColumnMappingTests : IAsyncLifetime
         typeof(Product).ApplyMap();
 
         // Insert test data
-        const string productName = "Gadget";
-        const decimal unitPrice = 29.99m;
-        const int quantityInStock = 50;
+        const String productName = "Gadget";
+        const Decimal unitPrice = 29.99m;
+        const Int32 quantityInStock = 50;
 
         await _connection.ExecuteAsync("""
             INSERT INTO products (product_name, unit_price, quantity_in_stock)

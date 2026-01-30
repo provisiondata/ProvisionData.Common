@@ -36,9 +36,9 @@ The framework uses a two-level lifecycle model:
    - Registers all services in the DI container
 
 2. **Test Level** - Created for each individual test method
-   - Creates a new service scope per test via `BeginTest()`
-   - Provides isolated instances of scoped services
-   - Disposes the scope after test completion via `EndTest()`
+- Creates a new service scope per test via `InitializeAsync()`
+- Provides isolated instances of scoped services
+- Disposes the scope after test completion via `DisposeAsync()`
 
 This design ensures expensive operations (like loading configuration or setting up database connections)
 happen once, while each test gets fresh instances of scoped dependencies for proper isolation.
@@ -87,24 +87,11 @@ public class CustomersFixture : IntegrationTestFixture
     }
 
     // One-time initialization per test class
-    protected override void InitializeFixture(IServiceProvider services)
+    protected override async ValueTask InitializeFixtureAsync(IServiceProvider services)
     {
         // Ensure database schema exists
-        using var scope = services.CreateScope();
-        var dbContext = scope.ServiceProvider.GetRequiredService<CustomerDbContext>();
-        dbContext.Database.EnsureCreated();
-    }
-
-    // Per-test initialization runs before each test. 
-    // IMPORTANT: If you override this, be sure to call base.BeginTest().
-    public override void BeginTest()
-    {
-        base.BeginTest();
-
-        // Clear data for test isolation
-        var dbContext = Services.GetRequiredService<CustomerDbContext>();
-        dbContext.Customers.RemoveRange(dbContext.Customers);
-        dbContext.SaveChanges();
+        var dbContext = services.GetRequiredService<CustomerDbContext>();
+        await dbContext.Database.EnsureCreatedAsync();
     }
 }
 ```
@@ -124,7 +111,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace ProvisionData.Testing.Integration.Examples.Customers;
 
-public class CustomerTestBase<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TSUT>(
+public class CustomerTestBase<TSUT>(
     CustomersFixture fixture)
     : IntegrationTestBase<TSUT, CustomersFixture>(fixture)
     where TSUT : class
@@ -169,8 +156,8 @@ public class CustomerServiceTests(CustomersFixture fixture)
 
 **Why pass the fixture to the base constructor?**
 
-The base class needs the fixture to access the service provider and configuration. It also 
-automatically calls `BeginTest()` during construction and `EndTest()` during disposal,
+The base class needs the fixture to access the service provider and configuration. The xUnit framework
+automatically calls `InitializeAsync()` before each test and `DisposeAsync()` after each test,
 ensuring each test gets a fresh service scope.
 
 ### Step 4: Create Configuration File
@@ -201,26 +188,25 @@ name.
 
 ### Custom Fixture Initialization
 
-Override `InitializeFixture` to perform one-time setup after the host is built but before tests run:
+Override `InitializeFixtureAsync` to perform one-time setup after the host is built but before tests run:
 
 ```csharp
 public class CustomersFixture : IntegrationTestFixture
 {
-    protected override void InitializeFixture(IServiceProvider services)
+    protected override async ValueTask InitializeFixtureAsync(IServiceProvider services)
     {
         // Ensure database exists and is migrated
-        using var scope = services.CreateScope();
-        var dbContext = scope.ServiceProvider.GetRequiredService<CustomerDbContext>();
-        dbContext.Database.EnsureCreated();
+        var dbContext = services.GetRequiredService<CustomerDbContext>();
+        await dbContext.Database.EnsureCreatedAsync();
     }
 }
 ```
 
-**Why use `InitializeFixture`?**
+**Why use `InitializeFixtureAsync`?**
 
 This runs once per test class (not per test), making it ideal for expensive operations like database
-migrations or seeding test data. You get a service provider so you can resolve services, but you must
-create your own scope since the fixture doesn't have a test scope yet.
+migrations or seeding test data. The service provider passed to this method already has a scope created,
+so you can directly resolve services without creating your own scope.
 
 ### Accessing Services Directly
 
@@ -256,14 +242,14 @@ services directly keeps tests focused and reduces unnecessary dependencies.
 
 ### Custom Configuration Loading
 
-Override `ConfigureTest` to customize how configuration is loaded:
+Override `ConfigureBuilder` to customize how configuration is loaded:
 
 ```csharp
 public class CustomConfigurationFixture : IntegrationTestFixture
 {
-    protected override void ConfigureTest(IConfigurationBuilder builder)
+    protected override void ConfigureBuilder(IConfigurationBuilder builder)
     {
-        base.ConfigureTest(builder); // Load appsettings.Testing.json
+        base.ConfigureBuilder(builder); // Load appsettings.Testing.json
         
         // Add additional configuration sources
         builder.AddJsonFile("appsettings.TestOverrides.json", optional: true);
@@ -277,7 +263,7 @@ public class CustomConfigurationFixture : IntegrationTestFixture
 }
 ```
 
-**Why override `ConfigureTest`?**
+**Why override `ConfigureBuilder`?**
 
 Different test scenarios may need different configurations. For example, you might want to test with
 various API endpoints, feature flags, or environment variables.
@@ -336,7 +322,7 @@ Each test gets its own service scope, which means:
 [Fact]
 public void EachTest_GetsIsolatedScopedServices()
 {
-    // This scope is created by BeginTest() before the test runs
+    // This scope is created by InitializeAsync() before the test runs
     var service1 = Services.GetRequiredService<CustomerApplicationService>();
     var service2 = Services.GetRequiredService<CustomerApplicationService>();
     
@@ -480,32 +466,30 @@ verification.
 
 ### 4. Clean Up Test Data
 
-```csharp
-public class CustomersFixture : IntegrationTestFixture
-{
-    protected override void InitializeFixture(IServiceProvider services)
-    {
-        using var scope = services.CreateScope();
-        var dbContext = scope.ServiceProvider.GetRequiredService<CustomerDbContext>();
-        dbContext.Database.EnsureCreated();
-    }
+For test data cleanup, create a derived test base class that performs cleanup in `InitializeAsync`:
 
-    public override void BeginTest()
+```csharp
+public class CustomerTestBase<TSUT>(CustomersFixture fixture)
+    : IntegrationTestBase<TSUT, CustomersFixture>(fixture)
+    where TSUT : class
+{
+    public override async ValueTask InitializeAsync()
     {
-        base.BeginTest();
+        await base.InitializeAsync();
         
         // Clear data before each test for complete isolation
         var dbContext = Services.GetRequiredService<CustomerDbContext>();
         dbContext.Customers.RemoveRange(dbContext.Customers);
-        dbContext.SaveChanges();
+        await dbContext.SaveChangesAsync();
     }
 }
 ```
 
-**Why override `BeginTest`?**
+**Why override `InitializeAsync` in the test base?**
 
 While service scopes provide isolation for service instances, database data persists across tests.
-Cleaning up data in `BeginTest` ensures each test starts with a known state.
+Cleaning up data in `InitializeAsync` ensures each test starts with a known state. By placing this
+in a test base class, all tests inheriting from it automatically get the cleanup behavior.
 
 ### 5. Use CancellationToken
 
@@ -530,10 +514,10 @@ It also gives you the opportunity to ensure that your code properly supports can
 
 ### "Test scope has not been started"
 
-**Problem:** Accessing `Services` before `BeginTest()` is called.
+**Problem:** Accessing `Services` before `InitializeAsync()` is called.
 
-**Solution:** Don't access `Services` or `SUT` in the test constructor. Use test methods or setup
-methods that run after construction.
+**Solution:** Don't access `Services` or `SUT` in the test constructor. Use test methods which run after
+xUnit's `InitializeAsync()` lifecycle method completes.
 
 ### Tests Affecting Each Other
 
@@ -543,7 +527,7 @@ methods that run after construction.
 
 **Solution:** 
 - Use scoped services instead of singletons for stateful dependencies
-- Override `BeginTest()` to clean up shared resources before each test
+- Override `InitializeAsync()` in your test base class to clean up shared resources before each test
 - Ensure each test operates on unique data
 
 ### Cannot Resolve Service
@@ -600,31 +584,29 @@ public class CustomersFixture : IntegrationTestFixture
         services.AddScoped<CustomerApplicationService>();
     }
 
-    protected override void InitializeFixture(IServiceProvider services)
+    protected override async ValueTask InitializeFixtureAsync(IServiceProvider services)
     {
         // Ensure database schema exists
-        using var scope = services.CreateScope();
-        var dbContext = scope.ServiceProvider.GetRequiredService<CustomerDbContext>();
-        dbContext.Database.EnsureCreated();
-    }
-
-    public override void BeginTest()
-    {
-        base.BeginTest();
-
-        // Clear data for test isolation
-        var dbContext = Services.GetRequiredService<CustomerDbContext>();
-        dbContext.Customers.RemoveRange(dbContext.Customers);
-        dbContext.SaveChanges();
+        var dbContext = services.GetRequiredService<CustomerDbContext>();
+        await dbContext.Database.EnsureCreatedAsync();
     }
 }
 
-// Test Base Class (optional, for better organization)
-public class CustomerTestBase<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] TSUT>(
+// Test Base Class (optional, for better organization and cleanup)
+public class CustomerTestBase<TSUT>(
     CustomersFixture fixture)
     : IntegrationTestBase<TSUT, CustomersFixture>(fixture)
     where TSUT : class
 {
+    public override async ValueTask InitializeAsync()
+    {
+        await base.InitializeAsync();
+        
+        // Clear data for test isolation
+        var dbContext = Services.GetRequiredService<CustomerDbContext>();
+        dbContext.Customers.RemoveRange(dbContext.Customers);
+        await dbContext.SaveChangesAsync();
+    }
 }
 
 // Tests
