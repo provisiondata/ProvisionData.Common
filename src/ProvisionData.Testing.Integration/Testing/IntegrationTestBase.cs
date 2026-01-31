@@ -34,9 +34,11 @@ public abstract class IntegrationTestBase<TSut, TFixture>
     /// Initializes a new instance of the <see cref="IntegrationTestBase{TSut, TFixture}"/> class.
     /// </summary>
     /// <param name="fixture">The test fixture providing services and configuration.</param>
-    public IntegrationTestBase(TFixture fixture)
+    /// <param name="output">The test output helper for logging test output.</param>
+    public IntegrationTestBase(TFixture fixture, ITestOutputHelper output)
     {
         _fixture = fixture;
+        _fixture.TestOutputHelper = output;
         _lazySut = new Lazy<TSut>(() => _fixture.Services.GetRequiredService<TSut>());
     }
 

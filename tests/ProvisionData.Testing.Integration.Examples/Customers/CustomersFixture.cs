@@ -15,7 +15,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System.Diagnostics.CodeAnalysis;
 
 namespace ProvisionData.Testing.Integration.Examples.Customers;
 
@@ -36,7 +35,6 @@ public class CustomersFixture : IntegrationTestFixture
         services.AddScoped<CustomerApplicationService>();
     }
 
-    [SuppressMessage("AOT", "IL3050:Calling members annotated with 'RequiresDynamicCodeAttribute' may break functionality when AOT compiling.", Justification = "<Pending>")]
     protected override async ValueTask InitializeFixtureAsync(IServiceProvider services)
     {
         // Ensure database schema exists

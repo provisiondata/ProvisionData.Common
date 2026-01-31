@@ -14,8 +14,8 @@
 
 namespace ProvisionData.Testing.Integration.Examples.Customers;
 
-public class CustomerTestBase<TSUT>(CustomersFixture fixture)
-    : IntegrationTestBase<TSUT, CustomersFixture>(fixture)
+public class CustomerTestBase<TSUT>(CustomersFixture fixture, ITestOutputHelper output)
+    : IntegrationTestBase<TSUT, CustomersFixture>(fixture, output)
     where TSUT : class
 {
 }

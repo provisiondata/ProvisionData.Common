@@ -13,6 +13,7 @@
 // program. If not, see <https://www.gnu.org/licenses/>.
 
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Riok.Mapperly.Abstractions;
 using System.Diagnostics.CodeAnalysis;
 
@@ -93,15 +94,18 @@ public interface ICustomerApplicationService
     Task<Result> UpdateCustomerAsync(UpdateCustomerCommand command, CancellationToken cancellationToken);
 }
 
-public class CustomerApplicationService(ICustomerRepository repository) : ICustomerApplicationService
+public class CustomerApplicationService(ICustomerRepository repository, ILogger<CustomerApplicationService> logger) : ICustomerApplicationService
 {
     private readonly ICustomerRepository _repository = repository;
+    private readonly ILogger<CustomerApplicationService> _logger = logger;
 
     public async Task<Result<Guid>> CreateCustomerAsync(CreateCustomerCommand command, CancellationToken cancellationToken)
     {
         var entity = command.ToEntity();
 
+        _logger.LogInformation("Creating customer with Id '{CustomerId}'", entity.Id);
         var result = await _repository.CreateAsync(entity, cancellationToken);
+        _logger.LogInformation("Created customer with Id '{CustomerId}'", entity.Id);
 
         return result;
     }

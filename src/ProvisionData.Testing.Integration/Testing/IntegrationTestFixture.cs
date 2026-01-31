@@ -12,9 +12,11 @@
 // You should have received a copy of the GNU Affero General Public License along with this
 // program. If not, see <https://www.gnu.org/licenses/>.
 
+using Meziantou.Extensions.Logging.Xunit.v3;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace ProvisionData.Testing;
 
@@ -23,7 +25,7 @@ namespace ProvisionData.Testing;
 /// </summary>
 public class IntegrationTestFixture : DisposableBase, IAsyncTestFixture, IAsyncLifetime
 {
-    private readonly IHost _host;
+    private IHost? _host;
 
     private IServiceScope? _testScope;
     private Int32 _initializationCount;
@@ -32,9 +34,16 @@ public class IntegrationTestFixture : DisposableBase, IAsyncTestFixture, IAsyncL
     private Int32 _endCount;
 
     /// <summary>
+    /// Gets or sets the test output helper used to capture and display test output.
+    /// </summary>
+    /// <remarks>Use this property to write diagnostic messages or additional information during test
+    /// execution. The value may be null if no output helper is available.</remarks>
+    public ITestOutputHelper? TestOutputHelper { get; set; }
+
+    /// <summary>
     /// Gets the configuration for the test fixture.
     /// </summary>
-    public IConfiguration Configuration { get; }
+    public IConfiguration Configuration { get; private set; } = default!;
 
     /// <summary>
     /// Gets the dependency injection service provider for the current test scope.
@@ -44,13 +53,12 @@ public class IntegrationTestFixture : DisposableBase, IAsyncTestFixture, IAsyncL
         ?? throw new InvalidOperationException("Test scope has not been started. Call BeginTestAsync() before accessing Services.");
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="IntegrationTestFixture"/> class.
+    /// Configures the fixture before tests run. Implementers should override <see cref="InitializeFixtureAsync(IServiceProvider)"/> to customize initialization.
     /// </summary>
-    /// <remarks>
-    /// This constructor builds the services and loads configuration from appsettings.Testing.json.
-    /// </remarks>
-    public IntegrationTestFixture()
+    public async ValueTask InitializeAsync()
     {
+        _initializationCount++;
+
         var settings = new HostApplicationBuilderSettings()
         {
             EnvironmentName = "Testing"
@@ -62,32 +70,18 @@ public class IntegrationTestFixture : DisposableBase, IAsyncTestFixture, IAsyncL
 
         ConfigureBuilder(builder.Configuration);
 
+        ConfigureLogging(builder.Logging);
+
         ConfigureServices(builder.Services, builder.Configuration);
+
+        builder.Services.AddSingleton<ILoggerProvider>((sp) => new XUnitLoggerProvider(TestOutputHelper));
 
         _host = builder.Build();
 
         Configuration = _host.Services.GetRequiredService<IConfiguration>();
-    }
 
-    /// <summary>
-    /// Configures the fixture before tests run. Implementers should override <see cref="InitializeFixtureAsync(IServiceProvider)"/> to customize initialization.
-    /// </summary>
-    public async ValueTask InitializeAsync()
-    {
-        _initializationCount++;
         using var scope = _host.Services.CreateScope();
         await InitializeFixtureAsync(scope.ServiceProvider);
-    }
-
-    /// <summary>
-    /// Provides an opportunity to configure the services instance before tests run.
-    /// </summary>
-    /// <remarks>Override this method in a derived class to apply custom configuration to the services. This
-    /// method is called before the tests are started, allowing for additional setup or service registration.</remarks>
-    /// <param name="services">The services to configure. Cannot be null.</param>
-    protected virtual ValueTask InitializeFixtureAsync(IServiceProvider services)
-    {
-        return ValueTask.CompletedTask;
     }
 
     /// <summary>
@@ -118,6 +112,15 @@ public class IntegrationTestFixture : DisposableBase, IAsyncTestFixture, IAsyncL
     }
 
     /// <summary>
+    /// Configures the application's logging services.
+    /// </summary>
+    /// <remarks>Override this method to customize logging configuration for the application. By default, no
+    /// additional configuration is applied.</remarks>
+    /// <param name="logging">The <see cref="ILoggingBuilder"/> instance used to configure logging providers and settings.</param>
+    /// <returns>The <see cref="ILoggingBuilder"/> instance after applying any custom logging configuration.</returns>
+    protected virtual ILoggingBuilder ConfigureLogging(ILoggingBuilder logging) => logging;
+
+    /// <summary>
     /// Called to configure dependency injection services for the test services.
     /// </summary>
     /// <param name="services">The service collection to configure.</param>
@@ -130,13 +133,24 @@ public class IntegrationTestFixture : DisposableBase, IAsyncTestFixture, IAsyncL
     }
 
     /// <summary>
+    /// Provides an opportunity to configure the services instance before tests run.
+    /// </summary>
+    /// <remarks>Override this method in a derived class to apply custom configuration to the services. This
+    /// method is called before the tests are started, allowing for additional setup or service registration.</remarks>
+    /// <param name="services">The services to configure. Cannot be null.</param>
+    protected virtual ValueTask InitializeFixtureAsync(IServiceProvider services)
+    {
+        return ValueTask.CompletedTask;
+    }
+
+    /// <summary>
     /// Called before each test to initialize the test scope.
     /// </summary>
     ValueTask IAsyncTestFixture.BeginTestAsync()
     {
-        if (_initializationCount != 1)
+        if (_initializationCount != 1 || _host is null)
         {
-            throw new InvalidOperationException("Fixture has not been initialized. Ensure your fixture is overriding InitializeFixtureAsync(IServiceProvider) and not InitializeFixtureAsync() before beginning tests.");
+            throw new InvalidOperationException("Fixture has not been initialized. Ensure your fixture is overriding InitializeFixtureAsync(IServiceProvider) and not InitializeAsync() before beginning tests.");
         }
 
         _beginCount++;

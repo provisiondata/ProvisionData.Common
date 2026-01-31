@@ -16,8 +16,8 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace ProvisionData.Testing.Integration.Examples.Customers;
 
-public class CustomerServiceTests(CustomersFixture fixture)
-    : CustomerTestBase<CustomerApplicationService>(fixture)
+public class CustomerServiceTests(CustomersFixture fixture, ITestOutputHelper output)
+    : CustomerTestBase<CustomerApplicationService>(fixture, output)
 {
     [Fact]
     public async Task CreateCustomer_WithValidData_ShouldReturn_Success()

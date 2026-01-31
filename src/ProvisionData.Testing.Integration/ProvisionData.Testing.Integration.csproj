@@ -25,6 +25,7 @@
 
     <ItemGroup>
         <PackageReference Include="coverlet.collector" Version="6.0.4" />
+        <PackageReference Include="Meziantou.Extensions.Logging.Xunit.v3" Version="1.1.23" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.2" />
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.2" />
         <PackageReference Include="xunit.analyzers" Version="1.27.0">
