@@ -20,15 +20,17 @@ namespace ProvisionData.Testing;
 /// <summary>
 /// Provides a base class for integration tests that use a test fixture with dependency injection.
 /// </summary>
-/// <typeparam name="TSut">The type of the System Under Test (SUT) to be tested.</typeparam>
 /// <typeparam name="TFixture">The type of the test fixture providing services and configuration.</typeparam>
-public abstract class IntegrationTestBase<TSut, TFixture>
+public abstract class IntegrationTestBase<TFixture>
     : DisposableBase, IClassFixture<TFixture>, IAsyncLifetime
-    where TSut : notnull
     where TFixture : IntegrationTestFixture
 {
-    private readonly TFixture _fixture;
-    private readonly Lazy<TSut> _lazySut;
+    /// <summary>
+    /// Gets the shared test fixture instance for the current test context.
+    /// </summary>
+    /// <remarks>The fixture provides shared setup, resources, or state that can be reused across multiple
+    /// tests. Use this property to access common dependencies or configuration required by the test class.</remarks>
+    protected TFixture Fixture { get; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="IntegrationTestBase{TSut, TFixture}"/> class.
@@ -37,9 +39,8 @@ public abstract class IntegrationTestBase<TSut, TFixture>
     /// <param name="output">The test output helper for logging test output.</param>
     public IntegrationTestBase(TFixture fixture, ITestOutputHelper output)
     {
-        _fixture = fixture;
-        _fixture.TestOutputHelper = output;
-        _lazySut = new Lazy<TSut>(() => _fixture.Services.GetRequiredService<TSut>());
+        Fixture = fixture;
+        Fixture.TestOutputHelper = output;
     }
 
     /// <summary>
@@ -48,7 +49,7 @@ public abstract class IntegrationTestBase<TSut, TFixture>
     /// <returns>A task that represents the asynchronous initialization operation.</returns>
     public async ValueTask InitializeAsync()
     {
-        if (_fixture is IAsyncTestFixture asyncFixture)
+        if (Fixture is IAsyncTestFixture asyncFixture)
         {
             await asyncFixture.BeginTestAsync();
         }
@@ -57,17 +58,55 @@ public abstract class IntegrationTestBase<TSut, TFixture>
     /// <summary>
     /// Gets the configuration from the test fixture.
     /// </summary>
-    protected IConfiguration Configuration => _fixture.Configuration;
+    protected IConfiguration Configuration => Fixture.Configuration;
 
     /// <summary>
     /// Gets the dependency injection service provider from the test fixture.
     /// </summary>
-    protected IServiceProvider Services => _fixture.Services;
+    protected IServiceProvider Services => Fixture.Services;
 
     /// <summary>
     /// Gets the cancellation token from the current test context.
     /// </summary>
     protected CancellationToken CancellationToken => TestContext.Current.CancellationToken;
+
+    /// <summary>
+    /// Releases managed resources used by the test.
+    /// </summary>
+    protected async override ValueTask DisposeAsyncCore()
+    {
+        if (Fixture is IAsyncTestFixture asyncFixture)
+        {
+            await asyncFixture.EndTestAsync();
+        }
+    }
+}
+
+/// <summary>
+/// Provides a base class for integration tests that test a specific service, Service Under Test (SUT), and a test fixture with
+/// configured service dependencies.
+/// </summary>
+/// <remarks>This class supports integration testing scenarios where the SUT is resolved from the test fixture's
+/// service provider. The SUT instance is created lazily and is available to derived test classes via the protected SUT
+/// property.</remarks>
+/// <typeparam name="TSut">The type of the System Under Test (SUT) to be resolved from the service provider. Must not be null.</typeparam>
+/// <typeparam name="TFixture">The type of the integration test fixture that supplies services and configuration for the test environment.</typeparam>
+public abstract class IntegrationTestBase<TSut, TFixture>
+    : IntegrationTestBase<TFixture>
+    where TSut : notnull
+    where TFixture : IntegrationTestFixture
+{
+    private readonly Lazy<TSut> _lazySut;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="IntegrationTestBase{TSut, TFixture}"/> class.
+    /// </summary>
+    /// <param name="fixture">The test fixture providing services and configuration.</param>
+    /// <param name="output">The test output helper for logging test output.</param>
+    public IntegrationTestBase(TFixture fixture, ITestOutputHelper output) : base(fixture, output)
+    {
+        _lazySut = new Lazy<TSut>(() => Fixture.Services.GetRequiredService<TSut>());
+    }
 
     /// <summary>
     /// Gets the System Under Test (SUT) instance from the service provider.
@@ -76,15 +115,4 @@ public abstract class IntegrationTestBase<TSut, TFixture>
     /// The SUT is lazily instantiated on first access.
     /// </remarks>
     protected TSut SUT => _lazySut.Value;
-
-    /// <summary>
-    /// Releases managed resources used by the test.
-    /// </summary>
-    protected async override ValueTask DisposeAsyncCore()
-    {
-        if (_fixture is IAsyncTestFixture asyncFixture)
-        {
-            await asyncFixture.EndTestAsync();
-        }
-    }
 }

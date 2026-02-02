@@ -103,9 +103,7 @@ public class CustomerApplicationService(ICustomerRepository repository, ILogger<
     {
         var entity = command.ToEntity();
 
-        _logger.LogInformation("Creating customer with Id '{CustomerId}'", entity.Id);
         var result = await _repository.CreateAsync(entity, cancellationToken);
-        _logger.LogInformation("Created customer with Id '{CustomerId}'", entity.Id);
 
         return result;
     }

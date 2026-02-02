@@ -68,13 +68,15 @@ public class IntegrationTestFixture : DisposableBase, IAsyncTestFixture, IAsyncL
 
         var builder = Host.CreateEmptyApplicationBuilder(settings);
 
-        ConfigureBuilder(builder.Configuration);
+        ConfigureBuilder(builder);
+
+        ConfigureConfiguration(builder.Configuration);
 
         ConfigureLogging(builder.Logging);
 
-        ConfigureServices(builder.Services, builder.Configuration);
+        builder.Services.AddSingleton<ILoggerProvider>((sp) => new XUnitLoggerProvider(TestOutputHelper, new XUnitLoggerOptions() { IncludeLogLevel = true, IncludeScopes = true }));
 
-        builder.Services.AddSingleton<ILoggerProvider>((sp) => new XUnitLoggerProvider(TestOutputHelper));
+        ConfigureServices(builder.Services, builder.Configuration);
 
         _host = builder.Build();
 
@@ -91,9 +93,17 @@ public class IntegrationTestFixture : DisposableBase, IAsyncTestFixture, IAsyncL
     /// <remarks>
     /// Override this method in derived classes to customize services settings.
     /// </remarks>
-    protected virtual void ConfigureSettings(HostApplicationBuilderSettings settings)
-    {
-    }
+    protected virtual void ConfigureSettings(HostApplicationBuilderSettings settings) { }
+
+    /// <summary>
+    /// Allows derived fixtures to configure the base fixture's application builder.
+    /// </summary>
+    /// <remarks>This method is called during fixture initialization to allow customization of the host builder.
+    /// Derived classes can override this method to register services, modify configuration, or perform other setup
+    /// tasks before the application is built.</remarks>
+    /// <param name="builder">The host application builder to configure. Provides access to services, configuration, and other application
+    /// setup features.</param>
+    protected virtual void ConfigureBuilder(IHostApplicationBuilder builder) { }
 
     /// <summary>
     /// Called to configure the configuration builder before services are configured.
@@ -103,11 +113,12 @@ public class IntegrationTestFixture : DisposableBase, IAsyncTestFixture, IAsyncL
     /// By default, this loads appsettings.Testing.json from the current directory.
     /// Override this method in derived classes to customize configuration loading.
     /// </remarks>
-    protected virtual void ConfigureBuilder(IConfigurationBuilder builder)
+    protected virtual void ConfigureConfiguration(IConfigurationBuilder builder)
     {
         var basePath = Directory.GetCurrentDirectory();
+
         builder.SetBasePath(basePath)
-            // appsettings.Testing.json: Excluded by .gitignore to prevent sensitive data from being checked in
+            // appsettings.Testing.json: Should be excluded by .gitignore to prevent sensitive data from being checked in.
             .AddJsonFile("appsettings.Testing.json", optional: false);
     }
 
@@ -118,7 +129,7 @@ public class IntegrationTestFixture : DisposableBase, IAsyncTestFixture, IAsyncL
     /// additional configuration is applied.</remarks>
     /// <param name="logging">The <see cref="ILoggingBuilder"/> instance used to configure logging providers and settings.</param>
     /// <returns>The <see cref="ILoggingBuilder"/> instance after applying any custom logging configuration.</returns>
-    protected virtual ILoggingBuilder ConfigureLogging(ILoggingBuilder logging) => logging;
+    protected virtual void ConfigureLogging(ILoggingBuilder logging) { }
 
     /// <summary>
     /// Called to configure dependency injection services for the test services.
@@ -128,9 +139,7 @@ public class IntegrationTestFixture : DisposableBase, IAsyncTestFixture, IAsyncL
     /// <remarks>
     /// Override this method in derived classes to register services needed for tests.
     /// </remarks>
-    protected virtual void ConfigureServices(IServiceCollection services, IConfiguration configuration)
-    {
-    }
+    protected virtual void ConfigureServices(IServiceCollection services, IConfiguration configuration) { }
 
     /// <summary>
     /// Provides an opportunity to configure the services instance before tests run.
