@@ -60,6 +60,14 @@ public class Result
     public static Result Success() => new(true, Error.None);
 
     /// <summary>
+    /// Creates a successful result containing the specified value.
+    /// </summary>
+    /// <typeparam name="TValue">The type of the value to be stored in the result.</typeparam>
+    /// <param name="value">The value to include in the successful result. Can be null for reference types.</param>
+    /// <returns>A <see cref="Result{TValue}"/> representing a successful operation with the provided value.</returns>
+    public static Result<TValue> Success<TValue>(TValue value) => Result<TValue>.Success(value);
+
+    /// <summary>
     /// Creates a failed result with the specified error.
     /// </summary>
     /// <param name="error">The error for the failed result.</param>
