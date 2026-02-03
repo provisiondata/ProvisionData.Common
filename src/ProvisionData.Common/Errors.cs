@@ -55,3 +55,11 @@ public sealed record UnauthorizedError(String Code, String Description) : Error(
 /// <param name="Code">A code identifying the validation error.</param>
 /// <param name="Description">A human-readable description of the validation error.</param>
 public sealed record ValidationError(String Code, String Description) : Error(Code, Description);
+
+/// <summary>
+/// Represents an error that occurred during an API call. This should be used to wrap HTTP-related errors,
+/// including deserialization issues, transport errors, etc., but not Application or Domain-Specific errors.
+/// </summary>
+/// <param name="Code">A code identifying the validation error.</param>
+/// <param name="Description">A human-readable description of the validation error.</param>
+public sealed record ApiError(String Code, String Description) : Error(Code, Description);

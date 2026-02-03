@@ -29,12 +29,21 @@ public class PdException : Exception
     /// Gets an optional <see cref="Error"/> instance containing structured
     /// error information associated with this exception.
     /// </summary>
-    public Error? Error { get; }
+    public Error? Error { get; init; }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="PdException"/> class.
+    /// Initializes a new instance of the <see cref="PdException"/> class but without
+    /// any useful information.
     /// </summary>
-    public PdException()
+    protected PdException()
+    {
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="PdException"/> class with a specified
+    /// message. Prefer using other constructors that accept an <see cref="Error"/> object.
+    /// </summary>
+    public PdException(String message) : base(message)
     {
     }
 
@@ -42,7 +51,7 @@ public class PdException : Exception
     /// Initializes a new instance of the <see cref="PdException"/> class with a specified
     /// error message.
     /// </summary>
-    public PdException(String? message) : base(message)
+    public PdException(Error error) : this(error.Description, error)
     {
     }
 
