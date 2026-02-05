@@ -72,7 +72,7 @@ public static class ResultWebApiExtensions
         => new()
         {
             Status = statusCode,
-            Title = error.Code,
+            Title = error.Code.ToString(),
             Detail = error.Description,
             Type = $"https://httpstatuses.com/{statusCode}"
         };

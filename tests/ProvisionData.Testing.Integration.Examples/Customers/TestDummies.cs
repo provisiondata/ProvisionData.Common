@@ -123,7 +123,7 @@ public class CustomerApplicationService(ICustomerRepository repository, ILogger<
 
         if (existing is null)
         {
-            return Error.NotFound("Customer.NotFound", $"Customer with Id '{command.Id}' was not found.");
+            return Error.NotFound($"Customer with Id '{command.Id}' was not found.");
         }
 
         if (command.Name is not null)

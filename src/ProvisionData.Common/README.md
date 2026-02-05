@@ -23,7 +23,7 @@ dotnet add package ProvisionData.Common
 
 ### Result Pattern
 
-> [Result Pattern in C#]( https://adrianbailador.github.io/blog/44-result-pattern-)
+> [Result Pattern in C#](https://adrianbailador.github.io/blog/44-result-pattern-)
 > by [Adrian Bailador](https://adrianbailador.github.io/)
 
 The `Result` class provides a way to represent the outcome of operations,
@@ -36,32 +36,51 @@ public class UserService
 {
     private readonly IUserRepository _repository;
 
-    public Result<User> GetById(int id)
+    public Result<User> GetById(Int32 id)
     {
         var user = _repository.Find(id);
         
         if (user is null)
-            return Error.NotFound("User.NotFound", $"User with ID {id} was not found");
+            return Error.NotFound($"User with ID {id} was not found");
 
         return user; // Implicit conversion to Result<User>.Success
     }
 
     public Result<User> Create(CreateUserRequest request)
     {
-        // Validation
-        if (string.IsNullOrWhiteSpace(request.Email))
-            return Error.Validation("User.EmailRequired", "Email is required");
-
+        // Validation happens in ASP.NET pipeline using FluentValidation
+        // Domain only handles business rules
+        
         if (_repository.ExistsByEmail(request.Email))
-            return Error.Conflict("User.EmailExists", "A user with this email already exists");
+            return Error.Conflict("A user with this email already exists");
 
-        // Create user
         var user = new User(request.Name, request.Email);
         _repository.Add(user);
 
         return user;
     }
-}```
+}
+```
+
+#### Error Codes
+
+Error codes use singleton instances with reference equality. Each error type has a unique code that can be used programmatically:
+
+```csharp
+// Programmatic use - implicit String conversion
+String errorName = error.Code;  // "NotFoundError"
+
+// Debugging - ToString() for logging
+Console.WriteLine(error.Code.ToString());  // "NotFoundError"
+
+// Type checking
+if (result.Error.IsErrorType<NotFoundError>())
+{
+    // Handle not found scenario
+}
+```
+
+**Note**: The `.ToString()` method is primarily for debugging and logging. For programmatic use, rely on the implicit `String` operator or `IsErrorType<T>()` method.
 
 #### Chaining Operations
 
@@ -78,7 +97,7 @@ public Result<OrderConfirmation> ProcessOrder(CreateOrderRequest request)
 private Result<Order> ValidateOrder(CreateOrderRequest request)
 {
     if (request.Items.Count == 0)
-        return Error.Validation("Order.NoItems", "Order must contain at least one item");
+        return Error.Validation("Order must contain at least one item");
     
     return new Order(request.CustomerId, request.Items);
 }
@@ -88,11 +107,65 @@ private Result<Order> CheckInventory(Order order)
     foreach (var item in order.Items)
     {
         if (!_inventory.IsAvailable(item.ProductId, item.Quantity))
-            return Error.Conflict("Order.OutOfStock", $"Product {item.ProductId} is out of stock");
+            return Error.Conflict($"Product {item.ProductId} is out of stock");
     }
     return order;
 }
 ```
+
+#### Async Operations
+
+The Result pattern includes comprehensive async support for modern C# codebases:
+
+```csharp
+// Example 1: Async data access
+public async Task<Result<User>> GetUserAsync(Int32 userId)
+{
+    return await _repository.FindAsync(userId)
+        .MapAsync(user => user ?? Error.NotFound("User not found"));
+}
+
+// Example 2: Async pipeline with external services
+public async Task<Result<OrderConfirmation>> ProcessOrderAsync(CreateOrderRequest request)
+{
+    return await ValidateOrderAsync(request)
+        .BindAsync(async order => await CheckInventoryAsync(order))
+        .BindAsync(async order => await ProcessPaymentAsync(order))
+        .TapAsync(async order => await SendConfirmationEmailAsync(order))
+        .MapAsync(async order => await CreateConfirmationAsync(order));
+}
+
+private async Task<Result<Order>> CheckInventoryAsync(Order order)
+{
+    foreach (var item in order.Items)
+    {
+        var isAvailable = await _inventoryService.CheckAvailabilityAsync(item.ProductId, item.Quantity);
+        if (!isAvailable)
+            return Error.Conflict($"Product {item.ProductId} is out of stock");
+    }
+    return order;
+}
+
+// Example 3: Async Match for handling results
+var message = await userService.GetUserAsync(userId)
+    .MatchAsync(
+        onSuccess: async user => 
+        {
+            await _analytics.TrackUserAccessAsync(user.Id);
+            return $"Welcome, {user.Name}!";
+        },
+        onFailure: async error => 
+        {
+            await _logger.LogErrorAsync(error.Description);
+            return $"Error: {error.Description}";
+        });
+```
+
+**When to use async methods:**
+- `MapAsync` - When transforming the result value requires async operations (e.g., calling external APIs, database queries)
+- `BindAsync` - When the next step in the pipeline is async and can fail (returns `Task<Result<T>>`)
+- `MatchAsync` - When handling success/failure cases requires async operations (e.g., logging, analytics)
+- `TapAsync` - When side effects are async but shouldn't affect the result (e.g., sending notifications, caching)
 
 #### Using Match
 
@@ -103,6 +176,25 @@ var message = userService.GetById(userId).Match(
 );
 ```
 
+#### Getting Values Safely
+
+```csharp
+// With explicit default
+var user = result.GetValueOrDefault(User.Guest);
+
+// With type default (null for reference types)
+var userId = result.GetValueOrDefault();
+
+// Using Match for custom logic
+var user = result.Match(
+    onSuccess: u => u,
+    onFailure: error => 
+    {
+        _logger.LogError(error.Description);
+        return User.Guest;
+    });
+```
+
 #### Domain Errors
 
 ```csharp
@@ -110,49 +202,129 @@ public static class DomainErrors
 {
     public static class User
     {
-        public static Error NotFound(int id) =>
-            Error.NotFound("User.NotFound", $"User with ID {id} was not found");
+        public static Error NotFound(Int32 id) =>
+            Error.NotFound($"User with ID {id} was not found");
 
-        public static Error EmailAlreadyExists(string email) =>
-            Error.Conflict("User.EmailExists", $"Email {email} is already registered");
+        public static Error EmailAlreadyExists(String email) =>
+            Error.Conflict($"Email {email} is already registered");
 
         public static Error InvalidEmail =>
-            Error.Validation("User.InvalidEmail", "The email format is invalid");
+            Error.Validation("The email format is invalid");
 
         public static Error PasswordTooWeak =>
-            Error.Validation("User.PasswordTooWeak", 
+            Error.Validation(
                 "Password must be at least 8 characters with uppercase, lowercase, and digits");
     }
 
     public static class Order
     {
         public static Error NotFound(Guid id) =>
-            Error.NotFound("Order.NotFound", $"Order {id} was not found");
+            Error.NotFound($"Order {id} was not found");
 
         public static Error EmptyCart =>
-            Error.Validation("Order.EmptyCart", "Cannot create order with empty cart");
+            Error.Validation("Cannot create order with empty cart");
 
-        public static Error InsufficientStock(string productId) =>
-            Error.Conflict("Order.InsufficientStock", $"Insufficient stock for product {productId}");
-
-        public static Error PaymentFailed(string reason) =>
-            Error.Failure("Order.PaymentFailed", $"Payment failed: {reason}");
+        public static Error InsufficientStock(String productId) =>
+            Error.Conflict($"Insufficient stock for product {productId}");
     }
 }
 ```
+
+#### Exception Handling
+
+The `Error.Exception()` method is available to convert exceptions to errors, but its use should be **rare and discouraged**.
+
+**Why it exists:**
+In Blazor applications, unhandled exceptions can crash the entire app, forcing a page reload. Converting exceptions to errors provides a recovery path.
+
+**Important limitations:**
+```csharp
+try
+{
+    await externalService.CallAsync();
+}
+catch (Exception ex)
+{
+    // ⚠️ This deliberately loses stack trace and inner exceptions
+    return Error.Exception(ex);  
+}
+```
+
+**The conversion is deliberately minimal:**
+- ✅ Captures exception type name and message only
+- ❌ Loses stack trace (security/privacy concern)
+- ❌ Loses inner exceptions
+- ❌ Loses custom exception properties
+
+**Why these limitations:**
+1. **Performance** - Error values must be lightweight for high-throughput scenarios
+2. **Security** - Error descriptions may be visible to end users; stack traces can leak internal details
+3. **Serialization** - Full exceptions are not serializable across API boundaries
+
+**Best practice:**
+Always log the full exception separately before converting:
+
+```csharp
+try
+{
+    await riskyOperation();
+}
+catch (Exception ex)
+{
+    _logger.LogError(ex, "Operation failed for user {UserId}", userId);
+    return Error.Exception(ex);  // Only for user-facing message
+}
+```
+
+#### Input Validation vs Business Rules
+
+The Result pattern is designed for **business rule violations**, not input validation.
+
+**Use FluentValidation for input validation:**
+```csharp
+public class CreateUserCommandValidator : AbstractValidator<CreateUserCommand>
+{
+    public CreateUserCommandValidator()
+    {
+        RuleFor(x => x.Email).NotEmpty().EmailAddress();
+        RuleFor(x => x.Password).MinimumLength(8);
+    }
+}
+```
+
+ASP.NET pipeline validates input and returns 400 BadRequest with detailed validation errors **before** the domain logic executes.
+
+**Use Result<T> for business logic:**
+```csharp
+public async Task<Result<User>> Handle(CreateUserCommand command)
+{
+    // Input is already validated by pipeline
+    
+    // Domain only checks business rules
+    if (await _userRepository.EmailExistsAsync(command.Email))
+        return Error.Conflict("Email already registered");
+        
+    return await _userRepository.CreateAsync(command);
+}
+```
+
+This separation ensures:
+- Multiple validation errors caught at API boundary
+- Type-safe domain logic with single error per operation
+- Clean architecture with clear responsibility boundaries
 
 #### Web API Integration
 
 This is packaged separately in `ProvisionData.WebApi` so you need to install that package as well.
 
 ```pwsh
-Install-Package ProvisionData.Common
+Install-Package ProvisionData.WebApi
 ```
 
 Or via .NET CLI:
 
 ```pwsh
-dotnet add package ProvisionData.Common
+dotnet add package ProvisionData.WebApi
 ```
 
 Once installed, you can use the extension methods to convert `Result` instances to appropriate HTTP responses.
@@ -160,7 +332,7 @@ Once installed, you can use the extension methods to convert `Result` instances 
 ```csharp
 var app = builder.Build();
 
-app.MapGet("/api/users/{id}", (int id, UserService userService) =>
+app.MapGet("/api/users/{id}", (Int32 id, UserService userService) =>
 {
     return userService.GetById(id).ToApiResult();
 });

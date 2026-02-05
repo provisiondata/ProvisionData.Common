@@ -22,6 +22,11 @@ namespace ProvisionData;
 public class Result
 {
     /// <summary>
+    /// Gets a special <see cref="Error"/> instance representing no error.
+    /// </summary>
+    public static readonly Error None = new(NoneErrorCode.Instance, String.Empty);
+
+    /// <summary>
     /// Gets a value indicating whether the operation was successful.
     /// </summary>
     public Boolean IsSuccess { get; }
@@ -40,13 +45,13 @@ public class Result
     /// Initializes a new instance of the <see cref="Result"/> class.
     /// </summary>
     /// <param name="isSuccess">Indicates whether the operation was successful.</param>
-    /// <param name="error">The error associated with the result. Must be <see cref="Error.None"/> for successful results.</param>
+    /// <param name="error">The error associated with the result. Must be <see cref="Result.None"/> for successful results.</param>
     /// <exception cref="ArgumentException">Thrown when the success state and error state are inconsistent.</exception>
     protected Result(Boolean isSuccess, Error error)
     {
-        if (isSuccess && error != Error.None)
+        if (isSuccess && error != None)
             throw new ArgumentException("Success result cannot have an error", nameof(error));
-        if (!isSuccess && error == Error.None)
+        if (!isSuccess && error == None)
             throw new ArgumentException("Failure result must have an error", nameof(error));
 
         IsSuccess = isSuccess;
@@ -57,7 +62,7 @@ public class Result
     /// Creates a successful result.
     /// </summary>
     /// <returns>A successful <see cref="Result"/>.</returns>
-    public static Result Success() => new(true, Error.None);
+    public static Result Success() => new(true, None);
 
     /// <summary>
     /// Creates a successful result containing the specified value.
@@ -79,6 +84,12 @@ public class Result
     /// </summary>
     /// <param name="error">The error to convert.</param>
     public static implicit operator Result(Error error) => Failure(error);
+
+    internal sealed class NoneErrorCode : ErrorCode
+    {
+        public static readonly NoneErrorCode Instance = new();
+        protected override String Name => "None";
+    }
 }
 
 /// <summary>
@@ -101,7 +112,7 @@ public class Result<TValue> : Result
     /// Initializes a new successful instance of the <see cref="Result{TValue}"/> class.
     /// </summary>
     /// <param name="value">The value of the successful result.</param>
-    private Result(TValue value) : base(true, Error.None)
+    private Result(TValue value) : base(true, None)
     {
         _value = value;
     }
@@ -140,40 +151,4 @@ public class Result<TValue> : Result
     /// </summary>
     /// <param name="error">The error to convert.</param>
     public static implicit operator Result<TValue>(Error error) => Failure(error);
-}
-
-/// <summary>
-/// Represents the result of a validation operation containing zero or more errors.
-/// </summary>
-public class ValidationResult : Result
-{
-    /// <summary>
-    /// Gets the collection of errors from the validation operation.
-    /// </summary>
-    public IReadOnlyList<Error> Errors { get; }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ValidationResult"/> class.
-    /// </summary>
-    /// <param name="errors">The validation errors.</param>
-    [SuppressMessage("Performance", "CA1826:Do not use Enumerable methods on indexable collections", Justification = "<Pending>")]
-    private ValidationResult(IReadOnlyList<Error> errors)
-        : base(errors.Count == 0, errors.FirstOrDefault() ?? Error.None)
-    {
-        Errors = errors;
-    }
-
-    /// <summary>
-    /// Creates a validation result with the specified errors.
-    /// </summary>
-    /// <param name="errors">The validation errors.</param>
-    /// <returns>A <see cref="ValidationResult"/> containing the specified errors.</returns>
-    public static ValidationResult WithErrors(params Error[] errors)
-        => new(errors);
-
-    /// <summary>
-    /// Creates a successful validation result with no errors.
-    /// </summary>
-    /// <returns>A successful <see cref="ValidationResult"/>.</returns>
-    public static ValidationResult Ok() => new([]);
 }
