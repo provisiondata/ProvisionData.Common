@@ -12,7 +12,9 @@
 // You should have received a copy of the GNU Affero General Public License along with this
 // program. If not, see <https://www.gnu.org/licenses/>.
 
+using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
+using System.Text.Json.Serialization;
 
 namespace ProvisionData;
 
@@ -24,22 +26,34 @@ public class Result
     /// <summary>
     /// Gets a special <see cref="Error"/> instance representing no error.
     /// </summary>
-    public static readonly Error None = new(NoneErrorCode.Instance, String.Empty);
+    [UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "NoneError is a built-in type preserved by the library")]
+    [UnconditionalSuppressMessage("AOT", "IL3050", Justification = "NoneError is a built-in type preserved by the library")]
+    public static readonly Error None = new(NoneErrorCode.Instance, "None");
 
     /// <summary>
     /// Gets a value indicating whether the operation was successful.
     /// </summary>
-    public Boolean IsSuccess { get; }
+    public Boolean IsSuccess { get; init; }
 
     /// <summary>
     /// Gets a value indicating whether the operation failed.
     /// </summary>
+    [JsonIgnore]
     public Boolean IsFailure => !IsSuccess;
 
     /// <summary>
     /// Gets the error associated with a failed result.
     /// </summary>
-    public Error Error { get; }
+    public Error Error { get; init; } = None;
+
+    /// <summary>
+    /// Parameterless constructor for JSON deserialization.
+    /// </summary>
+    [JsonConstructor]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    protected Result()
+    {
+    }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Result"/> class.
@@ -85,6 +99,8 @@ public class Result
     /// <param name="error">The error to convert.</param>
     public static implicit operator Result(Error error) => Failure(error);
 
+    [UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "NoneErrorCode is a built-in type preserved by the library")]
+    [UnconditionalSuppressMessage("AOT", "IL3050", Justification = "NoneErrorCode is a built-in type preserved by the library")]
     internal sealed class NoneErrorCode : ErrorCode
     {
         public static readonly NoneErrorCode Instance = new();
@@ -98,15 +114,29 @@ public class Result
 /// <typeparam name="TValue">The type of value returned by a successful operation.</typeparam>
 public class Result<TValue> : Result
 {
-    private readonly TValue? _value;
+    /// <summary>
+    /// Gets or sets the value for JSON serialization.
+    /// </summary>
+    [JsonPropertyName("value")]
+    [JsonInclude]
+    protected TValue? ValueStorage { get; init; }
 
     /// <summary>
     /// Gets the value returned by a successful operation.
     /// </summary>
-    /// <exception cref="InvalidOperationException">Thrown when accessing the value of a failed result.</exception>
+    [JsonIgnore]
     public TValue Value => IsSuccess
-        ? _value!
-        : throw new InvalidOperationException("Cannot access value of a failed result");
+        ? ValueStorage!
+        : default!;
+
+    /// <summary>
+    /// Parameterless constructor for JSON deserialization.
+    /// </summary>
+    [JsonConstructor]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    protected Result() : base()
+    {
+    }
 
     /// <summary>
     /// Initializes a new successful instance of the <see cref="Result{TValue}"/> class.
@@ -114,7 +144,7 @@ public class Result<TValue> : Result
     /// <param name="value">The value of the successful result.</param>
     private Result(TValue value) : base(true, None)
     {
-        _value = value;
+        ValueStorage = value;
     }
 
     /// <summary>
@@ -123,7 +153,7 @@ public class Result<TValue> : Result
     /// <param name="error">The error of the failed result.</param>
     private Result(Error error) : base(false, error)
     {
-        _value = default;
+        ValueStorage = default;
     }
 
     /// <summary>

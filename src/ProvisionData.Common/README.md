@@ -230,6 +230,163 @@ public static class DomainErrors
 }
 ```
 
+#### Creating Custom Error Types
+
+The `Error` class is fully extensible, allowing you to create domain-specific error types with additional properties while maintaining type safety and automatic JSON serialization.
+
+##### Basic Custom Error
+
+Create a custom error by inheriting from `Error` and defining an internal singleton `ErrorCode`:
+
+```csharp
+public sealed class CustomerNotFoundError : Error
+{
+    public String CustomerId { get; }
+
+    public CustomerNotFoundError(String description, String customerId)
+        : base(CustomerNotFoundErrorCode.Instance, description)
+    {
+        CustomerId = customerId;
+    }
+
+    internal sealed class CustomerNotFoundErrorCode : ErrorCode
+    {
+        public static readonly CustomerNotFoundErrorCode Instance = new();
+        protected override String Name => nameof(CustomerNotFoundError);
+    }
+}
+```
+
+**Key requirements:**
+- Inherit from `Error` as a `sealed class`
+- Define an internal `ErrorCode` class with a singleton `Instance`
+- Override `Name` property to return the error type name
+- Call base constructor with `ErrorCode` and description
+- Add any additional domain-specific properties with getters
+
+##### Custom Error with Additional Properties
+
+Custom errors can include domain-specific data that will automatically serialize:
+
+```csharp
+public sealed class PaymentDeclinedError : Error
+{
+    public String DeclineReason { get; }
+    public String TransactionId { get; }
+
+    public PaymentDeclinedError(String description, String declineReason, String transactionId) 
+        : base(PaymentDeclinedErrorCode.Instance, description)
+    {
+        DeclineReason = declineReason;
+        TransactionId = transactionId;
+    }
+
+    internal sealed class PaymentDeclinedErrorCode : ErrorCode
+    {
+        public static readonly PaymentDeclinedErrorCode Instance = new();
+        protected override String Name => nameof(PaymentDeclinedError);
+    }
+}
+```
+
+##### Using Custom Errors
+
+Custom errors work seamlessly with the Result pattern:
+
+```csharp
+public class CustomerService
+{
+    public Result<Customer> GetCustomer(String customerId)
+    {
+        var customer = _repository.FindById(customerId);
+        
+        if (customer is null)
+            return new CustomerNotFoundError(
+                $"Customer with ID '{customerId}' was not found",
+                customerId);
+
+        return customer;
+    }
+
+    public Result<PaymentConfirmation> ProcessPayment(PaymentRequest request)
+    {
+        var result = _paymentGateway.Charge(request);
+        
+        if (!result.Success)
+            return new PaymentDeclinedError(
+                "Payment was declined by the payment processor",
+                result.DeclineReason,
+                result.TransactionId);
+
+        return new PaymentConfirmation(result.TransactionId);
+    }
+}
+```
+
+##### Type-Safe Error Handling
+
+Use pattern matching or `IsErrorType<T>()` to handle custom errors:
+
+```csharp
+// Using pattern matching
+var result = customerService.GetCustomer(customerId);
+var message = result.Match(
+    onSuccess: customer => $"Welcome, {customer.Name}!",
+    onFailure: error => error switch
+    {
+        CustomerNotFoundError notFound => 
+            $"No customer found with ID: {notFound.CustomerId}",
+        PaymentDeclinedError declined => 
+            $"Payment declined: {declined.DeclineReason} (Ref: {declined.TransactionId})",
+        _ => $"Error: {error.Description}"
+    });
+
+// Using IsErrorType<T>()
+if (result.IsFailure && result.Error.IsErrorType<CustomerNotFoundError>())
+{
+    var notFoundError = (CustomerNotFoundError)result.Error;
+    _logger.LogWarning("Customer lookup failed for ID: {CustomerId}", notFoundError.CustomerId);
+}
+```
+
+##### JSON Serialization
+
+Custom errors automatically serialize and deserialize without any configuration:
+
+```csharp
+// Serialization preserves custom properties
+Result<Order> result = new PaymentDeclinedError(
+    "Card declined",
+    "Insufficient funds",
+    "TXN-12345");
+
+var json = JsonSerializer.Serialize(result);
+// {
+//   "IsSuccess": false,
+//   "Error": {
+//     "$type": "MyApp.PaymentDeclinedError, MyApp",
+//     "Code": { "$type": "...", "Name": "PaymentDeclinedError" },
+//     "Description": "Card declined",
+//     "DeclineReason": "Insufficient funds",
+//     "TransactionId": "TXN-12345"
+//   }
+// }
+
+// Deserialization restores exact type
+var deserialized = JsonSerializer.Deserialize<Result<Order>>(json);
+deserialized.Error.GetType(); // PaymentDeclinedError
+((PaymentDeclinedError)deserialized.Error).TransactionId; // "TXN-12345"
+```
+
+**How it works:**
+- The `ErrorJsonConverter` uses reflection to discover all properties on your custom error type
+- During serialization, it writes the fully-qualified type name as `$type` discriminator
+- During deserialization, it loads the type and invokes the constructor with matching parameter names
+- All public properties (including custom ones) are automatically included
+
+**Cross-assembly support:**
+Custom errors defined in any assembly will serialize correctly, even if the consuming application has no knowledge of them at compile time. The type discriminator ensures the correct type is reconstructed during deserialization.
+
 #### Exception Handling
 
 The `Error.Exception()` method is available to convert exceptions to errors, but its use should be **rare and discouraged**.

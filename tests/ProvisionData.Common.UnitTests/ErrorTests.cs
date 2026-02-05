@@ -12,9 +12,6 @@
 // You should have received a copy of the GNU Affero General Public License along with this
 // program. If not, see <https://www.gnu.org/licenses/>.
 
-using FluentAssertions;
-using Xunit;
-
 namespace ProvisionData.UnitTests;
 
 /// <summary>
@@ -23,11 +20,11 @@ namespace ProvisionData.UnitTests;
 public class ErrorTests
 {
     [Fact]
-    public void None_ShouldHaveEmptyDescription()
+    public void None_ShouldHaveDescription()
     {
         var error = Result.None;
 
-        error.Description.Should().BeEmpty();
+        error.Description.Should().Be("None");
     }
 
     [Fact]
@@ -203,12 +200,21 @@ public class ErrorTests
     }
 
     [Fact]
-    public void Errors_WithSameTypeAndDescription_ShouldBeEqual()
+    public void Errors_WithSameTypeAndDescription_ShouldNotBeEqual_DifferentInstances()
     {
         var error1 = new ValidationError("Invalid input");
         var error2 = new ValidationError("Invalid input");
 
-        error1.Should().Be(error2);
+        error1.Should().NotBe(error2, "different Error instances should not be equal (reference equality)");
+    }
+
+    [Fact]
+    public void Errors_SameInstance_ShouldBeEqual()
+    {
+        var error = new ValidationError("Invalid input");
+        var sameError = error;
+
+        error.Should().Be(sameError, "same Error instance should be equal to itself");
     }
 
     [Fact]

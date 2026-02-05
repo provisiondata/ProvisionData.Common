@@ -12,7 +12,7 @@
 // You should have received a copy of the GNU Affero General Public License along with this
 // program. If not, see <https://www.gnu.org/licenses/>.
 
-using System.Runtime.CompilerServices;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ProvisionData;
 
@@ -20,10 +20,20 @@ namespace ProvisionData;
 /// Represents an error that occurred during an API call. This should be used to wrap HTTP-related errors,
 /// including deserialization issues, transport errors, etc., but not Application or Domain-Specific errors.
 /// </summary>
-/// <param name="Description">A human-readable description of the API error.</param>
-public sealed record ApiError(String Description) : Error(ApiErrorCode.Instance, Description)
+public sealed class ApiError : Error
 {
-    internal sealed class ApiErrorCode : ErrorCode {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ApiError"/> class.
+    /// </summary>
+    /// <param name="description">A human-readable description of the API error.</param>
+    [UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Built-in error types are preserved by the library")]
+    [UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Built-in error types are preserved by the library")]
+    public ApiError(String description) : base(ApiErrorCode.Instance, description) { }
+
+    [UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Built-in error code types are preserved by the library")]
+    [UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Built-in error code types are preserved by the library")]
+    internal sealed class ApiErrorCode : ErrorCode
+    {
         public static readonly ApiErrorCode Instance = new();
         protected override String Name => nameof(ApiError);
     }
@@ -32,9 +42,18 @@ public sealed record ApiError(String Description) : Error(ApiErrorCode.Instance,
 /// <summary>
 /// Represents a business rule violation error.
 /// </summary>
-/// <param name="Description">A human-readable description of the business rule violation error.</param>
-public sealed record BusinessRuleViolationError(String Description) : Error(BusinessRuleViolationErrorCode.Instance, Description)
+public sealed class BusinessRuleViolationError : Error
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="BusinessRuleViolationError"/> class.
+    /// </summary>
+    /// <param name="description">A human-readable description of the business rule violation error.</param>
+    [UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Built-in error types are preserved by the library")]
+    [UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Built-in error types are preserved by the library")]
+    public BusinessRuleViolationError(String description) : base(BusinessRuleViolationErrorCode.Instance, description) { }
+
+    [UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Built-in error code types are preserved by the library")]
+    [UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Built-in error code types are preserved by the library")]
     internal sealed class BusinessRuleViolationErrorCode : ErrorCode
     {
         public static readonly BusinessRuleViolationErrorCode Instance = new();
@@ -45,9 +64,18 @@ public sealed record BusinessRuleViolationError(String Description) : Error(Busi
 /// <summary>
 /// Represents a configuration error.
 /// </summary>
-/// <param name="Description">A human-readable description of the configuration error.</param>
-public sealed record ConfigurationError(String Description) : Error(ConfigurationErrorCode.Instance, Description)
+public sealed class ConfigurationError : Error
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ConfigurationError"/> class.
+    /// </summary>
+    /// <param name="description">A human-readable description of the configuration error.</param>
+    [UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Built-in error types are preserved by the library")]
+    [UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Built-in error types are preserved by the library")]
+    public ConfigurationError(String description) : base(ConfigurationErrorCode.Instance, description) { }
+
+    [UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Built-in error code types are preserved by the library")]
+    [UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Built-in error code types are preserved by the library")]
     internal sealed class ConfigurationErrorCode : ErrorCode
     {
         public static readonly ConfigurationErrorCode Instance = new();
@@ -58,9 +86,18 @@ public sealed record ConfigurationError(String Description) : Error(Configuratio
 /// <summary>
 /// Represents a conflict error.
 /// </summary>
-/// <param name="Description">A human-readable description of the conflict error.</param>
-public sealed record ConflictError(String Description) : Error(ConflictErrorCode.Instance, Description)
+public sealed class ConflictError : Error
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ConflictError"/> class.
+    /// </summary>
+    /// <param name="description">A human-readable description of the conflict error.</param>
+    [UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Built-in error types are preserved by the library")]
+    [UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Built-in error types are preserved by the library")]
+    public ConflictError(String description) : base(ConflictErrorCode.Instance, description) { }
+
+    [UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Built-in error code types are preserved by the library")]
+    [UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Built-in error code types are preserved by the library")]
     internal sealed class ConflictErrorCode : ErrorCode
     {
         public static readonly ConflictErrorCode Instance = new();
@@ -71,9 +108,18 @@ public sealed record ConflictError(String Description) : Error(ConflictErrorCode
 /// <summary>
 /// Represents a not found error.
 /// </summary>
-/// <param name="Description">A human-readable description of the not found error.</param>
-public sealed record NotFoundError(String Description) : Error(NotFoundErrorCode.Instance, Description)
+public sealed class NotFoundError : Error
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="NotFoundError"/> class.
+    /// </summary>
+    /// <param name="description">A human-readable description of the not found error.</param>
+    [UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Built-in error types are preserved by the library")]
+    [UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Built-in error types are preserved by the library")]
+    public NotFoundError(String description) : base(NotFoundErrorCode.Instance, description) { }
+
+    [UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Built-in error code types are preserved by the library")]
+    [UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Built-in error code types are preserved by the library")]
     internal sealed class NotFoundErrorCode : ErrorCode
     {
         public static readonly NotFoundErrorCode Instance = new();
@@ -84,9 +130,18 @@ public sealed record NotFoundError(String Description) : Error(NotFoundErrorCode
 /// <summary>
 /// Represents an unauthorized error.
 /// </summary>
-/// <param name="Description">A human-readable description of the unauthorized error.</param>
-public sealed record UnauthorizedError(String Description) : Error(UnauthorizedErrorCode.Instance, Description)
+public sealed class UnauthorizedError : Error
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="UnauthorizedError"/> class.
+    /// </summary>
+    /// <param name="description">A human-readable description of the unauthorized error.</param>
+    [UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Built-in error types are preserved by the library")]
+    [UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Built-in error types are preserved by the library")]
+    public UnauthorizedError(String description) : base(UnauthorizedErrorCode.Instance, description) { }
+
+    [UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Built-in error code types are preserved by the library")]
+    [UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Built-in error code types are preserved by the library")]
     internal sealed class UnauthorizedErrorCode : ErrorCode
     {
         public static readonly UnauthorizedErrorCode Instance = new();
@@ -98,13 +153,23 @@ public sealed record UnauthorizedError(String Description) : Error(UnauthorizedE
 /// Represents an error caused by an unhandled exception encountered during application execution.
 /// The usage of this error type should be rare.
 /// </summary>
-/// <remarks>Use this type to report unexpected exceptions that were not caught by application logic. The
+/// <remarks>
+/// Use this type to report unexpected exceptions that were not caught by application logic. The
 /// exception details are preserved for diagnostic purposes. In most cases it is probably better
 /// to let the exception bubble up.
 /// </remarks>
-/// <param name="Description">A human-readable description of the unhandled exception error.</param>
-public sealed record UnhandledExceptionError(String Description) : Error(UnhandledExceptionErrorCode.Instance, Description)
+public sealed class UnhandledExceptionError : Error
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="UnhandledExceptionError"/> class.
+    /// </summary>
+    /// <param name="description">A human-readable description of the unhandled exception error.</param>
+    [UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Built-in error types are preserved by the library")]
+    [UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Built-in error types are preserved by the library")]
+    public UnhandledExceptionError(String description) : base(UnhandledExceptionErrorCode.Instance, description) { }
+
+    [UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Built-in error code types are preserved by the library")]
+    [UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Built-in error code types are preserved by the library")]
     internal sealed class UnhandledExceptionErrorCode : ErrorCode
     {
         public static readonly UnhandledExceptionErrorCode Instance = new();
@@ -115,9 +180,18 @@ public sealed record UnhandledExceptionError(String Description) : Error(Unhandl
 /// <summary>
 /// Represents a validation error.
 /// </summary>
-/// <param name="Description">A human-readable description of the validation error.</param>
-public sealed record ValidationError(String Description) : Error(ValidationErrorCode.Instance, Description)
+public sealed class ValidationError : Error
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ValidationError"/> class.
+    /// </summary>
+    /// <param name="description">A human-readable description of the validation error.</param>
+    [UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Built-in error types are preserved by the library")]
+    [UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Built-in error types are preserved by the library")]
+    public ValidationError(String description) : base(ValidationErrorCode.Instance, description) { }
+
+    [UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Built-in error code types are preserved by the library")]
+    [UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Built-in error code types are preserved by the library")]
     internal sealed class ValidationErrorCode : ErrorCode
     {
         public static readonly ValidationErrorCode Instance = new();

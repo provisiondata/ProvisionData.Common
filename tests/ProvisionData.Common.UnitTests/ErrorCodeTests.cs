@@ -12,8 +12,7 @@
 // You should have received a copy of the GNU Affero General Public License along with this
 // program. If not, see <https://www.gnu.org/licenses/>.
 
-using FluentAssertions;
-using Xunit;
+using System.Text.Json;
 
 namespace ProvisionData.UnitTests;
 
@@ -77,7 +76,7 @@ public class ErrorCodeTests
 
         var result = errorCode.Equals(errorCode);
 
-        result.Should().BeTrue();
+        result.Should().BeTrue("an instance should equal itself");
     }
 
     [Fact]
@@ -88,7 +87,7 @@ public class ErrorCodeTests
 
         var result = errorCode1.Equals(errorCode2);
 
-        result.Should().BeFalse("different singleton instances are not equal");
+        result.Should().BeFalse("different types with different names are not equal");
     }
 
     [Fact]
@@ -99,7 +98,7 @@ public class ErrorCodeTests
 
         var result = errorCode1.Equals(errorCode3);
 
-        result.Should().BeFalse("different singleton instances are not equal even if names match");
+        result.Should().BeFalse("different types are not equal even if names match");
     }
 
     [Fact]
@@ -122,7 +121,7 @@ public class ErrorCodeTests
         var hash1 = errorCode1.GetHashCode();
         var hash2 = errorCode2.GetHashCode();
 
-        hash1.Should().NotBe(hash2, "different singleton instances should have different hash codes");
+        hash1.Should().NotBe(hash2, "different types should have different hash codes");
     }
 
     [Fact]
@@ -232,6 +231,49 @@ public class ErrorCodeTests
         var errorCodes = errors.Select(e => e.Code).ToList();
         var distinctCodes = errorCodes.Distinct().ToList();
 
-        distinctCodes.Should().HaveCount(errorCodes.Count, "all error code singletons should be unique references");
+        distinctCodes.Should().HaveCount(errorCodes.Count, "all error codes should have unique type+name combinations");
+    }
+
+    [Fact]
+    public void ErrorCode_ShouldBe_Serializable()
+    {
+        // Use a real error code from the library, not a private test class
+        var error = new NotFoundError("test");
+        var original = error.Code;
+
+        var serialized = JsonSerializer.Serialize(original);
+
+        var deserialized = JsonSerializer.Deserialize<ErrorCode>(serialized);
+
+        deserialized.Should().NotBeNull();
+        deserialized.Should().Be(original, "deserialized error code should be equal to the original (value equality)");
+        deserialized.Should().BeSameAs(original, "deserialized error code should be the same singleton instance");
+    }
+
+    [Fact]
+    public void ErrorCode_AllBuiltInTypes_ShouldSerializeAndDeserialize()
+    {
+        var errors = new Error[]
+        {
+            new ApiError("test"),
+            new BusinessRuleViolationError("test"),
+            new ConfigurationError("test"),
+            new ConflictError("test"),
+            new NotFoundError("test"),
+            new UnauthorizedError("test"),
+            new UnhandledExceptionError("test"),
+            new ValidationError("test")
+        };
+
+        foreach (var error in errors)
+        {
+            var original = error.Code;
+            var serialized = JsonSerializer.Serialize(original);
+            var deserialized = JsonSerializer.Deserialize<ErrorCode>(serialized);
+
+            deserialized.Should().NotBeNull();
+            deserialized.Should().Be(original, $"{original} should deserialize with value equality");
+            deserialized.Should().BeSameAs(original, $"{original} should deserialize to the same singleton instance");
+        }
     }
 }
