@@ -278,6 +278,8 @@ dotnet_naming_style.begins_with__.capitalization = camel_case
 
 # Identifiers should not match keywords (CA1716)
 dotnet_diagnostic.CA1716.severity = none
+# Evaluation of this argument may be expensive and unnecessary if logging is disabled (CA1873)
+dotnet_diagnostic.CA1873.severity = none
 # Use auto-implemented property (IDE0032)
 dotnet_diagnostic.IDE0032.severity = none
 # Deconstruct variable declaration (IDE0042)
@@ -292,7 +294,7 @@ dotnet_diagnostic.IDE0305.severity = none
 dotnet_diagnostic.IDE0079.severity = none
 
 [*.{cs,js,ts}]
-file_header_template = ProvisionData.Common\nCopyright (C) 2026 Provision Data Systems Inc.\n\nThis program is free software: you can redistribute it and/or modify it under the terms of\nthe GNU Affero General Public License as published by the Free Software Foundation, either\nversion 3 of the License, or (at your option) any later version.\n\nThis program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY\nwithout even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\nSee the GNU Affero General Public License for more details.\n\nYou should have received a copy of the GNU Affero General Public License along with this\nprogram. If not, see <https://www.gnu.org/licenses/>.
+file_header_template = Provision Data Libraries\nCopyright (C) 2026 Provision Data Systems Inc.\n\nThis program is free software: you can redistribute it and/or modify it under the terms of\nthe GNU Affero General Public License as published by the Free Software Foundation, either\nversion 3 of the License, or (at your option) any later version.\n\nThis program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY\nwithout even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\nSee the GNU Affero General Public License for more details.\n\nYou should have received a copy of the GNU Affero General Public License along with this\nprogram. If not, see <https://www.gnu.org/licenses/>.
 
 [*]
 charset: utf-8

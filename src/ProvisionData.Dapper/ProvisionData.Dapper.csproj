@@ -8,8 +8,8 @@
         <Title>Provision Data Dapper Mapper</Title>
         <Description>Provides simple mapping of properties to database columns for use by Dapper.</Description>
         <PackageTags>Dapper,Mapping</PackageTags>
-        <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <PackageReadmeFile>./README.md</PackageReadmeFile>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <IsPackable>true</IsPackable>
         <IsTrimmable>False</IsTrimmable>
         <IsAotCompatible>True</IsAotCompatible>
@@ -17,7 +17,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Dapper" Version="2.1.66" />
+        <PackageReference Include="Dapper" />
     </ItemGroup>
 
     <ItemGroup>

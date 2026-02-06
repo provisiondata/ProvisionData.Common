@@ -12,7 +12,7 @@ on:
 
 jobs:
   build-test-pack-publish:
-    runs-on: self-hosted
+    runs-on: [ self-hosted, Fast ]
     permissions:
       contents: read
       id-token: write  # enable GitHub OIDC token issuance for this job
