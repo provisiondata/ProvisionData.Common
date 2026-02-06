@@ -97,7 +97,9 @@ internal sealed class ErrorCodeJsonConverter : JsonConverter<ErrorCode>
     public override ErrorCode Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         if (reader.TokenType != JsonTokenType.StartObject)
+        {
             throw new JsonException("ErrorCode must be serialized as an object");
+        }
 
         String? assemblyQualifiedTypeName = null;
         String? name = null;
@@ -105,7 +107,9 @@ internal sealed class ErrorCodeJsonConverter : JsonConverter<ErrorCode>
         while (reader.Read())
         {
             if (reader.TokenType == JsonTokenType.EndObject)
+            {
                 break;
+            }
 
             if (reader.TokenType == JsonTokenType.PropertyName)
             {
@@ -113,19 +117,27 @@ internal sealed class ErrorCodeJsonConverter : JsonConverter<ErrorCode>
                 reader.Read();
 
                 if (propertyName == "$type")
+                {
                     assemblyQualifiedTypeName = reader.GetString();
+                }
                 else if (propertyName == "$name")
+                {
                     name = reader.GetString();
+                }
             }
         }
 
         if (String.IsNullOrEmpty(assemblyQualifiedTypeName))
+        {
             throw new JsonException("ErrorCode requires $type property");
+        }
 
         // Load the type and get its singleton Instance property or field
         var type = Type.GetType(assemblyQualifiedTypeName);
         if (type is null || !typeof(ErrorCode).IsAssignableFrom(type))
+        {
             throw new JsonException($"Unknown or invalid ErrorCode type: '{assemblyQualifiedTypeName}'");
+        }
 
         // Try field first (public static readonly), then property
         var instanceField = type.GetField("Instance",
@@ -133,9 +145,11 @@ internal sealed class ErrorCodeJsonConverter : JsonConverter<ErrorCode>
 
         if (instanceField is not null)
         {
-            var instance = instanceField.GetValue(null) as ErrorCode;
-            if (instance is null)
+            if (instanceField.GetValue(null) is not ErrorCode instance)
+            {
                 throw new JsonException($"Failed to retrieve singleton instance from '{type.FullName}.Instance' field");
+            }
+
             return instance;
         }
 
@@ -144,9 +158,11 @@ internal sealed class ErrorCodeJsonConverter : JsonConverter<ErrorCode>
 
         if (instanceProperty is not null)
         {
-            var instance = instanceProperty.GetValue(null) as ErrorCode;
-            if (instance is null)
+            if (instanceProperty.GetValue(null) is not ErrorCode instance)
+            {
                 throw new JsonException($"Failed to retrieve singleton instance from '{type.FullName}.Instance' property");
+            }
+
             return instance;
         }
 

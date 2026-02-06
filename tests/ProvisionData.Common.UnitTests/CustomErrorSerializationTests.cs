@@ -23,15 +23,10 @@ namespace ProvisionData.UnitTests;
 public class CustomErrorSerializationTests
 {
     // Custom error type defined in this test assembly (simulating external assembly)
-    public sealed class CustomerNotFoundError : Error
+    public sealed class CustomerNotFoundError(String description, String customerId)
+        : Error(CustomerNotFoundErrorCode.Instance, description)
     {
-        public String CustomerId { get; }
-
-        public CustomerNotFoundError(String description, String customerId) 
-            : base(CustomerNotFoundErrorCode.Instance, description)
-        {
-            CustomerId = customerId;
-        }
+        public String CustomerId { get; } = customerId;
 
         internal sealed class CustomerNotFoundErrorCode : ErrorCode
         {
@@ -41,15 +36,10 @@ public class CustomErrorSerializationTests
     }
 
     // Another custom error with additional properties
-    public sealed class PaymentDeclinedError : Error
+    public sealed class PaymentDeclinedError(String description, String declineReason)
+        : Error(PaymentDeclinedErrorCode.Instance, description)
     {
-        public String DeclineReason { get; }
-
-        public PaymentDeclinedError(String description, String declineReason) 
-            : base(PaymentDeclinedErrorCode.Instance, description)
-        {
-            DeclineReason = declineReason;
-        }
+        public String DeclineReason { get; } = declineReason;
 
         internal sealed class PaymentDeclinedErrorCode : ErrorCode
         {

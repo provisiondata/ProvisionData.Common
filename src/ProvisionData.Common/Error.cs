@@ -266,5 +266,3 @@ internal sealed class ErrorJsonConverter : JsonConverter<Error>
         writer.WriteEndObject();
     }
 }
-
-
