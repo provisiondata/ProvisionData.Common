@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <RootNamespace>ProvisionData.HaloPSA</RootNamespace>
+
+        <!-- NuGet package metadata -->
+        <PackageId>ProvisionData.HaloPSA.ApiClient.Contracts</PackageId>
+        <Title>ProvisionData HaloPSA API Client</Title>
+        <Description>HaloPSA API Client for .NET providing typed models and client helpers.</Description>
+        <PackageTags>HaloPSA;API;Client</PackageTags>
+        <PackageReadmeFile>./README.md</PackageReadmeFile>
+        <GenerateDocumentationFile>false</GenerateDocumentationFile>
+        <IsPackable>True</IsPackable>
+        <IsTrimmable>False</IsTrimmable>
+        <IsAotCompatible>True</IsAotCompatible>
+        <IsPublishable>False</IsPublishable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="./README.md" Pack="true" PackagePath="/" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Using Include="System.Text.Json.Serialization" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.Extensions.Configuration" />
+    </ItemGroup>
+
+</Project>
