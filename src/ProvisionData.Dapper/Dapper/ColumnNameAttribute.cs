@@ -36,7 +36,7 @@ namespace ProvisionData.Dapper;
 /// </example>
 /// <param name="columnName">The name of the database column to map to this property.</param>
 [AttributeUsage(AttributeTargets.Property)]
-public class ColumnMapAttribute(String columnName) : Attribute
+public class ColumnNameAttribute(String columnName) : Attribute
 {
     /// <summary>
     /// Gets the database column name that this property maps to.

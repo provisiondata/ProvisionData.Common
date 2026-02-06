@@ -2,7 +2,7 @@
 
 ## Installation
 
-You can install the ProvisionData.Common package via NuGet Package Manager Console:
+You can install the ProvisionData.Dapper package via Package Manager Console:
 
 ```pwsh
 Install-Package ProvisionData.Dapper
@@ -16,48 +16,46 @@ dotnet add package ProvisionData.Dapper
 
 ## Usage
 
-Decorate your class properties with the `[DapperColumn]` attribute to specify custom column mappings for Dapper ORM.
+Decorate your class with the `[HasColumnMaps]` attribute and then decorate the properties with the `[DapperColumn]` attribute to map the column name to the property.
 
 ```csharp
-public class Invoice : INeedColumnMapping<Invoice>
+[HasColumnMaps]
+public class Invoice
 {
-    [DapperColumn("id")]
+    [ColumnName("id")]
     public Int32 InvoiceNumber { get; set; }
 
     public required InvoiceLineItem[] LineItems { get; set; } = [];
 
-    [DapperColumn("customer_fk")]
+    [ColumnName("customer_fk")]
     public Int32 CustomerId { get; set; }
 
-    [DapperColumn("site_number")]
+    [ColumnName("site_number")]
     public Int32 SiteNumber { get; set; }
 }
 ```
 
-In your project's startup code, register the mappings:
+Before your first query, use one or more of the following to apply the column maps:
 
 ```csharp
-// From the current assembly
-builder.Services.AddColumnMapping();
+ColumnMapper.MapTypesFromCallingAssembly();
 
-// From the specified assembly
-builder.Services.AddColumnMapFromAssembly();
+ColumnMapper.MapTypesFromExecutingAssembly();
 
-// From the assembly containing a specific type
-builder.Services.AddColumnMapFromAssemblyContaining<Invoice>();
+COlumnMapper.MapTypesFromAssemblyContaining<Invoice>();
+
+ColumnMapper.MapTypesFromAssemblies(typeof(Invoice).Assembly);
 ```
 
-Then once you have built the service provider, apply the mappings:
+Or map specific types:
 
 ```csharp
-...
-var app = builder.Build();
+ColumnMapper.Map<Invoice>();
 
-app.Services.MapColumns();
+typeof(Invoice).MapColumns();
 ```
 
-If you do not want to clutter up your dependency injection, you can directly apply the mappings like this:
+> NOTE: If you are mapping specific types, you do not need to apply the `[HasColumnMaps]` attribute to the class.
 
-```csharp
-ColumnMapping.ApplyMap<Invoice>();
-```
+That's it! You are done! Dapper will now use the column mappings when a query returns
+a type that has been mapped.

@@ -17,47 +17,49 @@ namespace ProvisionData.Dapper.Tests;
 /// <summary>
 /// Test entity for customers.
 /// </summary>
-public class Customer : INeedColumnMapping
+[HasColumnMaps]
+public class Customer
 {
     /// <summary>
     /// Gets or sets the customer ID.
     /// </summary>
-    [ColumnMap("customer_id")]
+    [ColumnName("customer_id")]
     public Int32 Id { get; set; }
 
     /// <summary>
     /// Gets or sets the customer name.
     /// </summary>
-    [ColumnMap("full_name")]
+    [ColumnName("full_name")]
     public String Name { get; set; } = String.Empty;
 
     /// <summary>
     /// Gets or sets the customer email.
     /// </summary>
-    [ColumnMap("email_address")]
+    [ColumnName("email_address")]
     public String Email { get; set; } = String.Empty;
 }
 
 /// <summary>
 /// Test entity for orders.
 /// </summary>
-public class Order : INeedColumnMapping
+[HasColumnMaps]
+public class Order
 {
     /// <summary>
     /// Gets or sets the order ID.
     /// </summary>
-    [ColumnMap("order_id")]
+    [ColumnName("order_id")]
     public Int32 Id { get; set; }
 
     /// <summary>
     /// Gets or sets the customer ID.
     /// </summary>
-    [ColumnMap("customer_id")]
+    [ColumnName("customer_id")]
     public Int32 CustomerId { get; set; }
 
     /// <summary>
     /// Gets or sets the order total.
     /// </summary>
-    [ColumnMap("order_total")]
+    [ColumnName("order_total")]
     public Decimal Total { get; set; }
 }

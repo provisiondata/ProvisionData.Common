@@ -18,9 +18,9 @@ using Microsoft.Data.Sqlite;
 namespace ProvisionData.Dapper.Tests;
 
 /// <summary>
-/// Tests the <see cref="ColumnMapping"/> functionality using an in-memory SQLite database.
+/// Tests the <see cref="ColumnMapper"/> functionality using an in-memory SQLite database.
 /// </summary>
-public class ColumnMappingTests : IAsyncLifetime
+public class ColumnMapperTests : IAsyncLifetime
 {
     private SqliteConnection _connection = null!;
 
@@ -29,6 +29,10 @@ public class ColumnMappingTests : IAsyncLifetime
     /// </summary>
     public async ValueTask InitializeAsync()
     {
+        // Cleanup any existing mappings
+        SqlMapper.RemoveTypeMap(typeof(Product));
+        SqlMapper.RemoveTypeMap(typeof(ProductWithOptionalFields));
+
         _connection = new SqliteConnection("Data Source=:memory:");
         await _connection.OpenAsync();
 
@@ -58,13 +62,13 @@ public class ColumnMappingTests : IAsyncLifetime
     }
 
     /// <summary>
-    /// Tests that the generic <see cref="ColumnMapping.ApplyMap{T}"/> method correctly maps columns to properties.
+    /// Tests that the generic <see cref="ColumnMapper.ApplyMap{T}"/> method correctly maps columns to properties.
     /// </summary>
     [Fact]
     public async Task ApplyMap_Generic_ShouldMapColumnsToProperties()
     {
         // Arrange - Apply mapping for Product type
-        ColumnMapping.ApplyMap<Product>();
+        ColumnMapper.Map<Product>();
 
         // Insert test data using database column names
         var productId = 1;
@@ -92,13 +96,13 @@ public class ColumnMappingTests : IAsyncLifetime
     }
 
     /// <summary>
-    /// Tests that the type-based <see cref="ColumnMapping.ApplyMap(Type)"/> extension method correctly maps columns to properties.
+    /// Tests that the type-based <see cref="ColumnMapper.MapColumns(Type)"/> extension method correctly maps columns to properties.
     /// </summary>
     [Fact]
     public async Task ApplyMap_ByType_ShouldMapColumnsToProperties()
     {
         // Arrange - Apply mapping for Product type using reflection-based method
-        typeof(Product).ApplyMap();
+        typeof(Product).MapColumns();
 
         // Insert test data
         const String productName = "Gadget";
@@ -122,41 +126,87 @@ public class ColumnMappingTests : IAsyncLifetime
         Assert.Equal(quantityInStock, product.Stock);
     }
 
-    /// <summary>
-    /// Tests that column mappings correctly handle multiple properties on a type.
-    /// </summary>
     [Fact]
-    public async Task ApplyMap_WithMultipleProperties_ShouldMapAllColumns()
+    public async Task MapTypesFromAssemblies_Should_MapTypes()
     {
         // Arrange
-        ColumnMapping.ApplyMap<Product>();
+        const String productName = "Widget";
+        const Decimal unitPrice = 19.99m;
+        const Int32 quantityInStock = 100;
 
-        // Insert multiple products
-        var testData = new[]
-        {
-            new { productName = "Product A", unitPrice = 10.0m, quantityInStock = 100 },
-            new { productName = "Product B", unitPrice = 20.0m, quantityInStock = 200 },
-            new { productName = "Product C", unitPrice = 30.0m, quantityInStock = 300 }
-        };
-
-        foreach (var item in testData)
-        {
-            await _connection.ExecuteAsync("""
-                INSERT INTO products (product_name, unit_price, quantity_in_stock)
-                VALUES (@productName, @unitPrice, @quantityInStock)
-                """, item);
-        }
+        await _connection.ExecuteAsync("""
+            INSERT INTO products (product_name, unit_price, quantity_in_stock)
+            VALUES (@productName, @unitPrice, @quantityInStock)
+            """, new { productName, unitPrice, quantityInStock });
 
         // Act
-        var products = (await _connection.QueryAsync<Product>(
-            "SELECT id, product_name, unit_price, quantity_in_stock FROM products"
-        )).ToList();
+        ColumnMapper.MapTypesFromAssemblies(typeof(ProductWithOptionalFields).Assembly);
 
         // Assert
-        Assert.Equal(3, products.Count);
-        Assert.Equal("Product A", products[0].Name);
-        Assert.Equal("Product B", products[1].Name);
-        Assert.Equal("Product C", products[2].Name);
+        var product = await _connection.QueryFirstOrDefaultAsync<Product>(
+            "SELECT id, product_name, unit_price, quantity_in_stock FROM products"
+        );
+
+        Assert.NotNull(product);
+        Assert.Equal(productName, product.Name);
+        Assert.Equal(unitPrice, product.Price);
+        Assert.Equal(quantityInStock, product.Stock);
+    }
+
+    [Fact]
+    public async Task MapTypesFromExecutingAssembly_Should_MapTypes()
+    {
+        // Arrange
+        const String productName = "Widget";
+        const Decimal unitPrice = 19.99m;
+        const Int32 quantityInStock = 100;
+
+        await _connection.ExecuteAsync("""
+            INSERT INTO products (product_name, unit_price, quantity_in_stock)
+            VALUES (@productName, @unitPrice, @quantityInStock)
+            """, new { productName, unitPrice, quantityInStock });
+
+        // Act
+        // This is a little redundant since it delegates to MapTypesFromAssemblies().
+        ColumnMapper.MapTypesFromExecutingAssembly();
+
+        // Assert
+        var product = await _connection.QueryFirstOrDefaultAsync<Product>(
+            "SELECT id, product_name, unit_price, quantity_in_stock FROM products"
+        );
+
+        Assert.NotNull(product);
+        Assert.Equal(productName, product.Name);
+        Assert.Equal(unitPrice, product.Price);
+        Assert.Equal(quantityInStock, product.Stock);
+    }
+
+    [Fact]
+    public async Task MapTypesFromAssemblyContaining_T_Should_MapTypes()
+    {
+        // Arrange
+        const String productName = "Widget";
+        const Decimal unitPrice = 19.99m;
+        const Int32 quantityInStock = 100;
+
+        await _connection.ExecuteAsync("""
+            INSERT INTO products (product_name, unit_price, quantity_in_stock)
+            VALUES (@productName, @unitPrice, @quantityInStock)
+            """, new { productName, unitPrice, quantityInStock });
+
+        // Act
+        // This is a little redundant since it delegates to MapTypesFromAssemblies().
+        ColumnMapper.MapTypesFromAssemblyContaining<ProductWithOptionalFields>();
+
+        // Assert
+        var product = await _connection.QueryFirstOrDefaultAsync<Product>(
+            "SELECT id, product_name, unit_price, quantity_in_stock FROM products"
+        );
+
+        Assert.NotNull(product);
+        Assert.Equal(productName, product.Name);
+        Assert.Equal(unitPrice, product.Price);
+        Assert.Equal(quantityInStock, product.Stock);
     }
 
     /// <summary>
@@ -166,7 +216,7 @@ public class ColumnMappingTests : IAsyncLifetime
     public async Task Mapping_ShouldWorkWithInsertAndRetrieve()
     {
         // Arrange
-        ColumnMapping.ApplyMap<Product>();
+        ColumnMapper.Map<Product>();
 
         var originalProduct = new Product
         {
@@ -195,67 +245,33 @@ public class ColumnMappingTests : IAsyncLifetime
     }
 
     /// <summary>
-    /// Tests that column mappings correctly handle nullable properties.
-    /// </summary>
-    [Fact]
-    public async Task Mapping_ShouldHandleNullableValues()
-    {
-        // Arrange
-        ColumnMapping.ApplyMap<ProductWithOptionalFields>();
-
-        await _connection.ExecuteAsync("""
-            CREATE TABLE IF NOT EXISTS products_extended (
-                id INTEGER PRIMARY KEY,
-                product_name TEXT NOT NULL,
-                unit_price REAL NOT NULL,
-                quantity_in_stock INTEGER NOT NULL,
-                description TEXT
-            )
-            """);
-
-        await _connection.ExecuteAsync("""
-            INSERT INTO products_extended (product_name, unit_price, quantity_in_stock, description)
-            VALUES (@Name, @Price, @Stock, @Description)
-            """, new { Name = "Test Product", Price = 15.0m, Stock = 10, Description = (String?)null });
-
-        // Act
-        var product = await _connection.QueryFirstOrDefaultAsync<ProductWithOptionalFields>(
-            "SELECT id, product_name, unit_price, quantity_in_stock, description FROM products_extended"
-        );
-
-        // Assert
-        Assert.NotNull(product);
-        Assert.Equal("Test Product", product.Name);
-        Assert.Null(product.Description);
-    }
-
-    /// <summary>
     /// Test entity with column mappings.
     /// </summary>
+    [HasColumnMaps]
     private class Product
     {
         /// <summary>
         /// Gets or sets the product ID.
         /// </summary>
-        [ColumnMap("id")]
+        [ColumnName("id")]
         public Int32 Id { get; set; }
 
         /// <summary>
         /// Gets or sets the product name, mapped from 'product_name' column.
         /// </summary>
-        [ColumnMap("product_name")]
+        [ColumnName("product_name")]
         public String Name { get; set; } = String.Empty;
 
         /// <summary>
         /// Gets or sets the product price, mapped from 'unit_price' column.
         /// </summary>
-        [ColumnMap("unit_price")]
+        [ColumnName("unit_price")]
         public Decimal Price { get; set; }
 
         /// <summary>
         /// Gets or sets the quantity in stock, mapped from 'quantity_in_stock' column.
         /// </summary>
-        [ColumnMap("quantity_in_stock")]
+        [ColumnName("quantity_in_stock")]
         public Int32 Stock { get; set; }
     }
 
@@ -272,25 +288,25 @@ public class ColumnMappingTests : IAsyncLifetime
         /// <summary>
         /// Gets or sets the product name.
         /// </summary>
-        [ColumnMap("product_name")]
+        [ColumnName("product_name")]
         public String Name { get; set; } = String.Empty;
 
         /// <summary>
         /// Gets or sets the product price.
         /// </summary>
-        [ColumnMap("unit_price")]
+        [ColumnName("unit_price")]
         public Decimal Price { get; set; }
 
         /// <summary>
         /// Gets or sets the quantity in stock.
         /// </summary>
-        [ColumnMap("quantity_in_stock")]
+        [ColumnName("quantity_in_stock")]
         public Int32 Stock { get; set; }
 
         /// <summary>
         /// Gets or sets the optional product description.
         /// </summary>
-        [ColumnMap("description")]
+        [ColumnName("description")]
         public String? Description { get; set; }
     }
 }

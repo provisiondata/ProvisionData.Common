@@ -15,16 +15,12 @@
 namespace ProvisionData.Dapper;
 
 /// <summary>
-/// Defines a contract for types that require custom Dapper column mapping configuration.
+/// Specifies that a class defines column mappings for use with Dapper.
 /// </summary>
-public interface INeedColumnMapping
+/// <remarks>Apply this attribute to a class to indicate that it provides explicit mapping between its members and
+/// columns in a database. The attribute does not enforce any behavior by itself; it serves as a marker that when
+/// discovered at runtime will cause the mapping configuration to be applied.</remarks>
+[AttributeUsage(AttributeTargets.Class)]
+public class HasColumnMapsAttribute : Attribute
 {
-    /// <summary>
-    /// Applies the column mapping configuration for the implementing type to Dapper's type map.
-    /// </summary>
-    /// <remarks>
-    /// The default implementation calls <see cref="ColumnMapping.ApplyMap"/> to configure
-    /// Dapper to recognize <see cref="ColumnMapAttribute"/> decorations on the type's properties.
-    /// </remarks>
-    void ApplyMap() => ColumnMapping.ApplyMap(GetType());
 }

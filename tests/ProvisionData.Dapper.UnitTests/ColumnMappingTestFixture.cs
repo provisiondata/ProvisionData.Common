@@ -24,8 +24,6 @@ public class ColumnMappingTestFixture : IntegrationTestFixture
 {
     protected override void ConfigureServices(IServiceCollection services, IConfiguration configuration)
     {
-        services.AddColumnMapping();
-
         services.AddSingleton<IDbConnectionFactory, TestSqliteConnectionFactory>();
     }
 
@@ -35,6 +33,8 @@ public class ColumnMappingTestFixture : IntegrationTestFixture
     protected override async ValueTask InitializeFixtureAsync(IServiceProvider services)
     {
         var connection = await services.GetRequiredService<IDbConnectionFactory>().CreateConnectionAsync();
+
+        ColumnMapper.MapTypesFromAssemblyContaining<Customer>();
 
         // Create test customers table
         await connection.ExecuteAsync("""
@@ -64,7 +64,5 @@ public class ColumnMappingTestFixture : IntegrationTestFixture
             INSERT INTO orders (order_id, customer_id, order_total)
             VALUES (@Id, @CustomerId, @Total)
             """, new { Id = 1, CustomerId = 1, Total = 99.99m });
-
-        services.MapColumns();
     }
 }
