@@ -1,0 +1,32 @@
+<Solution>
+  <Folder Name="/dev/">
+    <File Path=".editorconfig" />
+    <File Path=".gitignore" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
+    <File Path="LICENSE.md" />
+    <File Path="README.md" />
+    <File Path="scratch.md" />
+    <File Path="version.json" />
+  </Folder>
+  <Folder Name="/docs/">
+    <File Path="docs/PUBLISHING.md" />
+    <File Path="docs/ResultPattern-Changes.md" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/ProvisionData.Common/ProvisionData.Common.csproj" />
+    <Project Path="src/ProvisionData.Dapper/ProvisionData.Dapper.csproj" />
+    <Project Path="src/ProvisionData.HaloPSA.ApiClient.Contracts/ProvisionData.HaloPSA.ApiClient.Contracts.csproj" />
+    <Project Path="src/ProvisionData.HaloPSA.ApiClient.Generator/ProvisionData.HaloPSA.ApiClient.ModelGenerator.csproj" />
+    <Project Path="src/ProvisionData.HaloPSA.ApiClient/ProvisionData.HaloPSA.ApiClient.csproj" />
+    <Project Path="src/ProvisionData.Testing.Integration/ProvisionData.Testing.Integration.csproj" />
+    <Project Path="src/ProvisionData.Testing/ProvisionData.Testing.csproj" />
+    <Project Path="src/ProvisionData.WebApi/ProvisionData.WebApi.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/ProvisionData.Common.UnitTests/ProvisionData.Common.UnitTests.csproj" />
+    <Project Path="tests/ProvisionData.Dapper.UnitTests/ProvisionData.Dapper.UnitTests.csproj" />
+    <Project Path="tests/ProvisionData.HaloPSA.ApiClient.Tests/ProvisionData.HaloPSA.ApiClient.Tests.csproj" />
+    <Project Path="tests/ProvisionData.Testing.Integration.Examples/ProvisionData.Testing.Integration.Examples.csproj" />
+  </Folder>
+</Solution>
