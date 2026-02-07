@@ -12,9 +12,6 @@
 // You should have received a copy of the GNU Affero General Public License along with this
 // program. If not, see <https://www.gnu.org/licenses/>.
 
-using FluentAssertions;
-using Xunit;
-
 namespace ProvisionData.UnitTests.ResultPattern;
 
 /// <summary>
@@ -100,7 +97,7 @@ public class ResultExtensionsSyncTests
 
         var mapped = result.Map(x => x * 2);
 
-        mapped.IsFailure.Should().BeTrue();
+        mapped.IsSuccess.Should().BeFalse();
         mapped.Error.Should().BeOfType<NotFoundError>();
     }
 
@@ -124,7 +121,7 @@ public class ResultExtensionsSyncTests
         var bound = result.Bind(x =>
             x > 0 ? Result<String>.Success(x.ToString()) : Error.Validation("Must be positive"));
 
-        bound.IsFailure.Should().BeTrue();
+        bound.IsSuccess.Should().BeFalse();
         bound.Error.Should().BeOfType<ValidationError>();
     }
 
@@ -135,7 +132,7 @@ public class ResultExtensionsSyncTests
 
         var bound = result.Bind(x => Result<String>.Success(x.ToString()));
 
-        bound.IsFailure.Should().BeTrue();
+        bound.IsSuccess.Should().BeFalse();
         bound.Error.Should().BeOfType<NotFoundError>();
     }
 
@@ -184,7 +181,7 @@ public class ResultExtensionsSyncTests
 
         var tapped = result.Tap(x => sideEffect = x * 2);
 
-        tapped.IsFailure.Should().BeTrue();
+        tapped.IsSuccess.Should().BeFalse();
         sideEffect.Should().Be(0);
     }
 
@@ -206,7 +203,7 @@ public class ResultExtensionsSyncTests
 
         var typedResult = result.ToResult(42);
 
-        typedResult.IsFailure.Should().BeTrue();
+        typedResult.IsSuccess.Should().BeFalse();
         typedResult.Error.Should().BeOfType<NotFoundError>();
     }
 

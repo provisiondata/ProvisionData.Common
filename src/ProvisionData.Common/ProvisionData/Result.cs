@@ -35,15 +35,9 @@ public class Result
     public Boolean IsSuccess { get; init; }
 
     /// <summary>
-    /// Gets a value indicating whether the operation failed.
-    /// </summary>
-    [JsonIgnore]
-    public Boolean IsFailure => !IsSuccess;
-
-    /// <summary>
     /// Gets the error associated with a failed result.
     /// </summary>
-    public Error Error { get; init; } = default!; //= None;
+    public Error Error { get; init; } = None;
 
     /// <summary>
     /// Parameterless constructor for JSON deserialization.

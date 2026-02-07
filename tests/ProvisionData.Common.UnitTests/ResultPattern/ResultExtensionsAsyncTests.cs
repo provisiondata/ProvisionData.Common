@@ -12,9 +12,6 @@
 // You should have received a copy of the GNU Affero General Public License along with this
 // program. If not, see <https://www.gnu.org/licenses/>.
 
-using FluentAssertions;
-using Xunit;
-
 namespace ProvisionData.UnitTests.ResultPattern;
 
 /// <summary>
@@ -48,7 +45,7 @@ public class ResultExtensionsAsyncTests
             return x * 2;
         });
 
-        mapped.IsFailure.Should().BeTrue();
+        mapped.IsSuccess.Should().BeFalse();
         mapped.Error.Should().BeOfType<NotFoundError>();
     }
 
@@ -104,7 +101,7 @@ public class ResultExtensionsAsyncTests
             return Result<String>.Success(x.ToString());
         });
 
-        bound.IsFailure.Should().BeTrue();
+        bound.IsSuccess.Should().BeFalse();
         bound.Error.Should().BeOfType<NotFoundError>();
     }
 
@@ -236,7 +233,7 @@ public class ResultExtensionsAsyncTests
             sideEffect = x * 2;
         });
 
-        tapped.IsFailure.Should().BeTrue();
+        tapped.IsSuccess.Should().BeFalse();
         sideEffect.Should().Be(0);
     }
 

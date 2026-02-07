@@ -32,7 +32,7 @@ public class SerializationTests
         var deserialized = JsonSerializer.Deserialize<Result<Int32>>(json);
 
         deserialized.Should().NotBeNull();
-        deserialized!.IsSuccess.Should().BeTrue();
+        deserialized.IsSuccess.Should().BeTrue();
         deserialized.Value.Should().Be(42);
     }
 
@@ -45,7 +45,7 @@ public class SerializationTests
         var deserialized = JsonSerializer.Deserialize<Result<String>>(json);
 
         deserialized.Should().NotBeNull();
-        deserialized!.IsSuccess.Should().BeTrue();
+        deserialized.IsSuccess.Should().BeTrue();
         deserialized.Value.Should().Be("Hello, World!");
     }
 
@@ -58,7 +58,7 @@ public class SerializationTests
         var deserialized = JsonSerializer.Deserialize<Result<String?>>(json);
 
         deserialized.Should().NotBeNull();
-        deserialized!.IsSuccess.Should().BeTrue();
+        deserialized.IsSuccess.Should().BeTrue();
         deserialized.Value.Should().BeNull();
     }
 
@@ -72,7 +72,7 @@ public class SerializationTests
         var deserialized = JsonSerializer.Deserialize<Result<TestRecord>>(json);
 
         deserialized.Should().NotBeNull();
-        deserialized!.IsSuccess.Should().BeTrue();
+        deserialized.IsSuccess.Should().BeTrue();
         deserialized.Value.Should().BeEquivalentTo(record);
     }
 
@@ -86,7 +86,7 @@ public class SerializationTests
         var deserialized = JsonSerializer.Deserialize<Result<List<String>>>(json);
 
         deserialized.Should().NotBeNull();
-        deserialized!.IsSuccess.Should().BeTrue();
+        deserialized.IsSuccess.Should().BeTrue();
         deserialized.Value.Should().BeEquivalentTo(items);
     }
 
@@ -100,7 +100,7 @@ public class SerializationTests
         var deserialized = JsonSerializer.Deserialize<Result<Dictionary<String, Int32>>>(json);
 
         deserialized.Should().NotBeNull();
-        deserialized!.IsSuccess.Should().BeTrue();
+        deserialized.IsSuccess.Should().BeTrue();
         deserialized.Value.Should().BeEquivalentTo(dict);
     }
 
@@ -117,7 +117,7 @@ public class SerializationTests
         var deserialized = JsonSerializer.Deserialize<Result<Int32>>(json);
 
         deserialized.Should().NotBeNull();
-        deserialized!.IsFailure.Should().BeTrue();
+        deserialized.IsSuccess.Should().BeFalse();
         deserialized.Error.Should().BeOfType<ApiError>();
         deserialized.Error.Description.Should().Be("Service unavailable");
         deserialized.Error.Code.Should().Be(new ApiError("test").Code);
@@ -132,7 +132,7 @@ public class SerializationTests
         var deserialized = JsonSerializer.Deserialize<Result<String>>(json);
 
         deserialized.Should().NotBeNull();
-        deserialized!.IsFailure.Should().BeTrue();
+        deserialized.IsSuccess.Should().BeFalse();
         deserialized.Error.Should().BeOfType<ValidationError>();
         deserialized.Error.Description.Should().Be("Email format invalid");
         deserialized.Error.Code.Should().Be(new ValidationError("test").Code);
@@ -147,7 +147,7 @@ public class SerializationTests
         var deserialized = JsonSerializer.Deserialize<Result<TestRecord>>(json);
 
         deserialized.Should().NotBeNull();
-        deserialized!.IsFailure.Should().BeTrue();
+        deserialized.IsSuccess.Should().BeFalse();
         deserialized.Error.Should().BeOfType<NotFoundError>();
         deserialized.Error.Description.Should().Be("Customer not found");
     }
@@ -174,7 +174,7 @@ public class SerializationTests
             var deserialized = JsonSerializer.Deserialize<Result<Int32>>(json);
 
             deserialized.Should().NotBeNull();
-            deserialized!.IsFailure.Should().BeTrue();
+            deserialized.IsSuccess.Should().BeFalse();
             deserialized.Error.GetType().Should().Be(error.GetType());
             deserialized.Error.Code.Should().Be(error.Code,
                 $"{error.GetType().Name} should preserve ErrorCode value equality");
@@ -391,10 +391,10 @@ public class SerializationTests
         var deserializedSuccess = JsonSerializer.Deserialize<Result<Int32>>(successJson);
         var deserializedFailure = JsonSerializer.Deserialize<Result<Int32>>(failureJson);
 
-        deserializedSuccess!.IsSuccess.Should().BeTrue();
-        deserializedSuccess.IsFailure.Should().BeFalse();
-        deserializedFailure!.IsSuccess.Should().BeFalse();
-        deserializedFailure.IsFailure.Should().BeTrue();
+        deserializedSuccess.Should().NotBeNull();
+        deserializedSuccess.IsSuccess.Should().BeTrue();
+        deserializedFailure.Should().NotBeNull();
+        deserializedFailure.IsSuccess.Should().BeFalse();
     }
 
     #endregion

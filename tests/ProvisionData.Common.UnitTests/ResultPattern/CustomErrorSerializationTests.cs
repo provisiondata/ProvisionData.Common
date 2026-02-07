@@ -83,7 +83,7 @@ public class CustomErrorSerializationTests
         var deserialized = JsonSerializer.Deserialize<Result<String>>(json);
 
         deserialized.Should().NotBeNull();
-        deserialized!.IsFailure.Should().BeTrue();
+        deserialized.IsSuccess.Should().BeFalse();
         deserialized.Error.Should().BeOfType<CustomerNotFoundError>();
         deserialized.Error.Description.Should().Be("Customer ID 999 not found");
     }
