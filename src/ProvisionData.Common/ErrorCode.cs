@@ -1,4 +1,4 @@
-// ProvisionData.Common
+// Provision Data Libraries
 // Copyright (C) 2026 Provision Data Systems Inc.
 //
 // This program is free software: you can redistribute it and/or modify it under the terms of
@@ -32,8 +32,6 @@ namespace ProvisionData;
 /// </para>
 /// </remarks>
 [JsonConverter(typeof(ErrorCodeJsonConverter))]
-[RequiresUnreferencedCode("ErrorCode serialization/deserialization uses reflection to discover types and singleton Instance fields/properties, and may not work with trimming.")]
-[RequiresDynamicCode("ErrorCode serialization/deserialization uses Type.GetType() and reflection which requires dynamic code generation.")]
 public abstract class ErrorCode : IEquatable<ErrorCode>
 {
     /// <summary>
@@ -88,12 +86,6 @@ public abstract class ErrorCode : IEquatable<ErrorCode>
 /// </summary>
 internal sealed class ErrorCodeJsonConverter : JsonConverter<ErrorCode>
 {
-    [RequiresUnreferencedCode("ErrorCode deserialization uses reflection to find singleton Instance fields/properties and may not work with trimming.")]
-    [RequiresDynamicCode("ErrorCode deserialization uses Type.GetType() and reflection which requires dynamic code generation.")]
-    [UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Method is already annotated with RequiresUnreferencedCode")]
-    [UnconditionalSuppressMessage("Trimming", "IL2046", Justification = "Base JsonConverter<T>.Read is not annotated, but this override requires reflection")]
-    [UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Method is already annotated with RequiresDynamicCode")]
-    [UnconditionalSuppressMessage("AOT", "IL3051", Justification = "Base JsonConverter<T>.Read is not annotated, but this override requires dynamic code")]
     public override ErrorCode Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         if (reader.TokenType != JsonTokenType.StartObject)

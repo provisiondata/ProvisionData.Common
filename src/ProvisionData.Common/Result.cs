@@ -26,8 +26,6 @@ public class Result
     /// <summary>
     /// Gets a special <see cref="Error"/> instance representing no error.
     /// </summary>
-    [UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "NoneError is a built-in type preserved by the library")]
-    [UnconditionalSuppressMessage("AOT", "IL3050", Justification = "NoneError is a built-in type preserved by the library")]
     public static readonly Error None = new(NoneErrorCode.Instance, "None");
 
     /// <summary>
@@ -44,7 +42,7 @@ public class Result
     /// <summary>
     /// Gets the error associated with a failed result.
     /// </summary>
-    public Error Error { get; init; } = None;
+    public Error Error { get; init; } = default!; //= None;
 
     /// <summary>
     /// Parameterless constructor for JSON deserialization.
@@ -64,9 +62,14 @@ public class Result
     protected Result(Boolean isSuccess, Error error)
     {
         if (isSuccess && error != None)
+        {
             throw new ArgumentException("Success result cannot have an error", nameof(error));
+        }
+
         if (!isSuccess && error == None)
+        {
             throw new ArgumentException("Failure result must have an error", nameof(error));
+        }
 
         IsSuccess = isSuccess;
         Error = error;
@@ -99,8 +102,6 @@ public class Result
     /// <param name="error">The error to convert.</param>
     public static implicit operator Result(Error error) => Failure(error);
 
-    [RequiresUnreferencedCode("Error serialization/deserialization uses reflection to discover types, constructors, and properties, and may not work with trimming.")]
-    [RequiresDynamicCode("Error serialization/deserialization uses Type.GetType() and reflection which requires dynamic code generation.")]
     internal sealed class NoneErrorCode : ErrorCode
     {
         public static readonly NoneErrorCode Instance = new();
@@ -168,7 +169,7 @@ public class Result<TValue> : Result
     /// </summary>
     /// <param name="error">The error for the failed result.</param>
     /// <returns>A failed <see cref="Result{TValue}"/>.</returns>
-    public new static Result<TValue> Failure(Error error) => new(error);
+    public static new Result<TValue> Failure(Error error) => new(error);
 
     /// <summary>
     /// Implicit conversion from a value to a successful <see cref="Result{TValue}"/>.

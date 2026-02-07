@@ -1,4 +1,4 @@
-// ProvisionData.Common
+// Provision Data Libraries
 // Copyright (C) 2026 Provision Data Systems Inc.
 //
 // This program is free software: you can redistribute it and/or modify it under the terms of
@@ -15,7 +15,7 @@
 using FluentAssertions;
 using Xunit;
 
-namespace ProvisionData.UnitTests;
+namespace ProvisionData.UnitTests.ResultPattern;
 
 /// <summary>
 /// Unit tests for the <see cref="ResultExtensions"/> synchronous methods.
@@ -109,7 +109,7 @@ public class ResultExtensionsSyncTests
     {
         var result = Result<Int32>.Success(5);
 
-        var bound = result.Bind(x => 
+        var bound = result.Bind(x =>
             x > 0 ? Result<String>.Success(x.ToString()) : Error.Validation("Must be positive"));
 
         bound.IsSuccess.Should().BeTrue();
@@ -121,7 +121,7 @@ public class ResultExtensionsSyncTests
     {
         var result = Result<Int32>.Success(-5);
 
-        var bound = result.Bind(x => 
+        var bound = result.Bind(x =>
             x > 0 ? Result<String>.Success(x.ToString()) : Error.Validation("Must be positive"));
 
         bound.IsFailure.Should().BeTrue();

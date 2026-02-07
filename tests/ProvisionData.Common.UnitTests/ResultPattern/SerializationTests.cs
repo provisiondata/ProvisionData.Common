@@ -1,4 +1,4 @@
-// ProvisionData.Common
+// Provision Data Libraries
 // Copyright (C) 2026 Provision Data Systems Inc.
 //
 // This program is free software: you can redistribute it and/or modify it under the terms of
@@ -14,27 +14,22 @@
 
 using System.Text.Json;
 
-namespace ProvisionData.UnitTests;
+namespace ProvisionData.UnitTests.ResultPattern;
 
 /// <summary>
 /// Unit tests for JSON serialization of Result, Result&lt;T&gt;, and Error types.
 /// </summary>
 public class SerializationTests
 {
-    private readonly JsonSerializerOptions _jsonOptions = new()
-    {
-        WriteIndented = false
-    };
-
     #region Result<T> Success Tests
 
     [Fact]
     public void ResultOfT_Success_WithInt_ShouldRoundTrip()
     {
         var original = Result.Success(42);
-        var json = JsonSerializer.Serialize(original, _jsonOptions);
+        var json = JsonSerializer.Serialize(original);
 
-        var deserialized = JsonSerializer.Deserialize<Result<Int32>>(json, _jsonOptions);
+        var deserialized = JsonSerializer.Deserialize<Result<Int32>>(json);
 
         deserialized.Should().NotBeNull();
         deserialized!.IsSuccess.Should().BeTrue();
@@ -45,9 +40,9 @@ public class SerializationTests
     public void ResultOfT_Success_WithString_ShouldRoundTrip()
     {
         var original = Result.Success("Hello, World!");
-        var json = JsonSerializer.Serialize(original, _jsonOptions);
+        var json = JsonSerializer.Serialize(original);
 
-        var deserialized = JsonSerializer.Deserialize<Result<String>>(json, _jsonOptions);
+        var deserialized = JsonSerializer.Deserialize<Result<String>>(json);
 
         deserialized.Should().NotBeNull();
         deserialized!.IsSuccess.Should().BeTrue();
@@ -58,9 +53,9 @@ public class SerializationTests
     public void ResultOfT_Success_WithNullString_ShouldRoundTrip()
     {
         Result<String?> original = Result.Success<String?>(null);
-        var json = JsonSerializer.Serialize(original, _jsonOptions);
+        var json = JsonSerializer.Serialize(original);
 
-        var deserialized = JsonSerializer.Deserialize<Result<String?>>(json, _jsonOptions);
+        var deserialized = JsonSerializer.Deserialize<Result<String?>>(json);
 
         deserialized.Should().NotBeNull();
         deserialized!.IsSuccess.Should().BeTrue();
@@ -72,9 +67,9 @@ public class SerializationTests
     {
         var record = new TestRecord(123, "John Doe", "john@example.com");
         var original = Result.Success(record);
-        var json = JsonSerializer.Serialize(original, _jsonOptions);
+        var json = JsonSerializer.Serialize(original);
 
-        var deserialized = JsonSerializer.Deserialize<Result<TestRecord>>(json, _jsonOptions);
+        var deserialized = JsonSerializer.Deserialize<Result<TestRecord>>(json);
 
         deserialized.Should().NotBeNull();
         deserialized!.IsSuccess.Should().BeTrue();
@@ -86,9 +81,9 @@ public class SerializationTests
     {
         var items = new List<String> { "one", "two", "three" };
         var original = Result.Success(items);
-        var json = JsonSerializer.Serialize(original, _jsonOptions);
+        var json = JsonSerializer.Serialize(original);
 
-        var deserialized = JsonSerializer.Deserialize<Result<List<String>>>(json, _jsonOptions);
+        var deserialized = JsonSerializer.Deserialize<Result<List<String>>>(json);
 
         deserialized.Should().NotBeNull();
         deserialized!.IsSuccess.Should().BeTrue();
@@ -100,9 +95,9 @@ public class SerializationTests
     {
         var dict = new Dictionary<String, Int32> { ["a"] = 1, ["b"] = 2, ["c"] = 3 };
         var original = Result.Success(dict);
-        var json = JsonSerializer.Serialize(original, _jsonOptions);
+        var json = JsonSerializer.Serialize(original);
 
-        var deserialized = JsonSerializer.Deserialize<Result<Dictionary<String, Int32>>>(json, _jsonOptions);
+        var deserialized = JsonSerializer.Deserialize<Result<Dictionary<String, Int32>>>(json);
 
         deserialized.Should().NotBeNull();
         deserialized!.IsSuccess.Should().BeTrue();
@@ -117,9 +112,9 @@ public class SerializationTests
     public void ResultOfT_Failure_WithApiError_ShouldRoundTrip()
     {
         Result<Int32> original = new ApiError("Service unavailable");
-        var json = JsonSerializer.Serialize(original, _jsonOptions);
+        var json = JsonSerializer.Serialize(original);
 
-        var deserialized = JsonSerializer.Deserialize<Result<Int32>>(json, _jsonOptions);
+        var deserialized = JsonSerializer.Deserialize<Result<Int32>>(json);
 
         deserialized.Should().NotBeNull();
         deserialized!.IsFailure.Should().BeTrue();
@@ -132,9 +127,9 @@ public class SerializationTests
     public void ResultOfT_Failure_WithValidationError_ShouldRoundTrip()
     {
         Result<String> original = new ValidationError("Email format invalid");
-        var json = JsonSerializer.Serialize(original, _jsonOptions);
+        var json = JsonSerializer.Serialize(original);
 
-        var deserialized = JsonSerializer.Deserialize<Result<String>>(json, _jsonOptions);
+        var deserialized = JsonSerializer.Deserialize<Result<String>>(json);
 
         deserialized.Should().NotBeNull();
         deserialized!.IsFailure.Should().BeTrue();
@@ -147,9 +142,9 @@ public class SerializationTests
     public void ResultOfT_Failure_WithNotFoundError_ShouldRoundTrip()
     {
         Result<TestRecord> original = new NotFoundError("Customer not found");
-        var json = JsonSerializer.Serialize(original, _jsonOptions);
+        var json = JsonSerializer.Serialize(original);
 
-        var deserialized = JsonSerializer.Deserialize<Result<TestRecord>>(json, _jsonOptions);
+        var deserialized = JsonSerializer.Deserialize<Result<TestRecord>>(json);
 
         deserialized.Should().NotBeNull();
         deserialized!.IsFailure.Should().BeTrue();
@@ -175,8 +170,8 @@ public class SerializationTests
         foreach (var error in errors)
         {
             Result<Int32> result = error;
-            var json = JsonSerializer.Serialize(result, _jsonOptions);
-            var deserialized = JsonSerializer.Deserialize<Result<Int32>>(json, _jsonOptions);
+            var json = JsonSerializer.Serialize(result);
+            var deserialized = JsonSerializer.Deserialize<Result<Int32>>(json);
 
             deserialized.Should().NotBeNull();
             deserialized!.IsFailure.Should().BeTrue();
@@ -194,9 +189,9 @@ public class SerializationTests
     public void Error_ApiError_ShouldRoundTrip()
     {
         var original = new ApiError("HTTP 500 error");
-        var json = JsonSerializer.Serialize(original, _jsonOptions);
+        var json = JsonSerializer.Serialize(original);
 
-        var deserialized = JsonSerializer.Deserialize<ApiError>(json, _jsonOptions);
+        var deserialized = JsonSerializer.Deserialize<ApiError>(json);
 
         deserialized.Should().NotBeNull();
         deserialized!.Description.Should().Be("HTTP 500 error");
@@ -207,9 +202,9 @@ public class SerializationTests
     public void Error_BusinessRuleViolationError_ShouldRoundTrip()
     {
         var original = new BusinessRuleViolationError("Cannot delete active subscription");
-        var json = JsonSerializer.Serialize(original, _jsonOptions);
+        var json = JsonSerializer.Serialize(original);
 
-        var deserialized = JsonSerializer.Deserialize<BusinessRuleViolationError>(json, _jsonOptions);
+        var deserialized = JsonSerializer.Deserialize<BusinessRuleViolationError>(json);
 
         deserialized.Should().NotBeNull();
         deserialized!.Description.Should().Be("Cannot delete active subscription");
@@ -220,9 +215,9 @@ public class SerializationTests
     public void Error_ConfigurationError_ShouldRoundTrip()
     {
         var original = new ConfigurationError("Missing connection string");
-        var json = JsonSerializer.Serialize(original, _jsonOptions);
+        var json = JsonSerializer.Serialize(original);
 
-        var deserialized = JsonSerializer.Deserialize<ConfigurationError>(json, _jsonOptions);
+        var deserialized = JsonSerializer.Deserialize<ConfigurationError>(json);
 
         deserialized.Should().NotBeNull();
         deserialized!.Description.Should().Be("Missing connection string");
@@ -233,9 +228,9 @@ public class SerializationTests
     public void Error_ConflictError_ShouldRoundTrip()
     {
         var original = new ConflictError("Version mismatch detected");
-        var json = JsonSerializer.Serialize(original, _jsonOptions);
+        var json = JsonSerializer.Serialize(original);
 
-        var deserialized = JsonSerializer.Deserialize<ConflictError>(json, _jsonOptions);
+        var deserialized = JsonSerializer.Deserialize<ConflictError>(json);
 
         deserialized.Should().NotBeNull();
         deserialized!.Description.Should().Be("Version mismatch detected");
@@ -246,9 +241,9 @@ public class SerializationTests
     public void Error_NotFoundError_ShouldRoundTrip()
     {
         var original = new NotFoundError("Resource ID 123 not found");
-        var json = JsonSerializer.Serialize(original, _jsonOptions);
+        var json = JsonSerializer.Serialize(original);
 
-        var deserialized = JsonSerializer.Deserialize<NotFoundError>(json, _jsonOptions);
+        var deserialized = JsonSerializer.Deserialize<NotFoundError>(json);
 
         deserialized.Should().NotBeNull();
         deserialized!.Description.Should().Be("Resource ID 123 not found");
@@ -259,9 +254,9 @@ public class SerializationTests
     public void Error_UnauthorizedError_ShouldRoundTrip()
     {
         var original = new UnauthorizedError("Invalid API key");
-        var json = JsonSerializer.Serialize(original, _jsonOptions);
+        var json = JsonSerializer.Serialize(original);
 
-        var deserialized = JsonSerializer.Deserialize<UnauthorizedError>(json, _jsonOptions);
+        var deserialized = JsonSerializer.Deserialize<UnauthorizedError>(json);
 
         deserialized.Should().NotBeNull();
         deserialized!.Description.Should().Be("Invalid API key");
@@ -272,9 +267,9 @@ public class SerializationTests
     public void Error_UnhandledExceptionError_ShouldRoundTrip()
     {
         var original = new UnhandledExceptionError("NullReferenceException at line 42");
-        var json = JsonSerializer.Serialize(original, _jsonOptions);
+        var json = JsonSerializer.Serialize(original);
 
-        var deserialized = JsonSerializer.Deserialize<UnhandledExceptionError>(json, _jsonOptions);
+        var deserialized = JsonSerializer.Deserialize<UnhandledExceptionError>(json);
 
         deserialized.Should().NotBeNull();
         deserialized!.Description.Should().Be("NullReferenceException at line 42");
@@ -285,9 +280,9 @@ public class SerializationTests
     public void Error_ValidationError_ShouldRoundTrip()
     {
         var original = new ValidationError("Field 'name' is required");
-        var json = JsonSerializer.Serialize(original, _jsonOptions);
+        var json = JsonSerializer.Serialize(original);
 
-        var deserialized = JsonSerializer.Deserialize<ValidationError>(json, _jsonOptions);
+        var deserialized = JsonSerializer.Deserialize<ValidationError>(json);
 
         deserialized.Should().NotBeNull();
         deserialized!.Description.Should().Be("Field 'name' is required");
@@ -298,9 +293,9 @@ public class SerializationTests
     public void Error_WithSpecialCharacters_ShouldRoundTrip()
     {
         var original = new ConfigurationError("Path: <>&\"'\\\n\t");
-        var json = JsonSerializer.Serialize(original, _jsonOptions);
+        var json = JsonSerializer.Serialize(original);
 
-        var deserialized = JsonSerializer.Deserialize<ConfigurationError>(json, _jsonOptions);
+        var deserialized = JsonSerializer.Deserialize<ConfigurationError>(json);
 
         deserialized.Should().NotBeNull();
         deserialized!.Description.Should().Be("Path: <>&\"'\\\n\t");
@@ -310,9 +305,9 @@ public class SerializationTests
     public void Error_AsBaseType_ShouldDeserializeToCorrectType()
     {
         Error original = new NotFoundError("Item not found");
-        var json = JsonSerializer.Serialize(original, _jsonOptions);
+        var json = JsonSerializer.Serialize(original);
 
-        var deserialized = JsonSerializer.Deserialize<Error>(json, _jsonOptions);
+        var deserialized = JsonSerializer.Deserialize<Error>(json);
 
         deserialized.Should().NotBeNull();
         deserialized.Should().BeOfType<NotFoundError>();
@@ -327,8 +322,8 @@ public class SerializationTests
     public void ResultOfT_GetValueOrDefault_WorksAfterDeserialization()
     {
         var original = Result.Success(99);
-        var json = JsonSerializer.Serialize(original, _jsonOptions);
-        var deserialized = JsonSerializer.Deserialize<Result<Int32>>(json, _jsonOptions);
+        var json = JsonSerializer.Serialize(original);
+        var deserialized = JsonSerializer.Deserialize<Result<Int32>>(json);
 
         deserialized!.GetValueOrDefault().Should().Be(99);
     }
@@ -337,8 +332,8 @@ public class SerializationTests
     public void ResultOfT_Failure_GetValueOrDefault_WorksAfterDeserialization()
     {
         Result<Int32> original = new ApiError("Failed");
-        var json = JsonSerializer.Serialize(original, _jsonOptions);
-        var deserialized = JsonSerializer.Deserialize<Result<Int32>>(json, _jsonOptions);
+        var json = JsonSerializer.Serialize(original);
+        var deserialized = JsonSerializer.Deserialize<Result<Int32>>(json);
 
         deserialized.Should().NotBeNull();
         deserialized.GetValueOrDefault().Should().Be(0);
@@ -349,8 +344,8 @@ public class SerializationTests
     public void Error_IsErrorType_WorksAfterDeserialization()
     {
         var original = new ValidationError("test");
-        var json = JsonSerializer.Serialize(original, _jsonOptions);
-        var deserialized = JsonSerializer.Deserialize<ValidationError>(json, _jsonOptions);
+        var json = JsonSerializer.Serialize(original);
+        var deserialized = JsonSerializer.Deserialize<ValidationError>(json);
 
         deserialized!.IsErrorType<ValidationError>().Should().BeTrue();
         deserialized.IsErrorType<NotFoundError>().Should().BeFalse();
@@ -365,8 +360,8 @@ public class SerializationTests
     {
         Result<String> result = new NotFoundError("Not found");
 
-        var json1 = JsonSerializer.Serialize(result, _jsonOptions);
-        var json2 = JsonSerializer.Serialize(result, _jsonOptions);
+        var json1 = JsonSerializer.Serialize(result);
+        var json2 = JsonSerializer.Serialize(result);
 
         json1.Should().Be(json2, "serialization should be deterministic");
     }
@@ -375,10 +370,10 @@ public class SerializationTests
     public void ResultOfT_MultipleDeserializations_ShouldPreserveErrorCodeEquality()
     {
         Result<Int32> result = new ConflictError("Conflict");
-        var json = JsonSerializer.Serialize(result, _jsonOptions);
+        var json = JsonSerializer.Serialize(result);
 
-        var deserialized1 = JsonSerializer.Deserialize<Result<Int32>>(json, _jsonOptions);
-        var deserialized2 = JsonSerializer.Deserialize<Result<Int32>>(json, _jsonOptions);
+        var deserialized1 = JsonSerializer.Deserialize<Result<Int32>>(json);
+        var deserialized2 = JsonSerializer.Deserialize<Result<Int32>>(json);
 
         deserialized1!.Error.Code.Should().Be(deserialized2!.Error.Code,
             "ErrorCode should maintain value equality across deserializations");
@@ -390,11 +385,11 @@ public class SerializationTests
         var success = Result.Success(42);
         Result<Int32> failure = new NotFoundError("Not found");
 
-        var successJson = JsonSerializer.Serialize(success, _jsonOptions);
-        var failureJson = JsonSerializer.Serialize(failure, _jsonOptions);
+        var successJson = JsonSerializer.Serialize(success);
+        var failureJson = JsonSerializer.Serialize(failure);
 
-        var deserializedSuccess = JsonSerializer.Deserialize<Result<Int32>>(successJson, _jsonOptions);
-        var deserializedFailure = JsonSerializer.Deserialize<Result<Int32>>(failureJson, _jsonOptions);
+        var deserializedSuccess = JsonSerializer.Deserialize<Result<Int32>>(successJson);
+        var deserializedFailure = JsonSerializer.Deserialize<Result<Int32>>(failureJson);
 
         deserializedSuccess!.IsSuccess.Should().BeTrue();
         deserializedSuccess.IsFailure.Should().BeFalse();

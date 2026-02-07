@@ -1,4 +1,4 @@
-// ProvisionData.Common
+// Provision Data Libraries
 // Copyright (C) 2026 Provision Data Systems Inc.
 //
 // This program is free software: you can redistribute it and/or modify it under the terms of
@@ -12,13 +12,33 @@
 // You should have received a copy of the GNU Affero General Public License along with this
 // program. If not, see <https://www.gnu.org/licenses/>.
 
-namespace ProvisionData.UnitTests;
+namespace ProvisionData.UnitTests.ResultPattern;
 
 /// <summary>
 /// Unit tests for the <see cref="Error"/> class and its factory methods.
 /// </summary>
 public class ErrorTests
 {
+    [Fact]
+    public void Error_ShouldSerializeAndDeserializeCorrectly()
+    {
+        var error = Error.ApiError("API connection failed");
+
+        var json = System.Text.Json.JsonSerializer.Serialize(error);
+
+        var deserialized = System.Text.Json.JsonSerializer.Deserialize<Error>(json);
+
+        deserialized.Should().NotBeNull();
+
+        deserialized.Should().BeOfType<ApiError>();
+
+        String codeName = deserialized.Code;
+
+        codeName.Should().Be("ApiError");
+
+        deserialized.Description.Should().Be("API connection failed");
+    }
+
     [Fact]
     public void None_ShouldHaveDescription()
     {

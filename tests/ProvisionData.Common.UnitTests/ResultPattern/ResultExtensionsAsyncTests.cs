@@ -1,4 +1,4 @@
-// ProvisionData.Common
+// Provision Data Libraries
 // Copyright (C) 2026 Provision Data Systems Inc.
 //
 // This program is free software: you can redistribute it and/or modify it under the terms of
@@ -15,7 +15,7 @@
 using FluentAssertions;
 using Xunit;
 
-namespace ProvisionData.UnitTests;
+namespace ProvisionData.UnitTests.ResultPattern;
 
 /// <summary>
 /// Unit tests for the <see cref="ResultExtensions"/> async methods.
@@ -27,7 +27,7 @@ public class ResultExtensionsAsyncTests
     {
         var result = Result<Int32>.Success(5);
 
-        var mapped = await result.MapAsync(async x => 
+        var mapped = await result.MapAsync(async x =>
         {
             await Task.Delay(1);
             return x * 2;
@@ -42,7 +42,7 @@ public class ResultExtensionsAsyncTests
     {
         var result = Result<Int32>.Failure(Error.NotFound("Not found"));
 
-        var mapped = await result.MapAsync(async x => 
+        var mapped = await result.MapAsync(async x =>
         {
             await Task.Delay(1);
             return x * 2;
@@ -68,7 +68,7 @@ public class ResultExtensionsAsyncTests
     {
         var resultTask = Task.FromResult(Result<Int32>.Success(5));
 
-        var mapped = await resultTask.MapAsync(async x => 
+        var mapped = await resultTask.MapAsync(async x =>
         {
             await Task.Delay(1);
             return x * 2;
@@ -83,7 +83,7 @@ public class ResultExtensionsAsyncTests
     {
         var result = Result<Int32>.Success(5);
 
-        var bound = await result.BindAsync(async x => 
+        var bound = await result.BindAsync(async x =>
         {
             await Task.Delay(1);
             return x > 0 ? Result<String>.Success(x.ToString()) : Error.Validation("Must be positive");
@@ -98,7 +98,7 @@ public class ResultExtensionsAsyncTests
     {
         var result = Result<Int32>.Failure(Error.NotFound("Not found"));
 
-        var bound = await result.BindAsync(async x => 
+        var bound = await result.BindAsync(async x =>
         {
             await Task.Delay(1);
             return Result<String>.Success(x.ToString());
@@ -113,7 +113,7 @@ public class ResultExtensionsAsyncTests
     {
         var resultTask = Task.FromResult(Result<Int32>.Success(5));
 
-        var bound = await resultTask.BindAsync(x => 
+        var bound = await resultTask.BindAsync(x =>
             x > 0 ? Result<String>.Success(x.ToString()) : Error.Validation("Must be positive"));
 
         bound.IsSuccess.Should().BeTrue();
@@ -125,7 +125,7 @@ public class ResultExtensionsAsyncTests
     {
         var resultTask = Task.FromResult(Result<Int32>.Success(5));
 
-        var bound = await resultTask.BindAsync(async x => 
+        var bound = await resultTask.BindAsync(async x =>
         {
             await Task.Delay(1);
             return x > 0 ? Result<String>.Success(x.ToString()) : Error.Validation("Must be positive");
@@ -141,12 +141,12 @@ public class ResultExtensionsAsyncTests
         var result = Result<Int32>.Success(5);
 
         var message = await result.MatchAsync(
-            async x => 
+            async x =>
             {
                 await Task.Delay(1);
                 return $"Success: {x}";
             },
-            async error => 
+            async error =>
             {
                 await Task.Delay(1);
                 return $"Error: {error.Description}";
@@ -161,12 +161,12 @@ public class ResultExtensionsAsyncTests
         var result = Result<Int32>.Failure(Error.NotFound("Item not found"));
 
         var message = await result.MatchAsync(
-            async x => 
+            async x =>
             {
                 await Task.Delay(1);
                 return $"Success: {x}";
             },
-            async error => 
+            async error =>
             {
                 await Task.Delay(1);
                 return $"Error: {error.Description}";
@@ -193,12 +193,12 @@ public class ResultExtensionsAsyncTests
         var resultTask = Task.FromResult(Result<Int32>.Success(5));
 
         var message = await resultTask.MatchAsync(
-            async x => 
+            async x =>
             {
                 await Task.Delay(1);
                 return $"Success: {x}";
             },
-            async error => 
+            async error =>
             {
                 await Task.Delay(1);
                 return $"Error: {error.Description}";
@@ -213,7 +213,7 @@ public class ResultExtensionsAsyncTests
         var result = Result<Int32>.Success(5);
         var sideEffect = 0;
 
-        var tapped = await result.TapAsync(async x => 
+        var tapped = await result.TapAsync(async x =>
         {
             await Task.Delay(1);
             sideEffect = x * 2;
@@ -230,7 +230,7 @@ public class ResultExtensionsAsyncTests
         var result = Result<Int32>.Failure(Error.NotFound("Not found"));
         var sideEffect = 0;
 
-        var tapped = await result.TapAsync(async x => 
+        var tapped = await result.TapAsync(async x =>
         {
             await Task.Delay(1);
             sideEffect = x * 2;
@@ -259,7 +259,7 @@ public class ResultExtensionsAsyncTests
         var resultTask = Task.FromResult(Result<Int32>.Success(5));
         var sideEffect = 0;
 
-        var tapped = await resultTask.TapAsync(async x => 
+        var tapped = await resultTask.TapAsync(async x =>
         {
             await Task.Delay(1);
             sideEffect = x * 2;
@@ -274,17 +274,17 @@ public class ResultExtensionsAsyncTests
     public async Task AsyncChaining_ShouldWorkCorrectly()
     {
         var result = await Task.FromResult(Result<Int32>.Success(5))
-            .MapAsync(async x => 
+            .MapAsync(async x =>
             {
                 await Task.Delay(1);
                 return x * 2;
             })
-            .BindAsync(async x => 
+            .BindAsync(async x =>
             {
                 await Task.Delay(1);
                 return x > 5 ? Result<String>.Success(x.ToString()) : Error.Validation("Too small");
             })
-            .TapAsync(async x => 
+            .TapAsync(async x =>
             {
                 await Task.Delay(1);
                 Console.WriteLine(x);

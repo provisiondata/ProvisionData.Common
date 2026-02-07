@@ -1,4 +1,4 @@
-// ProvisionData.Common
+// Provision Data Libraries
 // Copyright (C) 2026 Provision Data Systems Inc.
 //
 // This program is free software: you can redistribute it and/or modify it under the terms of
@@ -23,8 +23,6 @@ namespace ProvisionData;
 /// Represents an error with a code and description.
 /// </summary>
 [JsonConverter(typeof(ErrorJsonConverter))]
-[RequiresUnreferencedCode("Error serialization/deserialization uses reflection to discover types, constructors, and properties, and may not work with trimming.")]
-[RequiresDynamicCode("Error serialization/deserialization uses Type.GetType() and reflection which requires dynamic code generation.")]
 public class Error
 {
     /// <summary>
@@ -139,14 +137,6 @@ public class Error
 /// </remarks>
 internal sealed class ErrorJsonConverter : JsonConverter<Error>
 {
-    [RequiresUnreferencedCode("Error deserialization uses reflection to discover constructors and properties, and may not work with trimming.")]
-    [RequiresDynamicCode("Error deserialization uses Type.GetType() and reflection which requires dynamic code generation.")]
-    [UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Method is already annotated with RequiresUnreferencedCode")]
-    [UnconditionalSuppressMessage("Trimming", "IL2046", Justification = "Base JsonConverter<T>.Read is not annotated, but this override requires reflection")]
-    [UnconditionalSuppressMessage("Trimming", "IL2072", Justification = "Method is already annotated with RequiresUnreferencedCode")]
-    [UnconditionalSuppressMessage("Trimming", "IL2075", Justification = "Method is already annotated with RequiresUnreferencedCode")]
-    [UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Method is already annotated with RequiresDynamicCode")]
-    [UnconditionalSuppressMessage("AOT", "IL3051", Justification = "Base JsonConverter<T>.Read is not annotated, but this override requires dynamic code")]
     public override Error Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         using var doc = JsonDocument.ParseValue(ref reader);
@@ -154,16 +144,22 @@ internal sealed class ErrorJsonConverter : JsonConverter<Error>
 
         // Get the type discriminator
         if (!root.TryGetProperty("$type", out var typeElement))
+        {
             throw new JsonException("Error serialization requires $type property");
+        }
 
         var typeName = typeElement.GetString();
         if (String.IsNullOrEmpty(typeName))
+        {
             throw new JsonException("Error $type cannot be null or empty");
+        }
 
         // Load the type
         var type = Type.GetType(typeName);
         if (type is null || !typeof(Error).IsAssignableFrom(type))
+        {
             throw new JsonException($"Unknown or invalid Error type: '{typeName}'");
+        }
 
         // Get all constructors and find the one with the most parameters (primary constructor for records)
         var constructors = type.GetConstructors()
@@ -171,7 +167,9 @@ internal sealed class ErrorJsonConverter : JsonConverter<Error>
             .ToArray();
 
         if (constructors.Length == 0)
+        {
             throw new JsonException($"Error type '{type.FullName}' has no public constructors");
+        }
 
         // Try each constructor until one works
         foreach (var constructor in constructors)
@@ -233,13 +231,6 @@ internal sealed class ErrorJsonConverter : JsonConverter<Error>
         throw new JsonException($"Could not find a compatible constructor for Error type '{type.FullName}'");
     }
 
-    [RequiresUnreferencedCode("Error serialization uses reflection to discover all public properties and may not work with trimming.")]
-    [RequiresDynamicCode("Error serialization uses reflection which requires dynamic code generation.")]
-    [UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Method is already annotated with RequiresUnreferencedCode")]
-    [UnconditionalSuppressMessage("Trimming", "IL2046", Justification = "Base JsonConverter<T>.Write is not annotated, but this override requires reflection")]
-    [UnconditionalSuppressMessage("Trimming", "IL2075", Justification = "Method is already annotated with RequiresUnreferencedCode")]
-    [UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Method is already annotated with RequiresDynamicCode")]
-    [UnconditionalSuppressMessage("AOT", "IL3051", Justification = "Base JsonConverter<T>.Write is not annotated, but this override requires dynamic code")]
     public override void Write(Utf8JsonWriter writer, Error value, JsonSerializerOptions options)
     {
         var type = value.GetType();
@@ -250,12 +241,15 @@ internal sealed class ErrorJsonConverter : JsonConverter<Error>
         writer.WriteString("$type", type.AssemblyQualifiedName);
 
         // Write all public properties
+        // We have to use reflection here in case we are serializing a derived type with additional properties.
         var properties = type.GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
         foreach (var property in properties)
         {
             // Skip properties that don't have a getter or are marked with JsonIgnore
             if (!property.CanRead || property.GetCustomAttribute<JsonIgnoreAttribute>() is not null)
+            {
                 continue;
+            }
 
             var propertyValue = property.GetValue(value);
 

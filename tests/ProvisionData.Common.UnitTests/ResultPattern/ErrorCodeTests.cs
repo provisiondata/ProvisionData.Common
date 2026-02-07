@@ -14,7 +14,7 @@
 
 using System.Text.Json;
 
-namespace ProvisionData.UnitTests;
+namespace ProvisionData.UnitTests.ResultPattern;
 
 /// <summary>
 /// Unit tests for the <see cref="ErrorCode"/> class and its implementations.
