@@ -7,6 +7,16 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <None Remove="appsettings.Testing.json" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+        <Content Include="appsettings.Testing.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
+
+    <ItemGroup>
         <Using Include="FluentAssertions" />
         <Using Include="Moq" />
         <Using Include="Xunit" />
@@ -18,8 +28,8 @@
         <PackageReference Include="Bogus.Hollywood" />
         <PackageReference Include="Bogus.Text" />
         <PackageReference Include="Bogus.Tools.Analyzer">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="coverlet.collector">
             <PrivateAssets>all</PrivateAssets>
@@ -49,6 +59,7 @@
     <ItemGroup>
         <ProjectReference Include="..\..\src\ProvisionData.HaloPSA.ApiClient\ProvisionData.HaloPSA.ApiClient.csproj" />
         <ProjectReference Include="..\..\src\ProvisionData.HaloPSA.ApiClient.Generator\ProvisionData.HaloPSA.ApiClient.ModelGenerator.csproj" />
+        <ProjectReference Include="..\..\src\ProvisionData.Testing.Integration\ProvisionData.Testing.Integration.csproj" />
     </ItemGroup>
 
 </Project>
