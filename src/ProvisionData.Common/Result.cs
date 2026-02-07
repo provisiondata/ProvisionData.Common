@@ -1,4 +1,4 @@
-// ProvisionData.Common
+// Provision Data Libraries
 // Copyright (C) 2026 Provision Data Systems Inc.
 //
 // This program is free software: you can redistribute it and/or modify it under the terms of
@@ -99,8 +99,8 @@ public class Result
     /// <param name="error">The error to convert.</param>
     public static implicit operator Result(Error error) => Failure(error);
 
-    [UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "NoneErrorCode is a built-in type preserved by the library")]
-    [UnconditionalSuppressMessage("AOT", "IL3050", Justification = "NoneErrorCode is a built-in type preserved by the library")]
+    [RequiresUnreferencedCode("Error serialization/deserialization uses reflection to discover types, constructors, and properties, and may not work with trimming.")]
+    [RequiresDynamicCode("Error serialization/deserialization uses Type.GetType() and reflection which requires dynamic code generation.")]
     internal sealed class NoneErrorCode : ErrorCode
     {
         public static readonly NoneErrorCode Instance = new();

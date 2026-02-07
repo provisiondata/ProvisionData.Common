@@ -1,4 +1,4 @@
-// ProvisionData.Common
+// Provision Data Libraries
 // Copyright (C) 2026 Provision Data Systems Inc.
 //
 // This program is free software: you can redistribute it and/or modify it under the terms of
@@ -28,12 +28,12 @@ namespace ProvisionData;
 /// Represents an error that occurred during an API call. This should be used to wrap HTTP-related errors,
 /// including deserialization issues, transport errors, etc., but not Application or Domain-Specific errors.
 /// </summary>
-[method: UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Built-in error types are preserved by the library")]
-[method: UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Built-in error types are preserved by the library")]
+[RequiresUnreferencedCode("ApiError serialization/deserialization uses reflection to discover types, constructors, and properties, and may not work with trimming.")]
+[RequiresDynamicCode("ApiError serialization/deserialization uses Type.GetType() and reflection which requires dynamic code generation.")]
 public sealed class ApiError(String description) : Error(ApiErrorCode.Instance, description)
 {
-    [UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Built-in error code types are preserved by the library")]
-    [UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Built-in error code types are preserved by the library")]
+    [RequiresUnreferencedCode("ApiErrorCode serialization/deserialization uses reflection to discover types, constructors, and properties, and may not work with trimming.")]
+    [RequiresDynamicCode("ApiErrorCode serialization/deserialization uses Type.GetType() and reflection which requires dynamic code generation.")]
     internal sealed class ApiErrorCode : ErrorCode
     {
         public static readonly ApiErrorCode Instance = new();
@@ -51,12 +51,12 @@ public sealed class ApiError(String description) : Error(ApiErrorCode.Instance, 
 /// <summary>
 /// Represents a business rule violation error.
 /// </summary>
-[method: UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Built-in error types are preserved by the library")]
-[method: UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Built-in error types are preserved by the library")]
+[RequiresUnreferencedCode("BusinessRuleViolationError serialization/deserialization uses reflection to discover types, constructors, and properties, and may not work with trimming.")]
+[RequiresDynamicCode("BusinessRuleViolationError serialization/deserialization uses Type.GetType() and reflection which requires dynamic code generation.")]
 public sealed class BusinessRuleViolationError(String description) : Error(BusinessRuleViolationErrorCode.Instance, description)
 {
-    [UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Built-in error code types are preserved by the library")]
-    [UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Built-in error code types are preserved by the library")]
+    [RequiresUnreferencedCode("BusinessRuleViolationErrorCode serialization/deserialization uses reflection to discover types, constructors, and properties, and may not work with trimming.")]
+    [RequiresDynamicCode("BusinessRuleViolationErrorCode serialization/deserialization uses Type.GetType() and reflection which requires dynamic code generation.")]
     internal sealed class BusinessRuleViolationErrorCode : ErrorCode
     {
         public static readonly BusinessRuleViolationErrorCode Instance = new();
@@ -74,12 +74,12 @@ public sealed class BusinessRuleViolationError(String description) : Error(Busin
 /// <summary>
 /// Represents a configuration error.
 /// </summary>
-[method: UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Built-in error types are preserved by the library")]
-[method: UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Built-in error types are preserved by the library")]
+[RequiresUnreferencedCode("ConfigurationError serialization/deserialization uses reflection to discover types, constructors, and properties, and may not work with trimming.")]
+[RequiresDynamicCode("ConfigurationError serialization/deserialization uses Type.GetType() and reflection which requires dynamic code generation.")]
 public sealed class ConfigurationError(String description) : Error(ConfigurationErrorCode.Instance, description)
 {
-    [UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Built-in error code types are preserved by the library")]
-    [UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Built-in error code types are preserved by the library")]
+    [RequiresUnreferencedCode("ConfigurationErrorCode serialization/deserialization uses reflection to discover types, constructors, and properties, and may not work with trimming.")]
+    [RequiresDynamicCode("ConfigurationErrorCode serialization/deserialization uses Type.GetType() and reflection which requires dynamic code generation.")]
     internal sealed class ConfigurationErrorCode : ErrorCode
     {
         public static readonly ConfigurationErrorCode Instance = new();
@@ -97,12 +97,12 @@ public sealed class ConfigurationError(String description) : Error(Configuration
 /// <summary>
 /// Represents a conflict error.
 /// </summary>
-[method: UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Built-in error types are preserved by the library")]
-[method: UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Built-in error types are preserved by the library")]
+[RequiresUnreferencedCode("ConflictError serialization/deserialization uses reflection to discover types, constructors, and properties, and may not work with trimming.")]
+[RequiresDynamicCode("ConflictError serialization/deserialization uses Type.GetType() and reflection which requires dynamic code generation.")]
 public sealed class ConflictError(String description) : Error(ConflictErrorCode.Instance, description)
 {
-    [UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Built-in error code types are preserved by the library")]
-    [UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Built-in error code types are preserved by the library")]
+    [RequiresUnreferencedCode("ConflictErrorCode serialization/deserialization uses reflection to discover types, constructors, and properties, and may not work with trimming.")]
+    [RequiresDynamicCode("ConflictErrorCode serialization/deserialization uses Type.GetType() and reflection which requires dynamic code generation.")]
     internal sealed class ConflictErrorCode : ErrorCode
     {
         public static readonly ConflictErrorCode Instance = new();
@@ -120,12 +120,12 @@ public sealed class ConflictError(String description) : Error(ConflictErrorCode.
 /// <summary>
 /// Represents a not found error.
 /// </summary>
-[method: UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Built-in error types are preserved by the library")]
-[method: UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Built-in error types are preserved by the library")]
+[RequiresUnreferencedCode("NotFoundError serialization/deserialization uses reflection to discover types, constructors, and properties, and may not work with trimming.")]
+[RequiresDynamicCode("NotFoundError serialization/deserialization uses Type.GetType() and reflection which requires dynamic code generation.")]
 public sealed class NotFoundError(String description) : Error(NotFoundErrorCode.Instance, description)
 {
-    [UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Built-in error code types are preserved by the library")]
-    [UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Built-in error code types are preserved by the library")]
+    [RequiresUnreferencedCode("NotFoundErrorCode serialization/deserialization uses reflection to discover types, constructors, and properties, and may not work with trimming.")]
+    [RequiresDynamicCode("NotFoundErrorCode serialization/deserialization uses Type.GetType() and reflection which requires dynamic code generation.")]
     internal sealed class NotFoundErrorCode : ErrorCode
     {
         public static readonly NotFoundErrorCode Instance = new();
@@ -143,12 +143,12 @@ public sealed class NotFoundError(String description) : Error(NotFoundErrorCode.
 /// <summary>
 /// Represents an unauthorized error.
 /// </summary>
-[method: UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Built-in error types are preserved by the library")]
-[method: UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Built-in error types are preserved by the library")]
+[RequiresUnreferencedCode("UnauthorizedError serialization/deserialization uses reflection to discover types, constructors, and properties, and may not work with trimming.")]
+[RequiresDynamicCode("UnauthorizedError serialization/deserialization uses Type.GetType() and reflection which requires dynamic code generation.")]
 public sealed class UnauthorizedError(String description) : Error(UnauthorizedErrorCode.Instance, description)
 {
-    [UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Built-in error code types are preserved by the library")]
-    [UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Built-in error code types are preserved by the library")]
+    [RequiresUnreferencedCode("UnauthorizedErrorCode serialization/deserialization uses reflection to discover types, constructors, and properties, and may not work with trimming.")]
+    [RequiresDynamicCode("UnauthorizedErrorCode serialization/deserialization uses Type.GetType() and reflection which requires dynamic code generation.")]
     internal sealed class UnauthorizedErrorCode : ErrorCode
     {
         public static readonly UnauthorizedErrorCode Instance = new();
@@ -178,12 +178,12 @@ public sealed class UnauthorizedError(String description) : Error(UnauthorizedEr
 /// exception details are preserved for diagnostic purposes. In most cases it is probably better
 /// to let the exception bubble up.
 /// </remarks>
-[method: UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Built-in error types are preserved by the library")]
-[method: UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Built-in error types are preserved by the library")]
+[RequiresUnreferencedCode("UnhandledExceptionError serialization/deserialization uses reflection to discover types, constructors, and properties, and may not work with trimming.")]
+[RequiresDynamicCode("UnhandledExceptionError serialization/deserialization uses Type.GetType() and reflection which requires dynamic code generation.")]
 public sealed class UnhandledExceptionError(String description) : Error(UnhandledExceptionErrorCode.Instance, description)
 {
-    [UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Built-in error code types are preserved by the library")]
-    [UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Built-in error code types are preserved by the library")]
+    [RequiresUnreferencedCode("UnhandledExceptionErrorCode serialization/deserialization uses reflection to discover types, constructors, and properties, and may not work with trimming.")]
+    [RequiresDynamicCode("UnhandledExceptionErrorCode serialization/deserialization uses Type.GetType() and reflection which requires dynamic code generation.")]
     internal sealed class UnhandledExceptionErrorCode : ErrorCode
     {
         public static readonly UnhandledExceptionErrorCode Instance = new();
@@ -201,12 +201,12 @@ public sealed class UnhandledExceptionError(String description) : Error(Unhandle
 /// <summary>
 /// Represents a validation error.
 /// </summary>
-[method: UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Built-in error types are preserved by the library")]
-[method: UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Built-in error types are preserved by the library")]
+[RequiresUnreferencedCode("ValidationError serialization/deserialization uses reflection to discover types, constructors, and properties, and may not work with trimming.")]
+[RequiresDynamicCode("ValidationError serialization/deserialization uses Type.GetType() and reflection which requires dynamic code generation.")]
 public sealed class ValidationError(String description) : Error(ValidationErrorCode.Instance, description)
 {
-    [UnconditionalSuppressMessage("Trimming", "IL2026", Justification = "Built-in error code types are preserved by the library")]
-    [UnconditionalSuppressMessage("AOT", "IL3050", Justification = "Built-in error code types are preserved by the library")]
+    [RequiresUnreferencedCode("ValidationErrorCode serialization/deserialization uses reflection to discover types, constructors, and properties, and may not work with trimming.")]
+    [RequiresDynamicCode("ValidationErrorCode serialization/deserialization uses Type.GetType() and reflection which requires dynamic code generation.")]
     internal sealed class ValidationErrorCode : ErrorCode
     {
         public static readonly ValidationErrorCode Instance = new();
