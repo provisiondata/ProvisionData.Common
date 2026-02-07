@@ -192,7 +192,13 @@ public class CustomFieldsGenerator
     {
         sb.AppendLine("    #region Custom Fields - Static Initialization");
         sb.AppendLine();
+
+        sb.AppendLine("#if NET9_0_OR_GREATER");
         sb.AppendLine("    private static readonly Lock MappingLock = new();");
+        sb.AppendLine("#else");
+        sb.AppendLine("    private static readonly Object MappingLock = new();");
+        sb.AppendLine("#endif");
+
         sb.AppendLine("    private static volatile Boolean Mapped;");
 
         // Field ID declarations
@@ -219,7 +225,7 @@ public class CustomFieldsGenerator
         sb.AppendLine("    /// <inheritdoc/>");
         sb.AppendLine("    public IEnumerable<String>? FieldNames");
         sb.AppendLine("        => [");
-        for (int i = 0; i < model.Fields.Count; i++)
+        for (Int32 i = 0; i < model.Fields.Count; i++)
         {
             var field = model.Fields[i];
             var comma = i < model.Fields.Count - 1 ? "," : "";
@@ -335,7 +341,7 @@ public class CustomFieldsGenerator
         sb.AppendLine("        return new Dictionary<String, Int32>");
         sb.AppendLine("        {");
 
-        for (int i = 0; i < model.Fields.Count; i++)
+        for (var i = 0; i < model.Fields.Count; i++)
         {
             var field = model.Fields[i];
             var comma = i < model.Fields.Count - 1 ? "," : "";

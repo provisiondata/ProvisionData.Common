@@ -25,8 +25,10 @@ public static class JsonExtensions
     private static readonly JsonSerializerOptions JSO = new()
     {
         WriteIndented = true,
+#if NET9_0_OR_GREATER
         IndentCharacter = ' ',
         IndentSize = 2
+#endif
     };
 
     /// <summary>

@@ -40,7 +40,7 @@ public static partial class AssetExtensions
         var assetView = JsonSerializer.Deserialize(json, AssetJsonContext.Default.AssetViewDto)
             ?? throw new HaloApiException("Failed to deserialize AssetView.", json);
 
-        return assetView?.Assets?.AsReadOnly() ?? [];
+        return assetView?.Assets is not null ? assetView.Assets.AsReadOnly() : new List<AssetListDto>().AsReadOnly();
     }
 
     /// <summary>

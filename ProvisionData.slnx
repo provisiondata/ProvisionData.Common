@@ -26,6 +26,7 @@
   <Folder Name="/tests/">
     <Project Path="tests/ProvisionData.Common.UnitTests/ProvisionData.Common.UnitTests.csproj" />
     <Project Path="tests/ProvisionData.Dapper.UnitTests/ProvisionData.Dapper.UnitTests.csproj" />
+    <Project Path="tests/ProvisionData.HaloPSA.ApiClient.Tests.Integration/ProvisionData.HaloPSA.ApiClient.Tests.Integration.csproj" Id="e237d8c8-a9af-44cb-b75c-80d781c912f0" />
     <Project Path="tests/ProvisionData.HaloPSA.ApiClient.Tests/ProvisionData.HaloPSA.ApiClient.Tests.csproj" />
     <Project Path="tests/ProvisionData.Testing.Integration.Examples/ProvisionData.Testing.Integration.Examples.csproj" />
   </Folder>

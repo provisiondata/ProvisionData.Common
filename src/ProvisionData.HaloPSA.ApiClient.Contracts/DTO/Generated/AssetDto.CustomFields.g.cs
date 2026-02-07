@@ -14,7 +14,11 @@ public partial class AssetDto
 {
     #region Custom Fields - Static Initialization
 
+#if NET9_0_OR_GREATER
     private static readonly Lock MappingLock = new();
+#else
+    private static readonly Object MappingLock = new();
+#endif
     private static volatile Boolean Mapped;
     private static Int32 ModelFieldId;
     private static Int32 NameFieldId;
