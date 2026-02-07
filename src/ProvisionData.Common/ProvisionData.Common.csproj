@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>        
 		<RootNamespace>ProvisionData</RootNamespace>        
@@ -12,11 +12,12 @@
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <IsPackable>true</IsPackable>
         <IsAotCompatible>false</IsAotCompatible>
-        <IsTrimmable>false</IsTrimmable>
+        <IsTrimmable>true</IsTrimmable>
     </PropertyGroup>
 
     <ItemGroup>
         <None Include="./README.md" Pack="true" PackagePath="/" />
+        <EmbeddedResource Include="IlDescriptors.xml" />
     </ItemGroup>
     
 </Project>

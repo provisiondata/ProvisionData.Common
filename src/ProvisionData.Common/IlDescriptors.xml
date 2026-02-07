@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<linker>
+  <assembly fullname="ProvisionData.Common">
+    <!-- Error base class and its JSON converter -->
+    <type fullname="ProvisionData.Error" preserve="all" />
+    <type fullname="ProvisionData.ErrorJsonConverter" preserve="all" />
+
+    <!-- ErrorCode base class and its JSON converter -->
+    <type fullname="ProvisionData.ErrorCode" preserve="all" />
+    <type fullname="ProvisionData.ErrorCodeJsonConverter" preserve="all" />
+
+    <!-- Derived Error types and their internal ErrorCode classes -->
+    <type fullname="ProvisionData.ApiError" preserve="all" />
+    <type fullname="ProvisionData.ApiError+ApiErrorCode" preserve="all" />
+
+    <type fullname="ProvisionData.BusinessRuleViolationError" preserve="all" />
+    <type fullname="ProvisionData.BusinessRuleViolationError+BusinessRuleViolationErrorCode" preserve="all" />
+
+    <type fullname="ProvisionData.ConfigurationError" preserve="all" />
+    <type fullname="ProvisionData.ConfigurationError+ConfigurationErrorCode" preserve="all" />
+
+    <type fullname="ProvisionData.ConflictError" preserve="all" />
+    <type fullname="ProvisionData.ConflictError+ConflictErrorCode" preserve="all" />
+
+    <type fullname="ProvisionData.NotFoundError" preserve="all" />
+    <type fullname="ProvisionData.NotFoundError+NotFoundErrorCode" preserve="all" />
+
+    <type fullname="ProvisionData.UnauthorizedError" preserve="all" />
+    <type fullname="ProvisionData.UnauthorizedError+UnauthorizedErrorCode" preserve="all" />
+
+    <type fullname="ProvisionData.UnhandledExceptionError" preserve="all" />
+    <type fullname="ProvisionData.UnhandledExceptionError+UnhandledExceptionErrorCode" preserve="all" />
+
+    <type fullname="ProvisionData.ValidationError" preserve="all" />
+    <type fullname="ProvisionData.ValidationError+ValidationErrorCode" preserve="all" />
+
+    <!-- Result and Result<T> classes -->
+    <type fullname="ProvisionData.Result" preserve="all" />
+    <type fullname="ProvisionData.Result`1" preserve="all" />
+
+    <!-- ResultExtensions class -->
+    <type fullname="ProvisionData.ResultExtensions" preserve="all" />
+  </assembly>
+</linker>

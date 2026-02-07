@@ -32,6 +32,7 @@ namespace ProvisionData;
 /// </para>
 /// </remarks>
 [JsonConverter(typeof(ErrorCodeJsonConverter))]
+[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
 public abstract class ErrorCode : IEquatable<ErrorCode>
 {
     /// <summary>
@@ -84,8 +85,10 @@ public abstract class ErrorCode : IEquatable<ErrorCode>
 /// <summary>
 /// JSON converter for ErrorCode that serializes by type and name, allowing deserialization of any ErrorCode subclass.
 /// </summary>
+[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
 internal sealed class ErrorCodeJsonConverter : JsonConverter<ErrorCode>
 {
+    [SuppressMessage("Trimming", "IL2057:Unrecognized value passed to the parameter of method. It's not possible to guarantee the availability of the target type.", Justification = "Type name is provided from JSON payload ($type property). The trimmer cannot statically analyze the type name at compile time, but callers must ensure they only deserialize types that have been preserved via IlDescriptors.xml or other trimming configuration.")]
     public override ErrorCode Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         if (reader.TokenType != JsonTokenType.StartObject)

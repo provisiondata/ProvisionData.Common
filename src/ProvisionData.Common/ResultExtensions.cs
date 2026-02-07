@@ -1,4 +1,4 @@
-// ProvisionData.Common
+// Provision Data Libraries
 // Copyright (C) 2026 Provision Data Systems Inc.
 //
 // This program is free software: you can redistribute it and/or modify it under the terms of
@@ -19,7 +19,7 @@ namespace ProvisionData;
 /// <summary>
 /// Extension methods for working with <see cref="Result"/> and <see cref="Result{T}"/> types.
 /// </summary>
-[SuppressMessage("Usage", "VSTHRD003:Avoid awaiting foreign Tasks", Justification = "")]
+[SuppressMessage("Usage", "VSTHRD003:Avoid awaiting foreign Tasks", Justification = "Extension methods intentionally await Task<Result<T>> returned by external code to enable composable async operations. This is fundamental to the Result pattern's design for chaining async operations across library and application boundaries.")]
 public static class ResultExtensions
 {
     /// <summary>
@@ -252,7 +252,10 @@ public static class ResultExtensions
         Action<T> action)
     {
         if (result.IsSuccess)
+        {
             action(result.Value);
+        }
+
         return result;
     }
 
@@ -268,7 +271,10 @@ public static class ResultExtensions
         Func<T, Task> action)
     {
         if (result.IsSuccess)
+        {
             await action(result.Value).ConfigureAwait(false);
+        }
+
         return result;
     }
 

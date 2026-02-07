@@ -23,6 +23,7 @@ namespace ProvisionData;
 /// Represents an error with a code and description.
 /// </summary>
 [JsonConverter(typeof(ErrorJsonConverter))]
+[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
 public class Error
 {
     /// <summary>
@@ -135,8 +136,11 @@ public class Error
 /// The converter handles additional properties on derived Error types by using reflection
 /// to read all public properties and invoke the appropriate constructor.
 /// </remarks>
+[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
 internal sealed class ErrorJsonConverter : JsonConverter<Error>
 {
+    [SuppressMessage("Trimming", "IL2057:Unrecognized value passed to the parameter of method. It's not possible to guarantee the availability of the target type.", Justification = "Type name is provided from JSON payload ($type property). The trimmer cannot statically analyze the type name at compile time, but callers must ensure they only deserialize types that have been preserved via IlDescriptors.xml or other trimming configuration.")]
+    [SuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "Method performs intentional polymorphic deserialization using reflection to reconstruct Error types from JSON. All Error types and their constructors must be preserved via IlDescriptors.xml for this to work correctly in trimmed environments.")]
     public override Error Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         using var doc = JsonDocument.ParseValue(ref reader);
@@ -231,6 +235,7 @@ internal sealed class ErrorJsonConverter : JsonConverter<Error>
         throw new JsonException($"Could not find a compatible constructor for Error type '{type.FullName}'");
     }
 
+    [SuppressMessage("Trimming", "IL2026:Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code", Justification = "Method performs intentional polymorphic serialization using reflection to discover all public properties on Error types. The [DynamicallyAccessedMembers(All)] attribute on Error class ensures all properties are preserved in trimmed environments.")]
     public override void Write(Utf8JsonWriter writer, Error value, JsonSerializerOptions options)
     {
         var type = value.GetType();
