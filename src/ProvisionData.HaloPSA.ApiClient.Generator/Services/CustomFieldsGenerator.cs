@@ -188,7 +188,7 @@ public class CustomFieldsGenerator
     /// <summary>
     /// Generates the static initialization region.
     /// </summary>
-    private static void GenerateStaticInitialization(StringBuilder sb, CustomFieldsTemplateModel model)
+    private void GenerateStaticInitialization(StringBuilder sb, CustomFieldsTemplateModel model)
     {
         sb.AppendLine("    #region Custom Fields - Static Initialization");
         sb.AppendLine();
@@ -245,7 +245,7 @@ public class CustomFieldsGenerator
     /// <summary>
     /// Generates the ApplyFieldMappings method.
     /// </summary>
-    private static void GenerateApplyFieldMappingsMethod(StringBuilder sb, CustomFieldsTemplateModel model)
+    private void GenerateApplyFieldMappingsMethod(StringBuilder sb, CustomFieldsTemplateModel model)
     {
         sb.AppendLine("    /// <summary>");
         sb.AppendLine("    /// Applies field mappings from the provided configuration.");
@@ -288,7 +288,7 @@ public class CustomFieldsGenerator
             sb.AppendLine("                    {");
             sb.AppendLine("                        throw new InvalidOperationException(");
             sb.AppendLine($"                            $\"Required field mappings not configured for {{nameof({model.ModelName})}}. \" +");
-            sb.AppendLine($"                            $\"Check configuration section 'HaloPsaApiClient:FieldMappings:{{nameof({model.ModelName})}}'. \" +");
+            sb.AppendLine($"                            $\"Check configuration section '{_options.OptionsName}:FieldMappings:{{nameof({model.ModelName})}}'. \" +");
             sb.AppendLine($"                            $\"Required fields: {model.GetRequiredFieldsList()}\");");
             sb.AppendLine("                    }");
         }

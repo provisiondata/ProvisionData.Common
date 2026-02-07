@@ -36,7 +36,6 @@ public partial class AssetDto
     /// </exception>
     /// <remarks>
     /// <para>This method uses double-checked locking for thread safety.</para>
-    /// <para>Required fields: Model, SerialNumber</para>
     /// </remarks>
     public static void ApplyFieldMappings(IFieldMappingProvider provider)
     {
@@ -51,15 +50,6 @@ public partial class AssetDto
                     PurchaseDateFieldId = provider.GetFieldId(nameof(AssetDto), nameof(PurchaseDate));
                     SerialNumberFieldId = provider.GetFieldId(nameof(AssetDto), nameof(SerialNumber));
                     UserFieldId = provider.GetFieldId(nameof(AssetDto), nameof(User));
-
-                    // Validate required field mappings
-                    if (ModelFieldId == 0 || SerialNumberFieldId == 0)
-                    {
-                        throw new InvalidOperationException(
-                            $"Required field mappings not configured for {nameof(AssetDto)}. " +
-                            $"Check configuration section 'HaloPsaApiClient:FieldMappings:{nameof(AssetDto)}'. " +
-                            $"Required fields: Model, SerialNumber");
-                    }
 
                     Mapped = true;
                 }

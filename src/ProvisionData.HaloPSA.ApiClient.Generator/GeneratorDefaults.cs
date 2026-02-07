@@ -1,4 +1,4 @@
-// Provision Data HaloPSA API Client
+// Provision Data Libraries
 // Copyright (C) 2026 Provision Data Systems Inc.
 //
 // This program is free software: you can redistribute it and/or modify it under the terms of
@@ -19,4 +19,5 @@ public static class GeneratorDefaults
     public static String DtoPath { get; set; } = "DTO\\Generated";
     public static String ContextsPath { get; set; } = "Contexts\\Generated";
     public static String CustomFieldsFilename { get; set; } = "custom-fields-config.json";
+    public static String OptionsName { get; set; } = "HaloPsaApiClientOptions";
 }

@@ -22,6 +22,7 @@ public class GeneratorOptions
     public String OutputBasePath { get; set; } = String.Empty;
     public String RootNamespace { get; set; } = String.Empty;
     public Boolean DeletePreviousOutputs { get; set; } = true;
+    public String OptionsName { get; set; } = GeneratorDefaults.OptionsName;
 
     public Boolean IsValid()
         => !String.IsNullOrWhiteSpace(OutputBasePath)

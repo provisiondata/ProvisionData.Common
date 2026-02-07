@@ -11,7 +11,7 @@
       },
       "SerialNumber": {
         "type": "string",
-        "required": true,
+        "required": false,
         "description": "The hardware serial number of the asset"
       },
       "User": {
@@ -21,7 +21,7 @@
       },
       "Model": {
         "type": "string",
-        "required": true,
+        "required": false,
         "description": "The model identifier or name of the asset"
       },
       "PurchaseDate": {
