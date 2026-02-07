@@ -21,6 +21,7 @@ namespace ProvisionData;
 /// <summary>
 /// Represents the result of an operation, either successful or failed.
 /// </summary>
+[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
 public class Result
 {
     /// <summary>
@@ -113,6 +114,7 @@ public class Result
 /// Represents the result of an operation that returns a value of type <typeparamref name="TValue"/>, either successful or failed.
 /// </summary>
 /// <typeparam name="TValue">The type of value returned by a successful operation.</typeparam>
+[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
 public class Result<TValue> : Result
 {
     /// <summary>

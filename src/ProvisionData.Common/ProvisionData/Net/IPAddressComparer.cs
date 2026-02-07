@@ -26,7 +26,7 @@ public class IPAddressComparer : IComparer<String>
     /// <param name="right">The second IPv4 address string to compare.</param>
     /// <returns>A value indicating the relative order of the addresses.</returns>
     Int32 IComparer<String>.Compare(String? left, String? right)
-        => IPAddressComparer.Compare(left, right);
+        => Compare(left, right);
 
     /// <summary>
     /// Compares two IPv4 address strings.

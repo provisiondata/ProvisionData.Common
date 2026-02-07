@@ -80,6 +80,20 @@ if (result.Error.IsErrorType<NotFoundError>())
 }
 ```
 
+> ## :warning: Important Note
+>
+> Despite the inclusion of `ILLink.Descriptors.xml`, when this assembly is used in a Blazor WebAssembly application,
+> required types are still trimmed, breaking the deserialization of `Result` and `Result<T>` and resulting in inexplicable,
+> and incredibly hard to debug, runtime errors when deserializing JSON responses. This is a 
+> [known issue](https://github.com/dotnet/runtime/blob/main/docs/tools/illink/serialization.md) with the ILLinker.
+>
+> To avoid this, you must manually register the `ErrorJsonConverter` and `ErrorCodeJsonConverter` in your Blazor WebAssembly
+> application to ensure they are included in the final build. We have provided a convenience extension method to do this:
+>
+> ```csharp
+> builder.Services.AddResultPattern();
+> ```
+
 **Note**: The `.ToString()` method is primarily for debugging and logging. For programmatic use, rely on the implicit `String` operator or `IsErrorType<T>()` method.
 
 #### Chaining Operations
