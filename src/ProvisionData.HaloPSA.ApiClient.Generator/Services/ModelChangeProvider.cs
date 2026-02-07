@@ -1,4 +1,4 @@
-// Provision Data HaloPSA API Client
+// Provision Data Libraries
 // Copyright (C) 2026 Provision Data Systems Inc.
 //
 // This program is free software: you can redistribute it and/or modify it under the terms of
@@ -49,7 +49,7 @@ public partial class ModelChangeProvider : IModelChangeProvider
             if (_validator.IsValid(change, out var error) is false)
             {
                 isInvalid = true;
-                _logger.LogWarning("Invalid Change: {JsonModelName}{DtoOrPropertyName}  Errors:\n{Error}\n",
+                _logger.LogWarning("Invalid Change: {JsonModelName}:{DtoOrPropertyName}  Errors:\n{Error}\n",
                     change.JsonModelName, change.ClientDtoName ?? change.JsonPropertyName ?? String.Empty, error);
                 continue;
             }

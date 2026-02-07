@@ -30,7 +30,7 @@ public static partial class AssetExtensions
     /// <param name="haloApiClient">The HaloPSA API client.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>A collection of device assetView items.</returns>
-    public static async Task<IReadOnlyCollection<AssetListDto>?> ListAssetsAsync(this ApiClient haloApiClient, CancellationToken cancellationToken = default)
+    public static async Task<IReadOnlyCollection<AssetDto>?> ListAssetsAsync(this ApiClient haloApiClient, CancellationToken cancellationToken = default)
     {
         var uri = "Asset"
             .AppendQueryParam("count", 5000)
@@ -40,7 +40,22 @@ public static partial class AssetExtensions
         var assetView = JsonSerializer.Deserialize(json, AssetJsonContext.Default.AssetViewDto)
             ?? throw new HaloApiException("Failed to deserialize AssetView.", json);
 
-        return assetView?.Assets is not null ? assetView.Assets.AsReadOnly() : new List<AssetListDto>().AsReadOnly();
+        return assetView?.Assets is not null ? assetView.Assets.AsReadOnly() : new List<AssetDto>().AsReadOnly();
+    }
+
+    public static async Task<IReadOnlyCollection<AssetDto>> QueryAssetsAsync(ApiClient haloApiClient, Int32 customerId, CancellationToken cancellationToken = default)
+    {
+        Uri uri = "Asset"
+            .AppendQueryParam("client_id", customerId)
+            .AppendQueryParam("columns_id", 9)
+            .AppendQueryParam("count", 200)
+            .ToUri();
+
+        var json = await haloApiClient.HttpGetAsync(uri, cancellationToken);
+        var assetView = JsonSerializer.Deserialize(json, AssetJsonContext.Default.AssetViewDto)
+            ?? throw new HaloApiException("Failed to deserialize AssetView.", json);
+
+        return assetView?.Assets is not null ? assetView.Assets.AsReadOnly() : new List<AssetDto>().AsReadOnly();
     }
 
     /// <summary>

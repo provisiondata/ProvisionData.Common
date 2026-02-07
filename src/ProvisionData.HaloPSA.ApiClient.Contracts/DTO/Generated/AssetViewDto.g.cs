@@ -20,9 +20,8 @@ public partial class AssetViewDto
     [JsonPropertyName("record_count")] // Json Property Type: integer
     public Int64 RecordCount { get; set; }
 
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    [JsonPropertyName("assets")] // Json Property Type: Device_List
-    public List<AssetListDto>? Assets { get; set; }
+    [JsonPropertyName("assets")] // Json Property Type: array
+    public List<AssetDto> Assets { get; set; } = [];
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     [JsonPropertyName("columns_id")] // Json Property Type: integer

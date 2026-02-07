@@ -30,7 +30,7 @@ public partial class AssetDto : IHasCustomFields
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     [JsonPropertyName("inventory_number")] // Json Property Type: string
-    public required String? AssetNumber { get; set; }
+    public String? AssetNumber { get; set; }
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     [JsonPropertyName("key_field")] // Json Property Type: string
@@ -54,7 +54,7 @@ public partial class AssetDto : IHasCustomFields
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     [JsonPropertyName("site_id")] // Json Property Type: integer
-    public required Int32? SiteId { get; set; }
+    public Int32? SiteId { get; set; }
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     [JsonPropertyName("site_name")] // Json Property Type: string
@@ -90,7 +90,7 @@ public partial class AssetDto : IHasCustomFields
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     [JsonPropertyName("technical_owner_id")] // Json Property Type: integer
-    public required Int32? TechnicalOwnerId { get; set; }
+    public Int32? TechnicalOwnerId { get; set; }
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     [JsonPropertyName("technical_owner_name")] // Json Property Type: string
