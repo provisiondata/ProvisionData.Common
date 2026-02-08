@@ -16,7 +16,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace ProvisionData;
+namespace ProvisionData.ResultPattern;
 
 /// <summary>
 /// JSON converter for ErrorCode that serializes by type and name, allowing deserialization of any ErrorCode subclass.

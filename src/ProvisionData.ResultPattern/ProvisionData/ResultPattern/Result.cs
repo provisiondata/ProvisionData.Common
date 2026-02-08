@@ -12,11 +12,10 @@
 // You should have received a copy of the GNU Affero General Public License along with this
 // program. If not, see <https://www.gnu.org/licenses/>.
 
-using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 
-namespace ProvisionData;
+namespace ProvisionData.ResultPattern;
 
 /// <summary>
 /// Represents the result of an operation, either successful or failed.
@@ -40,20 +39,12 @@ public class Result
     public Error Error { get; init; } = None;
 
     /// <summary>
-    /// Parameterless constructor for JSON deserialization.
-    /// </summary>
-    [JsonConstructor]
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    protected Result()
-    {
-    }
-
-    /// <summary>
     /// Initializes a new instance of the <see cref="Result"/> class.
     /// </summary>
     /// <param name="isSuccess">Indicates whether the operation was successful.</param>
     /// <param name="error">The error associated with the result. Must be <see cref="Result.None"/> for successful results.</param>
     /// <exception cref="ArgumentException">Thrown when the success state and error state are inconsistent.</exception>
+    [JsonConstructor]
     protected Result(Boolean isSuccess, Error error)
     {
         if (isSuccess && error != None)
@@ -127,45 +118,39 @@ public class Result<TValue> : Result
         : default!;
 
     /// <summary>
-    /// Parameterless constructor for JSON deserialization.
-    /// </summary>
-    [JsonConstructor]
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    protected Result() : base()
-    {
-    }
-
-    /// <summary>
     /// Initializes a new successful instance of the <see cref="Result{TValue}"/> class.
     /// </summary>
+    /// <param name="isSuccess">Indicates whether the operation was successful.</param>
     /// <param name="value">The value of the successful result.</param>
-    private Result(TValue value) : base(true, None)
+    /// <param name="error">The error of the failed result. Must be <see cref="Result.None"/> for successful results.</param>
+    [JsonConstructor]
+    private Result(Boolean isSuccess, TValue value, Error error) : base(isSuccess, error)
     {
         ValueStorage = value;
     }
 
-    /// <summary>
-    /// Initializes a new failed instance of the <see cref="Result{TValue}"/> class.
-    /// </summary>
-    /// <param name="error">The error of the failed result.</param>
-    private Result(Error error) : base(false, error)
-    {
-        ValueStorage = default;
-    }
+    ///// <summary>
+    ///// Initializes a new failed instance of the <see cref="Result{TValue}"/> class.
+    ///// </summary>
+    ///// <param name="error">The error of the failed result.</param>
+    //private Result(Error error) : base(false, error)
+    //{
+    //    ValueStorage = default;
+    //}
 
     /// <summary>
     /// Creates a successful result with the specified value.
     /// </summary>
     /// <param name="value">The value of the successful result.</param>
     /// <returns>A successful <see cref="Result{TValue}"/>.</returns>
-    public static Result<TValue> Success(TValue value) => new(value);
+    public static Result<TValue> Success(TValue value) => new(true, value, None);
 
     /// <summary>
     /// Creates a failed result with the specified error.
     /// </summary>
     /// <param name="error">The error for the failed result.</param>
     /// <returns>A failed <see cref="Result{TValue}"/>.</returns>
-    public static new Result<TValue> Failure(Error error) => new(error);
+    public static new Result<TValue> Failure(Error error) => new(false, default!, error);
 
     /// <summary>
     /// Implicit conversion from a value to a successful <see cref="Result{TValue}"/>.

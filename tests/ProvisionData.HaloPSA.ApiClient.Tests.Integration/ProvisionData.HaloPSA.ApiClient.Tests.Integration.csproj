@@ -2,7 +2,8 @@
 
     <PropertyGroup>
         <RootNamespace>ProvisionData.HaloPSA</RootNamespace>
-        <IsTestProject>true</IsTestProject>
+		<TargetFramework>net10.0</TargetFramework>
+		<IsTestProject>true</IsTestProject>
         <IsPackable>false</IsPackable>
     </PropertyGroup>
 

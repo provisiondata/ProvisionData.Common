@@ -14,7 +14,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-namespace ProvisionData;
+namespace ProvisionData.ResultPattern;
 
 /// <summary>
 /// Extension methods for working with <see cref="Result"/> and <see cref="Result{T}"/> types.

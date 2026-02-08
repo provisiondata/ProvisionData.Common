@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<RootNamespace />
+		<TargetFramework>netstandard2.0</TargetFramework>
+
+		<!-- NuGet package metadata -->
+		<PackageId>ProvisionData.ResultPattern</PackageId>
+		<Title>Provision Data Result Pattern Library</Title>
+		<Description>Classes and utilities for implementing the Result pattern in Provision Data projects.</Description>
+		<PackageTags></PackageTags>
+		<PackageReadmeFile>./README.md</PackageReadmeFile>
+		<GenerateDocumentationFile>false</GenerateDocumentationFile>
+		<IsPackable>true</IsPackable>
+		<IsAotCompatible>false</IsAotCompatible>
+		<IsTrimmable>false</IsTrimmable>
+
+		<!-- Analyzer/Source Generator settings -->
+		<EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+		<IncludeBuildOutput>false</IncludeBuildOutput>
+		<Analyzer>true</Analyzer>
+		<IsRoslynComponent>true</IsRoslynComponent>
+
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
+	</ItemGroup>
+
+</Project>

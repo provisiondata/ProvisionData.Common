@@ -13,9 +13,8 @@
 // program. If not, see <https://www.gnu.org/licenses/>.
 
 using System.Diagnostics.CodeAnalysis;
-using System.Text.Json.Serialization;
 
-namespace ProvisionData;
+namespace ProvisionData.ResultPattern;
 
 /// <summary>
 /// Represents an error code value used to identify specific error conditions.
@@ -30,7 +29,7 @@ namespace ProvisionData;
 /// that inherits from ErrorCode and defines a public static Instance property.
 /// </para>
 /// </remarks>
-[JsonConverter(typeof(ErrorCodeJsonConverter))]
+//[JsonConverter(typeof(ErrorCodeJsonConverter))]
 [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
 public abstract class ErrorCode : IEquatable<ErrorCode>
 {

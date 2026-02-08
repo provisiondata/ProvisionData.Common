@@ -1,4 +1,4 @@
-// ProvisionData.Common
+// Provision Data Libraries
 // Copyright (C) 2026 Provision Data Systems Inc.
 //
 // This program is free software: you can redistribute it and/or modify it under the terms of
@@ -12,9 +12,10 @@
 // You should have received a copy of the GNU Affero General Public License along with this
 // program. If not, see <https://www.gnu.org/licenses/>.
 
-using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using ProvisionData.ResultPattern;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ProvisionData;
 
@@ -23,7 +24,9 @@ public static class ResultWebApiExtensions
     public static IResult ToApiResult<T>(this Result<T> result)
     {
         if (result.IsSuccess)
+        {
             return Results.Ok(result.Value);
+        }
 
         return result.Error switch
         {
@@ -38,9 +41,11 @@ public static class ResultWebApiExtensions
     public static IResult ToApiResult(this Result result, Object? successValue = null)
     {
         if (result.IsSuccess)
+        {
             return successValue is not null
                 ? Results.Ok(successValue)
                 : Results.Ok();
+        }
 
         return result.Error switch
         {
@@ -56,7 +61,9 @@ public static class ResultWebApiExtensions
         String location)
     {
         if (result.IsSuccess)
+        {
             return Results.Created(location, result.Value);
+        }
 
         return result.ToApiResult();
     }

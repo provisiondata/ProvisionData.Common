@@ -14,7 +14,7 @@
 
 using System.Text.Json;
 
-namespace ProvisionData.UnitTests.ResultPattern;
+namespace ProvisionData.ResultPattern;
 
 /// <summary>
 /// Unit tests for JSON serialization of Result, Result&lt;T&gt;, and Error types.

@@ -2,7 +2,8 @@
 
     <PropertyGroup>
         <RootNamespace>ProvisionData.HaloPSA</RootNamespace>
-        <IsTestProject>true</IsTestProject>
+		<TargetFramework>net10.0</TargetFramework>
+		<IsTestProject>true</IsTestProject>
         <IsPackable>false</IsPackable>
     </PropertyGroup>
 
@@ -18,8 +19,8 @@
         <PackageReference Include="Bogus.Hollywood" />
         <PackageReference Include="Bogus.Text" />
         <PackageReference Include="Bogus.Tools.Analyzer">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="coverlet.collector">
             <PrivateAssets>all</PrivateAssets>

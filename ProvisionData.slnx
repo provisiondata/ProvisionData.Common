@@ -11,7 +11,7 @@
   </Folder>
   <Folder Name="/docs/">
     <File Path="docs/PUBLISHING.md" />
-    <File Path="docs/ResultPattern-Changes.md" />
+    <File Path="docs/ResultPattern.md" />
   </Folder>
   <Folder Name="/src/">
     <Project Path="src/ProvisionData.Common/ProvisionData.Common.csproj" />
@@ -19,6 +19,8 @@
     <Project Path="src/ProvisionData.HaloPSA.ApiClient.Contracts/ProvisionData.HaloPSA.ApiClient.Contracts.csproj" />
     <Project Path="src/ProvisionData.HaloPSA.ApiClient.Generator/ProvisionData.HaloPSA.ApiClient.ModelGenerator.csproj" />
     <Project Path="src/ProvisionData.HaloPSA.ApiClient/ProvisionData.HaloPSA.ApiClient.csproj" />
+    <Project Path="src/ProvisionData.ResultPattern.Generators/ProvisionData.ResultPattern.Generators.csproj" Id="435d8c2b-a391-4349-80c1-0508e86fc89b" />
+    <Project Path="src/ProvisionData.ResultPattern/ProvisionData.ResultPattern.csproj" />
     <Project Path="src/ProvisionData.Testing.Integration/ProvisionData.Testing.Integration.csproj" />
     <Project Path="src/ProvisionData.Testing/ProvisionData.Testing.csproj" />
     <Project Path="src/ProvisionData.WebApi/ProvisionData.WebApi.csproj" />
@@ -28,6 +30,8 @@
     <Project Path="tests/ProvisionData.Dapper.UnitTests/ProvisionData.Dapper.UnitTests.csproj" />
     <Project Path="tests/ProvisionData.HaloPSA.ApiClient.Tests.Integration/ProvisionData.HaloPSA.ApiClient.Tests.Integration.csproj" Id="e237d8c8-a9af-44cb-b75c-80d781c912f0" />
     <Project Path="tests/ProvisionData.HaloPSA.ApiClient.Tests/ProvisionData.HaloPSA.ApiClient.Tests.csproj" />
+    <Project Path="tests/ProvisionData.ResultPattern.CustomErrors.Tests/ProvisionData.ResultPattern.CustomErrors.Tests.csproj" />
+    <Project Path="tests/ProvisionData.ResultPattern.UnitTests/ProvisionData.ResultPattern.UnitTests.csproj" Id="b77b2c01-3a1d-4b6e-8a49-a5bcb70f3716" />
     <Project Path="tests/ProvisionData.Testing.Integration.Examples/ProvisionData.Testing.Integration.Examples.csproj" />
   </Folder>
 </Solution>

@@ -17,7 +17,7 @@ using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace ProvisionData;
+namespace ProvisionData.ResultPattern;
 
 /// <summary>
 /// JSON converter for Error that supports polymorphic serialization/deserialization

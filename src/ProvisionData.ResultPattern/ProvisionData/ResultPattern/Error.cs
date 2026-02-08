@@ -13,16 +13,13 @@
 // program. If not, see <https://www.gnu.org/licenses/>.
 
 using System.Diagnostics.CodeAnalysis;
-using System.Reflection;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 
-namespace ProvisionData;
+namespace ProvisionData.ResultPattern;
 
 /// <summary>
 /// Represents an error with a code and description.
 /// </summary>
-[JsonConverter(typeof(ErrorJsonConverter))]
+//[JsonConverter(typeof(ErrorJsonConverter))]
 [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
 public class Error
 {

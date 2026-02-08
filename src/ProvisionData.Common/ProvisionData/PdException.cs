@@ -1,4 +1,4 @@
-// ProvisionData.Common
+// Provision Data Libraries
 // Copyright (C) 2026 Provision Data Systems Inc.
 //
 // This program is free software: you can redistribute it and/or modify it under the terms of
@@ -15,8 +15,7 @@
 namespace ProvisionData;
 
 /// <summary>
-/// Represents an application-specific exception that can carry an optional <see cref="Error"/>
-/// object with additional error details.
+/// Represents an application-specific exception throw by the ProvisionData libraries.
 /// </summary>
 /// <remarks>
 /// This exception type extends <see cref="Exception"/> and is intended to be used throughout
@@ -25,11 +24,6 @@ namespace ProvisionData;
 /// </remarks>
 public class PdException : Exception
 {
-    /// <summary>
-    /// Gets an optional <see cref="Error"/> instance containing structured
-    /// error information associated with this exception.
-    /// </summary>
-    public Error? Error { get; init; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="PdException"/> class but without
@@ -49,43 +43,11 @@ public class PdException : Exception
 
     /// <summary>
     /// Initializes a new instance of the <see cref="PdException"/> class with a specified
-    /// error message.
-    /// </summary>
-    public PdException(Error error) : this(error.Description, error)
-    {
-    }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="PdException"/> class with a specified
-    /// error message and an optional <see cref="Error"/> object containing additional details.
-    /// </summary>
-    /// <param name="message">The error message that explains the reason for the exception.</param>
-    /// <param name="error">An optional <see cref="Error"/> instance with structured error details.</param>
-    public PdException(String? message, Error? error) : base(message)
-    {
-        Error = error;
-    }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="PdException"/> class with a specified
     /// error message and a reference to the inner exception that is the cause of this exception.
     /// </summary>
     /// <param name="message">The error message that explains the reason for the exception.</param>
     /// <param name="innerException">The exception that is the cause of the current exception.</param>
     public PdException(String? message, Exception? innerException) : base(message, innerException)
     {
-    }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="PdException"/> class with a specified
-    /// error message, an <see cref="Error"/> object containing additional details, and a
-    /// reference to the inner exception that is the cause of this exception.
-    /// </summary>
-    /// <param name="message">The error message that explains the reason for the exception.</param>
-    /// <param name="error">An optional <see cref="Error"/> instance with structured error details.</param>
-    /// <param name="innerException">The exception that is the cause of the current exception.</param>
-    public PdException(String? message, Error? error, Exception? innerException) : base(message, innerException)
-    {
-        Error = error;
     }
 }

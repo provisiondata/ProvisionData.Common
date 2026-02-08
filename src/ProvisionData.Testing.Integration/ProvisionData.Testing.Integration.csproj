@@ -2,6 +2,7 @@
 
     <PropertyGroup>
         <RootNamespace>ProvisionData</RootNamespace>
+        <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
 
         <!-- NuGet package metadata -->
         <PackageId>ProvisionData.Testing.Integration</PackageId>
@@ -36,7 +37,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\ProvisionData.Common\ProvisionData.Common.csproj" />
+        <ProjectReference Include="..\ProvisionData.Common\ProvisionData.Common.csproj" />
     </ItemGroup>
 
 </Project>

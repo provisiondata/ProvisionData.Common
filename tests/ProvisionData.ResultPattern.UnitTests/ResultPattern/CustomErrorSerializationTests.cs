@@ -14,7 +14,7 @@
 
 using System.Text.Json;
 
-namespace ProvisionData.UnitTests.ResultPattern;
+namespace ProvisionData.ResultPattern;
 
 /// <summary>
 /// Demonstrates that custom Error types can be created and serialized

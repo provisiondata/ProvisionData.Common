@@ -1,4 +1,4 @@
-// ProvisionData.Common
+// Provision Data Libraries
 // Copyright (C) 2026 Provision Data Systems Inc.
 //
 // This program is free software: you can redistribute it and/or modify it under the terms of
@@ -14,7 +14,7 @@
 
 using System.Text.Json;
 
-namespace ProvisionData.UnitTests.ResultPattern;
+namespace ProvisionData.ResultPattern;
 
 /// <summary>
 /// Unit tests for the <see cref="ErrorCode"/> class and its implementations.

@@ -2,6 +2,7 @@
 
     <PropertyGroup>
         <RootNamespace>ProvisionData.HaloPSA</RootNamespace>
+        <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
 
         <!-- NuGet package metadata -->
         <PackageId>ProvisionData.HaloPSA.ApiClient</PackageId>
@@ -19,7 +20,7 @@
     <ItemGroup>
         <None Include="../../README.md" Pack="true" PackagePath="/" />
     </ItemGroup>
-    
+
     <ItemGroup>
         <Using Include="System.Text.Json.Serialization" />
     </ItemGroup>
@@ -33,7 +34,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\ProvisionData.HaloPSA.ApiClient.Contracts\ProvisionData.HaloPSA.ApiClient.Contracts.csproj" />
+        <ProjectReference Include="..\ProvisionData.HaloPSA.ApiClient.Contracts\ProvisionData.HaloPSA.ApiClient.Contracts.csproj" />
     </ItemGroup>
 
 </Project>

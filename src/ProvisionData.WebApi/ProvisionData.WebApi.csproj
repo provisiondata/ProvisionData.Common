@@ -2,6 +2,7 @@
 
     <PropertyGroup>
         <RootNamespace>ProvisionData</RootNamespace>
+        <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
 
         <!-- NuGet package metadata -->
         <PackageId>ProvisionData.WebApi</PackageId>
@@ -24,7 +25,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\ProvisionData.Common\ProvisionData.Common.csproj" />
+        <ProjectReference Include="..\ProvisionData.ResultPattern\ProvisionData.ResultPattern.csproj" />
     </ItemGroup>
 
 </Project>

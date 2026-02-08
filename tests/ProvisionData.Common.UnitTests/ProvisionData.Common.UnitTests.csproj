@@ -2,16 +2,17 @@
 
 	<PropertyGroup>
 		<RootNamespace>ProvisionData.UnitTests</RootNamespace>
-        <IsPackable>false</IsPackable>
-        <UseAppHost>true</UseAppHost>
+		<TargetFrameworks>net8.0;net10.0</TargetFrameworks>
+		<IsPackable>false</IsPackable>
+		<UseAppHost>true</UseAppHost>
 	</PropertyGroup>
 
-    <ItemGroup>
-        <Using Include="FluentAssertions" />
-        <Using Include="Xunit" />
-    </ItemGroup>
-    
-    <ItemGroup>
+	<ItemGroup>
+		<Using Include="FluentAssertions" />
+		<Using Include="Xunit" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="Bogus" />
 		<PackageReference Include="FluentAssertions" />
 		<PackageReference Include="Microsoft.NET.Test.Sdk" />
@@ -28,18 +29,18 @@
 		</PackageReference>
 	</ItemGroup>
 
-    <ItemGroup>
-        <PackageReference Include="Bogus.Tools.Analyzer">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-        <PackageReference Include="xunit.analyzers">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-    </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Bogus.Tools.Analyzer">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="xunit.analyzers">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
 
-    <ItemGroup>
+	<ItemGroup>
 		<ProjectReference Include="..\..\src\ProvisionData.Common\ProvisionData.Common.csproj" />
 	</ItemGroup>
 

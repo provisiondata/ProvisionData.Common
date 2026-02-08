@@ -12,9 +12,26 @@
 // You should have received a copy of the GNU Affero General Public License along with this
 // program. If not, see <https://www.gnu.org/licenses/>.
 
-using System.Diagnostics.CodeAnalysis;
+namespace ProvisionData.ResultPattern;
 
-namespace ProvisionData;
+/// <summary>
+/// Represents an error that occurred during a payment transaction.
+/// </summary>
+public sealed partial class PaymentError : Error
+{
+    public String TransactionId { get; init; }
+
+    public PaymentFailureReason Reason { get; init; }
+}
+
+public enum PaymentFailureReason
+{
+    InsufficientFunds,
+    CardExpired,
+    InvalidCardNumber,
+    NetworkError,
+    UnknownError
+}
 
 /// <summary>
 /// Represents an error that occurred during an API call. This should be used to wrap HTTP-related errors,
