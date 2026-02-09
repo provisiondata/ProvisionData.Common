@@ -14,6 +14,16 @@
 		<IsPackable>true</IsPackable>
 		<IsAotCompatible>false</IsAotCompatible>
 		<IsTrimmable>false</IsTrimmable>
+		<ErrorReport>send</ErrorReport>
+		<IncludeSymbols>true</IncludeSymbols>
+		<IncludeSource>true</IncludeSource>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+
+		<!-- Analyzer/Source Generator settings -->
+		<TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);_AddAnalyzersToOutput</TargetsForTfmSpecificContentInPackage>
+
+		<!-- NerdBank.GitVersioning -->
+		<NBGV_ThisAssemblyNamespace>ProvisionData.ResultPattern.Versioning</NBGV_ThisAssemblyNamespace>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -21,18 +31,22 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" />
 		<PackageReference Include="Microsoft.Extensions.Options" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Folder Include="Microsoft\Extensions\DependencyInjection\" />
-	</ItemGroup>
+	<!-- Pack the analyzer, code fixes, and generator assemblies in the analyzers/dotnet/cs folder -->
+	<Target Name="_AddAnalyzersToOutput" AfterTargets="Build">
+		<ItemGroup>
+			<TfmSpecificPackageFile Include="..\ProvisionData.ResultPattern.CodeFixes\bin\$(Configuration)\netstandard2.0\ProvisionData.ResultPattern.CodeFixes.dll" PackagePath="analyzers/dotnet/cs" />
+			<TfmSpecificPackageFile Include="..\ProvisionData.ResultPattern.Generators\bin\$(Configuration)\netstandard2.0\ProvisionData.ResultPattern.Generators.dll" PackagePath="analyzers/dotnet/cs" />
+			<!--<TfmSpecificPackageFile Include="..\ProvisionData.ResultPattern.Shared\bin\$(Configuration)\netstandard2.0\ProvisionData.ResultPattern.Shared.dll" PackagePath="analyzers/dotnet/cs" />-->
+		</ItemGroup>
+	</Target>
 
-	<ItemGroup>
-	  <ProjectReference Include="..\ProvisionData.ResultPattern.Generators\ProvisionData.ResultPattern.Generators.csproj"
-						OutputItemType="Analyzer"
-						ReferenceOutputAssembly="false" />
-	</ItemGroup>
+	<Target Name="CopyPackage" AfterTargets="Pack">
+		<Message Text="Copying $(OutputPath)$(PackageId).$(PackageVersion).nupkg to $(ProjectDir)..\..\LocalPackages" Importance="High" />
+		<Copy SourceFiles="$(OutputPath)$(PackageId).$(PackageVersion).nupkg" DestinationFolder="$(ProjectDir)..\..\LocalPackages" />
+	</Target>
 
 </Project>

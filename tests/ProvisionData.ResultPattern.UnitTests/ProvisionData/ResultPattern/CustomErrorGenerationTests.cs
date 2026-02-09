@@ -12,10 +12,9 @@
 // You should have received a copy of the GNU Affero General Public License along with this
 // program. If not, see <https://www.gnu.org/licenses/>.
 
-using ProvisionData.ResultPattern;
-using Xunit;
+using ProvisionData.ResultPattern.Infrastructure;
 
-namespace ProvisionData.ResultPattern.CustomErrors.Tests;
+namespace ProvisionData.ResultPattern;
 
 /// <summary>
 /// Tests to verify that custom errors defined in consuming assemblies are properly generated.
@@ -72,7 +71,7 @@ public sealed class CustomErrorGenerationTests
     {
         // ModuleInitializer automatically registers errors when the assembly loads!
         // No manual registration needed - the generator creates the initializer.
-        
+
         var errorTypes = ErrorTypeRegistry.ErrorTypes.ToList();
         var errorCodeTypes = ErrorTypeRegistry.ErrorCodeTypes.ToList();
 
@@ -80,8 +79,8 @@ public sealed class CustomErrorGenerationTests
         Assert.Contains(typeof(OrderNotFoundError), errorTypes);
         Assert.Contains(typeof(InventoryInsufficientError), errorTypes);
         Assert.Contains(typeof(DatabaseConnectionError), errorTypes);
-        
-        // Verify we have the expected count (at least our 3 custom errors + PaymentError from the library)
+
+        // Verify we have the expected count (at least our 3 custom errors + TransactionError from the library)
         Assert.True(errorTypes.Count >= 4, $"Expected at least 4 error types, but found {errorTypes.Count}");
     }
 }

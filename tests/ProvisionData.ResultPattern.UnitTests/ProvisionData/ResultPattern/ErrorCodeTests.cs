@@ -19,7 +19,8 @@ namespace ProvisionData.ResultPattern;
 /// <summary>
 /// Unit tests for the <see cref="ErrorCode"/> class and its implementations.
 /// </summary>
-public class ErrorCodeTests
+public class ErrorCodeTests(ResultPatternIntegrationTestFixture fixture, ITestOutputHelper output)
+    : ResultPatternUnitTestBase(fixture, output)
 {
     private sealed class TestErrorCode1 : ErrorCode
     {
@@ -133,106 +134,26 @@ public class ErrorCodeTests
         instance1.Should().BeSameAs(instance2, "singleton instances should be the same reference");
     }
 
-    [Fact]
-    public void ApiErrorCode_ShouldHaveCorrectName()
-    {
-        var error = new ApiError("Test description");
+    //[Fact]
+    //public void ErrorCodeSingletons_ShouldBeUnique()
+    //{
+    //    var errors = new Error[]
+    //    {
+    //        new ApiError("test"),
+    //        new BusinessRuleViolationError("test"),
+    //        new ConfigurationError("test"),
+    //        new ConflictError("test"),
+    //        new NotFoundError("test"),
+    //        new UnauthorizedError("test"),
+    //        new UnhandledExceptionError("test"),
+    //        new ValidationError("test")
+    //    };
 
-        String name = error.Code;
+    //    var errorCodes = errors.Select(e => e.Code).ToList();
+    //    var distinctCodes = errorCodes.Distinct().ToList();
 
-        name.Should().Be("ApiError");
-    }
-
-    [Fact]
-    public void BusinessRuleViolationErrorCode_ShouldHaveCorrectName()
-    {
-        var error = new BusinessRuleViolationError("Test description");
-
-        String name = error.Code;
-
-        name.Should().Be("BusinessRuleViolationError");
-    }
-
-    [Fact]
-    public void ConfigurationErrorCode_ShouldHaveCorrectName()
-    {
-        var error = new ConfigurationError("Test description");
-
-        String name = error.Code;
-
-        name.Should().Be("ConfigurationError");
-    }
-
-    [Fact]
-    public void ConflictErrorCode_ShouldHaveCorrectName()
-    {
-        var error = new ConflictError("Test description");
-
-        String name = error.Code;
-
-        name.Should().Be("ConflictError");
-    }
-
-    [Fact]
-    public void NotFoundErrorCode_ShouldHaveCorrectName()
-    {
-        var error = new NotFoundError("Test description");
-
-        String name = error.Code;
-
-        name.Should().Be("NotFoundError");
-    }
-
-    [Fact]
-    public void UnauthorizedErrorCode_ShouldHaveCorrectName()
-    {
-        var error = new UnauthorizedError("Test description");
-
-        String name = error.Code;
-
-        name.Should().Be("UnauthorizedError");
-    }
-
-    [Fact]
-    public void UnhandledExceptionErrorCode_ShouldHaveCorrectName()
-    {
-        var error = new UnhandledExceptionError("Test description");
-
-        String name = error.Code;
-
-        name.Should().Be("UnhandledExceptionError");
-    }
-
-    [Fact]
-    public void ValidationErrorCode_ShouldHaveCorrectName()
-    {
-        var error = new ValidationError("Test description");
-
-        String name = error.Code;
-
-        name.Should().Be("ValidationError");
-    }
-
-    [Fact]
-    public void ErrorCodeSingletons_ShouldBeUnique()
-    {
-        var errors = new Error[]
-        {
-            new ApiError("test"),
-            new BusinessRuleViolationError("test"),
-            new ConfigurationError("test"),
-            new ConflictError("test"),
-            new NotFoundError("test"),
-            new UnauthorizedError("test"),
-            new UnhandledExceptionError("test"),
-            new ValidationError("test")
-        };
-
-        var errorCodes = errors.Select(e => e.Code).ToList();
-        var distinctCodes = errorCodes.Distinct().ToList();
-
-        distinctCodes.Should().HaveCount(errorCodes.Count, "all error codes should have unique type+name combinations");
-    }
+    //    distinctCodes.Should().HaveCount(errorCodes.Count, "all error codes should have unique type+name combinations");
+    //}
 
     [Fact]
     public void ErrorCode_ShouldBe_Serializable()
@@ -255,14 +176,8 @@ public class ErrorCodeTests
     {
         var errors = new Error[]
         {
-            new ApiError("test"),
-            new BusinessRuleViolationError("test"),
-            new ConfigurationError("test"),
-            new ConflictError("test"),
             new NotFoundError("test"),
-            new UnauthorizedError("test"),
-            new UnhandledExceptionError("test"),
-            new ValidationError("test")
+            new TransactionError(TransactionFailureReason.NetworkError, "XDV83401@FVAD", "test")
         };
 
         foreach (var error in errors)

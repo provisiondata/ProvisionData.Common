@@ -12,9 +12,29 @@
 // You should have received a copy of the GNU Affero General Public License along with this
 // program. If not, see <https://www.gnu.org/licenses/>.
 
-using ProvisionData.ResultPattern;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using ProvisionData.Testing;
 
-namespace ProvisionData.ResultPattern.CustomErrors.Tests;
+namespace ProvisionData.ResultPattern;
+
+public sealed partial class NotFoundError : Error { }
+
+public sealed partial class TransactionError : Error
+{
+    public TransactionFailureReason Reason { get; init; }
+    public String TransactionId { get; init; }
+}
+
+public enum TransactionFailureReason
+{
+    InsufficientFunds,
+    CardExpired,
+    InvalidCardNumber,
+    NetworkError,
+    UnknownError
+}
 
 /// <summary>
 /// Example of a domain-specific error in a consuming application.
@@ -55,4 +75,31 @@ public sealed partial class InventoryInsufficientError : Error
 public sealed partial class DatabaseConnectionError : Error
 {
     // No additional properties - just uses the base description
+}
+
+public class ResultPatternIntegrationTestFixture : IntegrationTestFixture
+{
+    protected override void ConfigureConfiguration(IConfigurationBuilder builder)
+    {
+        // Removes the need for an appsettings.Testing.json file in the test project,
+        // since the ResultPattern tests don't require any configuration settings.
+    }
+
+    protected override void ConfigureServices(IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddResultPattern();
+    }
+
+    protected override ValueTask InitializeFixtureAsync(IServiceProvider services)
+    {
+        var logger = services.GetRequiredService<ILogger<ResultPatternIntegrationTestFixture>>();
+        logger.LogInformation("Initializing ResultPattern integration test fixture.");
+
+        return ValueTask.CompletedTask;
+    }
+}
+
+public class ResultPatternUnitTestBase(ResultPatternIntegrationTestFixture fixture, ITestOutputHelper output)
+    : IntegrationTestBase<ResultPatternIntegrationTestFixture>(fixture, output)
+{
 }

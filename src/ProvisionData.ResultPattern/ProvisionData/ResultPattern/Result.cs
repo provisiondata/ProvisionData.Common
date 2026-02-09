@@ -44,7 +44,6 @@ public class Result
     /// <param name="isSuccess">Indicates whether the operation was successful.</param>
     /// <param name="error">The error associated with the result. Must be <see cref="Result.None"/> for successful results.</param>
     /// <exception cref="ArgumentException">Thrown when the success state and error state are inconsistent.</exception>
-    [JsonConstructor]
     protected Result(Boolean isSuccess, Error error)
     {
         if (isSuccess && error != None)

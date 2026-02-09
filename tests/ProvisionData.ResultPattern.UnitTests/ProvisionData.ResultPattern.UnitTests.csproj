@@ -1,10 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<RootNamespace>ProvisionData</RootNamespace>
-		<TargetFrameworks>net8.0;net10.0</TargetFrameworks>
+		<RootNamespace />
+		<TargetFramework>net10.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
 		<IsPackable>false</IsPackable>
-		<UseAppHost>true</UseAppHost>
+		<IsTestProject>true</IsTestProject>
+		<EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+		<CompilerGeneratedFilesOutputPath>$(BaseIntermediateOutputPath)Generated</CompilerGeneratedFilesOutputPath>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -34,7 +38,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\src\ProvisionData.ResultPattern\ProvisionData.ResultPattern.csproj" />
+		<PackageReference Include="ProvisionData.ResultPattern" />
+		<ProjectReference Include="..\..\src\ProvisionData.Testing.Integration\ProvisionData.Testing.Integration.csproj" />
 	</ItemGroup>
 
 </Project>

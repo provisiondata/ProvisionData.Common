@@ -17,7 +17,8 @@ namespace ProvisionData.ResultPattern;
 /// <summary>
 /// Unit tests for the <see cref="ResultExtensions"/> async methods.
 /// </summary>
-public class ResultExtensionsAsyncTests
+public class ResultExtensionsAsyncTests(ResultPatternIntegrationTestFixture fixture, ITestOutputHelper output)
+    : ResultPatternUnitTestBase(fixture, output)
 {
     [Fact]
     public async Task MapAsync_WithSuccessResult_ShouldTransformValue()
@@ -37,7 +38,7 @@ public class ResultExtensionsAsyncTests
     [Fact]
     public async Task MapAsync_WithFailureResult_ShouldReturnFailure()
     {
-        var result = Result<Int32>.Failure(Error.NotFound("Not found"));
+        var result = Result<Int32>.Failure(new NotFoundError("Not found"));
 
         var mapped = await result.MapAsync(async x =>
         {
@@ -83,7 +84,7 @@ public class ResultExtensionsAsyncTests
         var bound = await result.BindAsync(async x =>
         {
             await Task.Delay(1);
-            return x > 0 ? Result<String>.Success(x.ToString()) : Error.Validation("Must be positive");
+            return x > 0 ? Result<String>.Success(x.ToString()) : new NotFoundError("Kidnapped");
         });
 
         bound.IsSuccess.Should().BeTrue();
@@ -93,7 +94,7 @@ public class ResultExtensionsAsyncTests
     [Fact]
     public async Task BindAsync_WithFailureResult_ShouldReturnFailure()
     {
-        var result = Result<Int32>.Failure(Error.NotFound("Not found"));
+        var result = Result<Int32>.Failure(new NotFoundError("Not found"));
 
         var bound = await result.BindAsync(async x =>
         {
@@ -111,7 +112,7 @@ public class ResultExtensionsAsyncTests
         var resultTask = Task.FromResult(Result<Int32>.Success(5));
 
         var bound = await resultTask.BindAsync(x =>
-            x > 0 ? Result<String>.Success(x.ToString()) : Error.Validation("Must be positive"));
+            x > 0 ? Result<String>.Success(x.ToString()) : new NotFoundError("Gone Fishing"));
 
         bound.IsSuccess.Should().BeTrue();
         bound.Value.Should().Be("5");
@@ -125,7 +126,7 @@ public class ResultExtensionsAsyncTests
         var bound = await resultTask.BindAsync(async x =>
         {
             await Task.Delay(1);
-            return x > 0 ? Result<String>.Success(x.ToString()) : Error.Validation("Must be positive");
+            return x > 0 ? Result<String>.Success(x.ToString()) : new NotFoundError("Smoke Break");
         });
 
         bound.IsSuccess.Should().BeTrue();
@@ -155,7 +156,7 @@ public class ResultExtensionsAsyncTests
     [Fact]
     public async Task MatchAsync_WithFailureResult_ShouldCallOnFailure()
     {
-        var result = Result<Int32>.Failure(Error.NotFound("Item not found"));
+        var result = Result<Int32>.Failure(new NotFoundError("Item not found"));
 
         var message = await result.MatchAsync(
             async x =>
@@ -224,7 +225,7 @@ public class ResultExtensionsAsyncTests
     [Fact]
     public async Task TapAsync_WithFailureResult_ShouldNotExecuteAction()
     {
-        var result = Result<Int32>.Failure(Error.NotFound("Not found"));
+        var result = Result<Int32>.Failure(new NotFoundError("Not found"));
         var sideEffect = 0;
 
         var tapped = await result.TapAsync(async x =>
@@ -279,7 +280,7 @@ public class ResultExtensionsAsyncTests
             .BindAsync(async x =>
             {
                 await Task.Delay(1);
-                return x > 5 ? Result<String>.Success(x.ToString()) : Error.Validation("Too small");
+                return x > 5 ? Result<String>.Success(x.ToString()) : new NotFoundError("Sick - Have Doctor's Note");
             })
             .TapAsync(async x =>
             {

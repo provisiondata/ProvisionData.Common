@@ -14,7 +14,7 @@
 
 using Microsoft.CodeAnalysis;
 
-namespace ProvisionData.ResultPattern.Generators;
+namespace ProvisionData.ResultPattern;
 
 internal static class SymbolExtensions
 {
@@ -30,6 +30,7 @@ internal static class SymbolExtensions
 
             current = current.BaseType;
         }
+
         return false;
     }
 }

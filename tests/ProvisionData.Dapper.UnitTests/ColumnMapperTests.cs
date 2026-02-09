@@ -1,4 +1,4 @@
-// ProvisionData.Common
+// Provision Data Libraries
 // Copyright (C) 2026 Provision Data Systems Inc.
 //
 // This program is free software: you can redistribute it and/or modify it under the terms of
@@ -154,6 +154,33 @@ public class ColumnMapperTests : IAsyncLifetime
     }
 
     [Fact]
+    public async Task MapTypesFromCallingAssembly_Should_MapTypes()
+    {
+        // Arrange
+        const String productName = "Widget";
+        const Decimal unitPrice = 19.99m;
+        const Int32 quantityInStock = 100;
+
+        await _connection.ExecuteAsync("""
+            INSERT INTO products (product_name, unit_price, quantity_in_stock)
+            VALUES (@productName, @unitPrice, @quantityInStock)
+            """, new { productName, unitPrice, quantityInStock });
+
+        // Act
+        ColumnMapper.MapTypesFromCallingAssembly();
+
+        // Assert
+        var product = await _connection.QueryFirstOrDefaultAsync<Product>(
+            "SELECT id, product_name, unit_price, quantity_in_stock FROM products"
+        );
+
+        Assert.NotNull(product);
+        Assert.Equal(productName, product.Name);
+        Assert.Equal(unitPrice, product.Price);
+        Assert.Equal(quantityInStock, product.Stock);
+    }
+
+    [Fact]
     public async Task MapTypesFromExecutingAssembly_Should_MapTypes()
     {
         // Arrange
@@ -171,7 +198,7 @@ public class ColumnMapperTests : IAsyncLifetime
         ColumnMapper.MapTypesFromExecutingAssembly();
 
         // Assert
-        var product = await _connection.QueryFirstOrDefaultAsync<Product>(
+        var product = await _connection.QueryFirstOrDefaultAsync<Internals.ProductEx>(
             "SELECT id, product_name, unit_price, quantity_in_stock FROM products"
         );
 

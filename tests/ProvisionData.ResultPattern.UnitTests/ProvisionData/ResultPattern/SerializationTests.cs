@@ -19,7 +19,8 @@ namespace ProvisionData.ResultPattern;
 /// <summary>
 /// Unit tests for JSON serialization of Result, Result&lt;T&gt;, and Error types.
 /// </summary>
-public class SerializationTests
+public class SerializationTests(ResultPatternIntegrationTestFixture fixture, ITestOutputHelper output)
+    : ResultPatternUnitTestBase(fixture, output)
 {
     #region Result<T> Success Tests
 
@@ -109,36 +110,6 @@ public class SerializationTests
     #region Result<T> Failure Tests
 
     [Fact]
-    public void ResultOfT_Failure_WithApiError_ShouldRoundTrip()
-    {
-        Result<Int32> original = new ApiError("Service unavailable");
-        var json = JsonSerializer.Serialize(original);
-
-        var deserialized = JsonSerializer.Deserialize<Result<Int32>>(json);
-
-        deserialized.Should().NotBeNull();
-        deserialized.IsSuccess.Should().BeFalse();
-        deserialized.Error.Should().BeOfType<ApiError>();
-        deserialized.Error.Description.Should().Be("Service unavailable");
-        deserialized.Error.Code.Should().Be(new ApiError("test").Code);
-    }
-
-    [Fact]
-    public void ResultOfT_Failure_WithValidationError_ShouldRoundTrip()
-    {
-        Result<String> original = new ValidationError("Email format invalid");
-        var json = JsonSerializer.Serialize(original);
-
-        var deserialized = JsonSerializer.Deserialize<Result<String>>(json);
-
-        deserialized.Should().NotBeNull();
-        deserialized.IsSuccess.Should().BeFalse();
-        deserialized.Error.Should().BeOfType<ValidationError>();
-        deserialized.Error.Description.Should().Be("Email format invalid");
-        deserialized.Error.Code.Should().Be(new ValidationError("test").Code);
-    }
-
-    [Fact]
     public void ResultOfT_Failure_WithNotFoundError_ShouldRoundTrip()
     {
         Result<TestRecord> original = new NotFoundError("Customer not found");
@@ -153,18 +124,27 @@ public class SerializationTests
     }
 
     [Fact]
+    public void ResultOfT_Failure_WithTransactionError_ShouldRoundTrip()
+    {
+        Result<Int32> original = new TransactionError(TransactionFailureReason.NetworkError, "ABC12345@DRMA", "Could not connect to the payment gateway");
+        var json = JsonSerializer.Serialize(original);
+
+        var deserialized = JsonSerializer.Deserialize<Result<Int32>>(json);
+
+        deserialized.Should().NotBeNull();
+        deserialized.IsSuccess.Should().BeFalse();
+        deserialized.Error.Should().BeOfType<TransactionError>();
+        deserialized.Error.Description.Should().Be("Could not connect to the payment gateway");
+        deserialized.Error.Code.Should().Be(new TransactionError(TransactionFailureReason.NetworkError, "QWE23456@RTYU", "test").Code);
+    }
+
+    [Fact]
     public void ResultOfT_Failure_AllErrorTypes_ShouldPreserveErrorCodeSingletons()
     {
         var errors = new Error[]
         {
-            new ApiError("test"),
-            new BusinessRuleViolationError("test"),
-            new ConfigurationError("test"),
-            new ConflictError("test"),
             new NotFoundError("test"),
-            new UnauthorizedError("test"),
-            new UnhandledExceptionError("test"),
-            new ValidationError("test")
+            new TransactionError(TransactionFailureReason.NetworkError, "test", "test")
         };
 
         foreach (var error in errors)
@@ -186,55 +166,16 @@ public class SerializationTests
     #region Error Serialization Tests
 
     [Fact]
-    public void Error_ApiError_ShouldRoundTrip()
+    public void Error_TransactionError_ShouldRoundTrip()
     {
-        var original = new ApiError("HTTP 500 error");
+        var original = new TransactionError(TransactionFailureReason.NetworkError, "FUB02789@BAR", "test");
         var json = JsonSerializer.Serialize(original);
 
-        var deserialized = JsonSerializer.Deserialize<ApiError>(json);
+        var deserialized = JsonSerializer.Deserialize<TransactionError>(json);
 
         deserialized.Should().NotBeNull();
-        deserialized!.Description.Should().Be("HTTP 500 error");
-        deserialized.Code.Should().Be(new ApiError("test").Code);
-    }
-
-    [Fact]
-    public void Error_BusinessRuleViolationError_ShouldRoundTrip()
-    {
-        var original = new BusinessRuleViolationError("Cannot delete active subscription");
-        var json = JsonSerializer.Serialize(original);
-
-        var deserialized = JsonSerializer.Deserialize<BusinessRuleViolationError>(json);
-
-        deserialized.Should().NotBeNull();
-        deserialized!.Description.Should().Be("Cannot delete active subscription");
-        deserialized.Code.Should().Be(new BusinessRuleViolationError("test").Code);
-    }
-
-    [Fact]
-    public void Error_ConfigurationError_ShouldRoundTrip()
-    {
-        var original = new ConfigurationError("Missing connection string");
-        var json = JsonSerializer.Serialize(original);
-
-        var deserialized = JsonSerializer.Deserialize<ConfigurationError>(json);
-
-        deserialized.Should().NotBeNull();
-        deserialized!.Description.Should().Be("Missing connection string");
-        deserialized.Code.Should().Be(new ConfigurationError("test").Code);
-    }
-
-    [Fact]
-    public void Error_ConflictError_ShouldRoundTrip()
-    {
-        var original = new ConflictError("Version mismatch detected");
-        var json = JsonSerializer.Serialize(original);
-
-        var deserialized = JsonSerializer.Deserialize<ConflictError>(json);
-
-        deserialized.Should().NotBeNull();
-        deserialized!.Description.Should().Be("Version mismatch detected");
-        deserialized.Code.Should().Be(new ConflictError("test").Code);
+        deserialized!.Description.Should().Be("test");
+        deserialized.Code.Should().Be(new TransactionError(TransactionFailureReason.NetworkError, "test", "test").Code);
     }
 
     [Fact]
@@ -251,51 +192,12 @@ public class SerializationTests
     }
 
     [Fact]
-    public void Error_UnauthorizedError_ShouldRoundTrip()
-    {
-        var original = new UnauthorizedError("Invalid API key");
-        var json = JsonSerializer.Serialize(original);
-
-        var deserialized = JsonSerializer.Deserialize<UnauthorizedError>(json);
-
-        deserialized.Should().NotBeNull();
-        deserialized!.Description.Should().Be("Invalid API key");
-        deserialized.Code.Should().Be(new UnauthorizedError("test").Code);
-    }
-
-    [Fact]
-    public void Error_UnhandledExceptionError_ShouldRoundTrip()
-    {
-        var original = new UnhandledExceptionError("NullReferenceException at line 42");
-        var json = JsonSerializer.Serialize(original);
-
-        var deserialized = JsonSerializer.Deserialize<UnhandledExceptionError>(json);
-
-        deserialized.Should().NotBeNull();
-        deserialized!.Description.Should().Be("NullReferenceException at line 42");
-        deserialized.Code.Should().Be(new UnhandledExceptionError("test").Code);
-    }
-
-    [Fact]
-    public void Error_ValidationError_ShouldRoundTrip()
-    {
-        var original = new ValidationError("Field 'name' is required");
-        var json = JsonSerializer.Serialize(original);
-
-        var deserialized = JsonSerializer.Deserialize<ValidationError>(json);
-
-        deserialized.Should().NotBeNull();
-        deserialized!.Description.Should().Be("Field 'name' is required");
-        deserialized.Code.Should().Be(new ValidationError("test").Code);
-    }
-
-    [Fact]
     public void Error_WithSpecialCharacters_ShouldRoundTrip()
     {
-        var original = new ConfigurationError("Path: <>&\"'\\\n\t");
+        var original = new NotFoundError("Path: <>&\"'\\\n\t");
         var json = JsonSerializer.Serialize(original);
 
-        var deserialized = JsonSerializer.Deserialize<ConfigurationError>(json);
+        var deserialized = JsonSerializer.Deserialize<NotFoundError>(json);
 
         deserialized.Should().NotBeNull();
         deserialized!.Description.Should().Be("Path: <>&\"'\\\n\t");
@@ -331,7 +233,7 @@ public class SerializationTests
     [Fact]
     public void ResultOfT_Failure_GetValueOrDefault_WorksAfterDeserialization()
     {
-        Result<Int32> original = new ApiError("Failed");
+        Result<Int32> original = new NotFoundError("Failed");
         var json = JsonSerializer.Serialize(original);
         var deserialized = JsonSerializer.Deserialize<Result<Int32>>(json);
 
@@ -343,11 +245,11 @@ public class SerializationTests
     [Fact]
     public void Error_IsErrorType_WorksAfterDeserialization()
     {
-        var original = new ValidationError("test");
+        var original = new NotFoundError("test");
         var json = JsonSerializer.Serialize(original);
-        var deserialized = JsonSerializer.Deserialize<ValidationError>(json);
+        var deserialized = JsonSerializer.Deserialize<NotFoundError>(json);
 
-        deserialized!.IsErrorType<ValidationError>().Should().BeTrue();
+        deserialized!.IsErrorType<NotFoundError>().Should().BeTrue();
         deserialized.IsErrorType<NotFoundError>().Should().BeFalse();
     }
 
@@ -369,7 +271,7 @@ public class SerializationTests
     [Fact]
     public void ResultOfT_MultipleDeserializations_ShouldPreserveErrorCodeEquality()
     {
-        Result<Int32> result = new ConflictError("Conflict");
+        Result<Int32> result = new NotFoundError("Conflict");
         var json = JsonSerializer.Serialize(result);
 
         var deserialized1 = JsonSerializer.Deserialize<Result<Int32>>(json);

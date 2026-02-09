@@ -124,7 +124,7 @@ public class CustomerApplicationService(ICustomerRepository repository, ILogger<
 
         if (existing is null)
         {
-            return Error.NotFound($"Customer with Id '{command.Id}' was not found.");
+            return new NotFoundError($"Customer with Id '{command.Id}' was not found.");
         }
 
         if (command.Name is not null)
@@ -195,4 +195,21 @@ public class CustomerDbContext(DbContextOptions<CustomerDbContext> options)
     : DbContext(options)
 {
     public DbSet<Customer> Customers { get; init; } = default!;
+}
+
+/// <summary>
+/// If you are not sure what this is, check out the ProvisionData.ResultPattern NuGet package.
+/// </summary>
+/// <param name="description"></param>
+/// <remarks>
+/// This is a custom error type that can be used in the Application Layer to represent a 404 
+/// NOT FOUND style error for missing entities, etc. 
+/// </remarks>
+public sealed class NotFoundError(String description) : Error(NotFoundErrorCode.Instance, description)
+{
+    internal sealed class NotFoundErrorCode : ErrorCode
+    {
+        public static readonly NotFoundErrorCode Instance = new();
+        protected override String Name => nameof(NotFoundError);
+    }
 }

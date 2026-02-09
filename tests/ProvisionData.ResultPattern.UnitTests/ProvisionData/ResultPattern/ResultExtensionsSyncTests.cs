@@ -17,7 +17,8 @@ namespace ProvisionData.ResultPattern;
 /// <summary>
 /// Unit tests for the <see cref="ResultExtensions"/> synchronous methods.
 /// </summary>
-public class ResultExtensionsSyncTests
+public class ResultExtensionsSyncTests(ResultPatternIntegrationTestFixture fixture, ITestOutputHelper output)
+    : ResultPatternUnitTestBase(fixture, output)
 {
     [Fact]
     public void GetValueOrDefault_WithSuccessResult_ShouldReturnValue()
@@ -32,7 +33,7 @@ public class ResultExtensionsSyncTests
     [Fact]
     public void GetValueOrDefault_WithFailureResult_ShouldReturnDefaultValue()
     {
-        var result = Result<Int32>.Failure(Error.NotFound("Not found"));
+        var result = Result<Int32>.Failure(new NotFoundError("Not found"));
 
         var value = result.GetValueOrDefault(99);
 
@@ -52,7 +53,7 @@ public class ResultExtensionsSyncTests
     [Fact]
     public void GetValueOrDefault_WithFailureResultNoParameter_ShouldReturnTypeDefault()
     {
-        var result = Result<Int32>.Failure(Error.NotFound("Not found"));
+        var result = Result<Int32>.Failure(new NotFoundError("Not found"));
 
         var value = result.GetValueOrDefault();
 
@@ -62,7 +63,7 @@ public class ResultExtensionsSyncTests
     [Fact]
     public void GetValueOrDefault_WithReferenceType_ShouldReturnNull()
     {
-        var result = Result<String>.Failure(Error.NotFound("Not found"));
+        var result = Result<String>.Failure(new NotFoundError("Not found"));
 
         var value = result.GetValueOrDefault();
 
@@ -72,7 +73,7 @@ public class ResultExtensionsSyncTests
     [Fact]
     public void GetValueOrDefault_WithReferenceTypeAndDefault_ShouldReturnDefault()
     {
-        var result = Result<String>.Failure(Error.NotFound("Not found"));
+        var result = Result<String>.Failure(new NotFoundError("Not found"));
 
         var value = result.GetValueOrDefault("default value");
 
@@ -93,7 +94,7 @@ public class ResultExtensionsSyncTests
     [Fact]
     public void Map_WithFailureResult_ShouldReturnFailure()
     {
-        var result = Result<Int32>.Failure(Error.NotFound("Not found"));
+        var result = Result<Int32>.Failure(new NotFoundError("Not found"));
 
         var mapped = result.Map(x => x * 2);
 
@@ -107,7 +108,7 @@ public class ResultExtensionsSyncTests
         var result = Result<Int32>.Success(5);
 
         var bound = result.Bind(x =>
-            x > 0 ? Result<String>.Success(x.ToString()) : Error.Validation("Must be positive"));
+            x > 0 ? Result<String>.Success(x.ToString()) : new NotFoundError("On vacation"));
 
         bound.IsSuccess.Should().BeTrue();
         bound.Value.Should().Be("5");
@@ -119,16 +120,16 @@ public class ResultExtensionsSyncTests
         var result = Result<Int32>.Success(-5);
 
         var bound = result.Bind(x =>
-            x > 0 ? Result<String>.Success(x.ToString()) : Error.Validation("Must be positive"));
+            x > 0 ? Result<String>.Success(x.ToString()) : new NotFoundError("Ask nicely next time"));
 
         bound.IsSuccess.Should().BeFalse();
-        bound.Error.Should().BeOfType<ValidationError>();
+        bound.Error.Should().BeOfType<NotFoundError>();
     }
 
     [Fact]
     public void Bind_WithFailureResult_ShouldReturnFailure()
     {
-        var result = Result<Int32>.Failure(Error.NotFound("Not found"));
+        var result = Result<Int32>.Failure(new NotFoundError("Not found"));
 
         var bound = result.Bind(x => Result<String>.Success(x.ToString()));
 
@@ -151,7 +152,7 @@ public class ResultExtensionsSyncTests
     [Fact]
     public void Match_WithFailureResult_ShouldCallOnFailure()
     {
-        var result = Result<Int32>.Failure(Error.NotFound("Item not found"));
+        var result = Result<Int32>.Failure(new NotFoundError("Item not found"));
 
         var message = result.Match(
             x => $"Success: {x}",
@@ -176,7 +177,7 @@ public class ResultExtensionsSyncTests
     [Fact]
     public void Tap_WithFailureResult_ShouldNotExecuteAction()
     {
-        var result = Result<Int32>.Failure(Error.NotFound("Not found"));
+        var result = Result<Int32>.Failure(new NotFoundError("Not found"));
         var sideEffect = 0;
 
         var tapped = result.Tap(x => sideEffect = x * 2);
@@ -199,7 +200,7 @@ public class ResultExtensionsSyncTests
     [Fact]
     public void ToResult_WithFailureResult_ShouldReturnFailure()
     {
-        var result = Result.Failure(Error.NotFound("Not found"));
+        var result = Result.Failure(new NotFoundError("Not found"));
 
         var typedResult = result.ToResult(42);
 
@@ -212,7 +213,7 @@ public class ResultExtensionsSyncTests
     {
         var result = Result<Int32>.Success(5)
             .Map(x => x * 2)
-            .Bind(x => x > 5 ? Result<String>.Success(x.ToString()) : Error.Validation("Too small"))
+            .Bind(x => x > 5 ? Result<String>.Success(x.ToString()) : new NotFoundError("Missing"))
             .Tap(x => Console.WriteLine(x));
 
         result.IsSuccess.Should().BeTrue();

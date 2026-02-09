@@ -20,8 +20,10 @@ namespace ProvisionData.ResultPattern;
 /// Demonstrates that custom Error types can be created and serialized
 /// without modifying the base Error class.
 /// </summary>
-public class CustomErrorSerializationTests
+public class CustomErrorSerializationTests(ResultPatternIntegrationTestFixture fixture, ITestOutputHelper output)
+    : ResultPatternUnitTestBase(fixture, output)
 {
+
     // Custom error type defined in this test assembly (simulating external assembly)
     public sealed class CustomerNotFoundError(String description, String customerId)
         : Error(CustomerNotFoundErrorCode.Instance, description)

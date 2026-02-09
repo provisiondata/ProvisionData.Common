@@ -29,17 +29,13 @@ namespace ProvisionData.ResultPattern;
 /// that inherits from ErrorCode and defines a public static Instance property.
 /// </para>
 /// </remarks>
+/// <remarks>
+/// Initializes a new instance of the ErrorCode class.
+/// </remarks>
 //[JsonConverter(typeof(ErrorCodeJsonConverter))]
 [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
-public abstract class ErrorCode : IEquatable<ErrorCode>
+public abstract class ErrorCode() : IEquatable<ErrorCode>
 {
-    /// <summary>
-    /// Initializes a new instance of the ErrorCode class.
-    /// </summary>
-    protected ErrorCode()
-    {
-    }
-
     /// <summary>
     /// A human-readable name for the error code.
     /// </summary>

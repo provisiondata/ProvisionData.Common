@@ -12,7 +12,7 @@
 // You should have received a copy of the GNU Affero General Public License along with this
 // program. If not, see <https://www.gnu.org/licenses/>.
 
-namespace ProvisionData.ResultPattern;
+namespace ProvisionData.ResultPattern.Infrastructure;
 
 /// <summary>
 /// Serves as a registry for all error types and their corresponding error code types in the

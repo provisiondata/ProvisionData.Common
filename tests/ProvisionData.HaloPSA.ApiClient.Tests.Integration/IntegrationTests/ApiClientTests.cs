@@ -17,13 +17,16 @@ using Microsoft.Extensions.DependencyInjection;
 using ProvisionData.HaloPSA.DTO;
 
 namespace ProvisionData.HaloPSA.IntegrationTests;
+#pragma warning disable xUnit1004 // Test methods should not be skipped
 
 public class ApiClientTests(ApiClientTestFixture fixture, ITestOutputHelper testOutputHelper)
     : ApiClientTestBase(fixture, testOutputHelper)
 {
+    private const String SkipReason = "Leaves test artifacts behind.";
+
     private readonly ITestOutputHelper _testOutputHelper = testOutputHelper;
 
-    [Fact]
+    [Fact(Skip = SkipReason)]
     public async Task Client_ShouldAuthenticate()
     {
         // Arrange
@@ -37,7 +40,7 @@ public class ApiClientTests(ApiClientTestFixture fixture, ITestOutputHelper test
         info.AppName.Should().Be("Halo PSA");
     }
 
-    [Fact]
+    [Fact(Skip = SkipReason)]
     public async Task ShouldGet_Client()
     {
         // Arrange
@@ -50,7 +53,7 @@ public class ApiClientTests(ApiClientTestFixture fixture, ITestOutputHelper test
         client.Id.Should().Be(TestData.TestCustomerId);
     }
 
-    [Fact]
+    [Fact(Skip = SkipReason)]
     public async Task ShouldGet_Invoice_with_Details()
     {
         // Act
@@ -63,7 +66,7 @@ public class ApiClientTests(ApiClientTestFixture fixture, ITestOutputHelper test
         invoice.Lines.Single().Description.Should().StartWith("MISCELLANEOUS");
     }
 
-    [Fact]
+    [Fact(Skip = SkipReason)]
     public async Task ShouldGet_Asset()
     {
         // Arrange
@@ -77,7 +80,7 @@ public class ApiClientTests(ApiClientTestFixture fixture, ITestOutputHelper test
         asset.SerialNumber.Should().NotBeNullOrWhiteSpace();
     }
 
-    [Fact]
+    [Fact(Skip = SkipReason)]
     public async Task Should_List_Asset()
     {
         // Arrange
@@ -91,7 +94,7 @@ public class ApiClientTests(ApiClientTestFixture fixture, ITestOutputHelper test
         list.Should().AllBeOfType<AssetDto>();
     }
 
-    [Fact]
+    [Fact(Skip = SkipReason)]
     public async Task Should_CreateAsset()
     {
         // Arrange
@@ -110,7 +113,7 @@ public class ApiClientTests(ApiClientTestFixture fixture, ITestOutputHelper test
         result.Fields.SingleOrDefault(f => f.Id == 117)?.Value.Should().Be(serialNumber);
     }
 
-    [Fact]
+    [Fact(Skip = SkipReason)]
     public async Task Should_GetJson()
     {
         var uri = "https://halo.pdsint.net/api/"
@@ -125,3 +128,4 @@ public class ApiClientTests(ApiClientTestFixture fixture, ITestOutputHelper test
         _testOutputHelper.WriteLine(json);
     }
 }
+#pragma warning restore xUnit1004 // Test methods should not be skipped

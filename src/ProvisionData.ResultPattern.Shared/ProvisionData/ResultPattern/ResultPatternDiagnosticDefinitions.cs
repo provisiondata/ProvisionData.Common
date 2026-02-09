@@ -12,10 +12,22 @@
 // You should have received a copy of the GNU Affero General Public License along with this
 // program. If not, see <https://www.gnu.org/licenses/>.
 
+using Microsoft.CodeAnalysis;
+
 namespace ProvisionData.ResultPattern;
 
-//[JsonSerializable(typeof(Result))]
-//[JsonSourceGenerationOptions(GenerationMode = JsonSourceGenerationMode.Metadata, UseStringEnumConverter = true)]
-//public partial class ResultPatternContext(JsonSerializerOptions? options) : JsonSerializerContext(options)
-//{
-//}
+internal static class ResultPatternDiagnosticDefinitions
+{
+    public const String MissingAddResultPatternId = "PDRP0001";
+
+    internal static readonly DiagnosticDescriptor MissingAddResultPattern = new(
+        id: MissingAddResultPatternId,
+        title: "ResultPattern services are not configured",
+        messageFormat: "ResultPattern types are used but AddResultPattern() is not called on IServiceCollection",
+        category: "Usage",
+        defaultSeverity: DiagnosticSeverity.Warning,
+        isEnabledByDefault: true,
+        description: "Call services.AddResultPattern() during service registration to enable ResultPattern JSON polymorphism and error handling.",
+        customTags: [WellKnownDiagnosticTags.CompilationEnd]
+    );
+}
