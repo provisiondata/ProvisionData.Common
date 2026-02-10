@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<RootNamespace />
+		<AssemblyName>ProvisionData.ResultPattern.UnitTests.CustomErrors</AssemblyName>
+		<TargetFramework>net8.0</TargetFramework>
+
+		<EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+		<CompilerGeneratedFilesOutputPath>$(BaseIntermediateOutputPath)Generated</CompilerGeneratedFilesOutputPath>
+		<RestoreSources>$(MSBuildThisFileDirectory)..\..\LocalPackages;$(RestoreSources)</RestoreSources>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<!--
+		This is required to ensure the generators and analyzers are available to the unit test project.
+		Since the generators and analyzers are included as content files in the package, we need to
+		reference the package itself to get them copied to the output directory of the test project.
+		-->
+		<PackageReference Include="ProvisionData.ResultPattern" />
+	</ItemGroup>
+
+</Project>

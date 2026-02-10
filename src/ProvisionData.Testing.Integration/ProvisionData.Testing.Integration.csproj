@@ -6,25 +6,37 @@
 
         <!-- NuGet package metadata -->
         <PackageId>ProvisionData.Testing.Integration</PackageId>
-        <Title>Provision Data Core Library</Title>
-        <Description>Basic classes and utilities used across all PDSI projects.</Description>
         <PackageTags></PackageTags>
         <PackageReadmeFile>./README.md</PackageReadmeFile>
-        <IsPackable>true</IsPackable>
-        <IsTrimmable>false</IsTrimmable>
-        <IsAotCompatible>false</IsAotCompatible>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    </PropertyGroup>
+        <IsPackable>true</IsPackable>
+        <ErrorReport>send</ErrorReport>
+        <IncludeSymbols>true</IncludeSymbols>
+        <IncludeSource>true</IncludeSource>
 
-    <ItemGroup>
-        <Using Include="Xunit" />
-    </ItemGroup>
+        <!-- Project Specific -->
+        <IsAotCompatible>true</IsAotCompatible>
+        <IsTrimmable>false</IsTrimmable>
+		<OutputType>Exe</OutputType>
+
+		<!-- NerdBank.GitVersioning -->
+        <NBGV_ThisAssemblyNamespace>ProvisionData.Testing.Integration.Versioning</NBGV_ThisAssemblyNamespace>
+    </PropertyGroup>
 
     <ItemGroup>
         <None Include="./README.md" Pack="true" PackagePath="/" />
     </ItemGroup>
 
-    <ItemGroup>
+	<Target Name="CopyPackage" AfterTargets="Pack">
+		<Message Text="Copying $(OutputPath)$(PackageId).$(PackageVersion).nupkg to $(ProjectDir)..\..\LocalPackages" Importance="High" />
+		<Copy SourceFiles="$(OutputPath)$(PackageId).$(PackageVersion).nupkg" DestinationFolder="$(ProjectDir)..\..\LocalPackages" />
+	</Target>
+
+	<ItemGroup>
+		<Using Include="Xunit" />
+	</ItemGroup>
+
+	<ItemGroup>
         <PackageReference Include="coverlet.collector" />
         <PackageReference Include="Meziantou.Extensions.Logging.Xunit.v3" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
@@ -33,6 +45,7 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
         </PackageReference>
+        <PackageReference Include="xunit.v3" />
         <PackageReference Include="xunit.v3.extensibility.core" />
     </ItemGroup>
 

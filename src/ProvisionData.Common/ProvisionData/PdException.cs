@@ -1,4 +1,4 @@
-// Provision Data Libraries
+// Provision Data Application Framework
 // Copyright (C) 2026 Provision Data Systems Inc.
 //
 // This program is free software: you can redistribute it and/or modify it under the terms of
@@ -35,7 +35,7 @@ public class PdException : Exception
 
     /// <summary>
     /// Initializes a new instance of the <see cref="PdException"/> class with a specified
-    /// message. Prefer using other constructors that accept an <see cref="Error"/> object.
+    /// message.
     /// </summary>
     public PdException(String message) : base(message)
     {

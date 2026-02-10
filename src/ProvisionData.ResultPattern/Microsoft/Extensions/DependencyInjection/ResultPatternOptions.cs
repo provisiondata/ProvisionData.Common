@@ -1,4 +1,4 @@
-// Provision Data Libraries
+// Provision Data Application Framework
 // Copyright (C) 2026 Provision Data Systems Inc.
 //
 // This program is free software: you can redistribute it and/or modify it under the terms of
@@ -18,10 +18,7 @@ using System.Text.Json;
 namespace Microsoft.Extensions.DependencyInjection;
 
 /// <summary>
-/// Configuration options for the Result Pattern. This class allows you to customize the behavior of the Result Pattern.
-/// Specifically JSON serialization settings and versioning. You can configure these options when calling
-/// <see cref="ResultPatternServiceCollectionExtensions.AddResultPattern(IServiceCollection, Action{ResultPatternOptions})"/>
-/// to add the Result Pattern to your application's dependency injection container.
+/// Configuration options for the Result Pattern.
 /// </summary>
 public class ResultPatternOptions
 {

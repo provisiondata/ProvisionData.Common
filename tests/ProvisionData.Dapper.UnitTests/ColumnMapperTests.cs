@@ -1,4 +1,4 @@
-// Provision Data Libraries
+// Provision Data Application Framework
 // Copyright (C) 2026 Provision Data Systems Inc.
 //
 // This program is free software: you can redistribute it and/or modify it under the terms of
@@ -15,7 +15,7 @@
 using Dapper;
 using Microsoft.Data.Sqlite;
 
-namespace ProvisionData.Dapper.Tests;
+namespace ProvisionData.Dapper;
 
 /// <summary>
 /// Tests the <see cref="ColumnMapper"/> functionality using an in-memory SQLite database.

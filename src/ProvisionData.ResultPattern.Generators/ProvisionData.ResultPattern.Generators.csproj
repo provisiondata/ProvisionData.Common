@@ -1,43 +1,42 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<RootNamespace />
-		<TargetFramework>netstandard2.0</TargetFramework>
+    <PropertyGroup>
+        <RootNamespace />
+		<AssemblyName>ProvisionData.ResultPattern.Generators</AssemblyName>
+        <TargetFramework>netstandard2.0</TargetFramework>
 
-		<!-- NuGet package metadata -->
-		<PackageId>ProvisionData.ResultPattern.Generators</PackageId>
-		<Title>Provision Data Result Pattern Library</Title>
-		<Description>Classes and utilities for implementing the Result pattern in Provision Data projects.</Description>
-		<PackageTags></PackageTags>
-		<PackageReadmeFile>./README.md</PackageReadmeFile>
-		<GenerateDocumentationFile>false</GenerateDocumentationFile>
-		<IsPackable>false</IsPackable>
-		<IsAotCompatible>false</IsAotCompatible>
-		<IsTrimmable>false</IsTrimmable>
-		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+        <!-- NuGet package metadata -->
+        <PackageId>ProvisionData.ResultPattern.Generators</PackageId>
+        <Description>Code fixes for the Provision Data Result Pattern Library.</Description>
+        <PackageTags></PackageTags>
 
-		<!-- Analyzer/Source Generator settings -->
-		<EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
-		<IncludeBuildOutput>false</IncludeBuildOutput>
-		<Analyzer>true</Analyzer>
-		<IsRoslynComponent>true</IsRoslynComponent>
-		<DevelopmentDependency>true</DevelopmentDependency>
+        <!--
+		These are settings specfic for analyzers/code fixes/source generators. We set IsPackable to false
+		to prevent packing this project as a separate NuGet package, but we still want to include the
+		assembly in the main package's analyzers folder.
+		-->
+        <Analyzer>true</Analyzer>
+        <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+        <IsRoslynComponent>true</IsRoslynComponent>
+        <GenerateDocumentationFile>false</GenerateDocumentationFile>
+        <DevelopmentDependency>true</DevelopmentDependency>
+        <IncludeBuildOutput>false</IncludeBuildOutput>
+        <PrivateAssets>all</PrivateAssets>
+        <IsPackable>false</IsPackable>
+        <IsAotCompatible>false</IsAotCompatible>
+        <IsTrimmable>false</IsTrimmable>
 
-		<!-- NerdBank.GitVersioning -->
-		<NBGV_ThisAssemblyNamespace>ProvisionData.ResultPattern.Generators.Versioning</NBGV_ThisAssemblyNamespace>
-	</PropertyGroup>
+        <!-- NerdBank.GitVersioning -->
+        <NBGV_ThisAssemblyNamespace>ProvisionData.ResultPattern.Generators.Versioning</NBGV_ThisAssemblyNamespace>
+    </PropertyGroup>
 
-	<ItemGroup>
-		<None Include="./README.md" Pack="true" PackagePath="/" />
-	</ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
+        <PackageReference Include="Microsoft.Extensions.Logging" />
+    </ItemGroup>
 
-	<ItemGroup>
-		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
-		<PackageReference Include="Microsoft.Extensions.Logging" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<ProjectReference Include="..\ProvisionData.ResultPattern.Shared\ProvisionData.ResultPattern.Shared.csproj" />
-	</ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\ProvisionData.ResultPattern.Generators.Shared\ProvisionData.ResultPattern.Generators.Shared.csproj" />
+    </ItemGroup>
 
 </Project>

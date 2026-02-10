@@ -6,19 +6,33 @@
 
         <!-- NuGet package metadata -->
         <PackageId>ProvisionData.Testing</PackageId>
-        <Title>Provision Data Core Library</Title>
-        <Description>Basic classes and utilities used across all PDSI projects.</Description>
         <PackageTags></PackageTags>
         <PackageReadmeFile>./README.md</PackageReadmeFile>
-        <IsPackable>false</IsPackable>        <!-- Temporary. Set to True when ready to pack. -->
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <IsPackable>false</IsPackable>
+        <ErrorReport>send</ErrorReport>
+        <IncludeSymbols>true</IncludeSymbols>
+        <IncludeSource>true</IncludeSource>
+
+        <!-- Project Specific -->
+        <IsAotCompatible>false</IsAotCompatible>
+        <IsTrimmable>false</IsTrimmable>
+		<OutputType>Exe</OutputType>
+		
+        <!-- NerdBank.GitVersioning -->
+        <NBGV_ThisAssemblyNamespace>ProvisionData.Testing.Versioning</NBGV_ThisAssemblyNamespace>
     </PropertyGroup>
 
     <ItemGroup>
         <None Include="./README.md" Pack="true" PackagePath="/" />
     </ItemGroup>
 
-    <ItemGroup>
+	<Target Name="CopyPackage" AfterTargets="Pack">
+		<Message Text="Copying $(OutputPath)$(PackageId).$(PackageVersion).nupkg to $(ProjectDir)..\..\LocalPackages" Importance="High" />
+		<Copy SourceFiles="$(OutputPath)$(PackageId).$(PackageVersion).nupkg" DestinationFolder="$(ProjectDir)..\..\LocalPackages" />
+	</Target>
+
+	<ItemGroup>
         <Using Include="Xunit" />
     </ItemGroup>
 

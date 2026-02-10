@@ -1,4 +1,4 @@
-// Provision Data HaloPSA API Client
+// Provision Data Application Framework
 // Copyright (C) 2026 Provision Data Systems Inc.
 //
 // This program is free software: you can redistribute it and/or modify it under the terms of
@@ -15,6 +15,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using ProvisionData.HaloPSA.ApiClient;
 
 namespace ProvisionData.HaloPSA.UnitTests;
 
@@ -47,7 +48,7 @@ public class HaloPsaApiClientExtensionsTests
         var serviceProvider = services.BuildServiceProvider();
         var options = serviceProvider.GetRequiredService<IOptions<HaloPsaApiClientOptions>>();
         var timeProvider = serviceProvider.GetRequiredService<TimeProvider>();
-        var client = serviceProvider.GetRequiredService<ApiClient>();
+        var client = serviceProvider.GetRequiredService<HaloPsaApiClient>();
 
         options.Value.AuthUrl.Should().Be("https://test.halo.local/auth/");
         options.Value.ApiUrl.Should().Be("https://test.halo.local/api/");
@@ -112,7 +113,7 @@ public class HaloPsaApiClientExtensionsTests
 
         var serviceProvider = services.BuildServiceProvider();
         var options = serviceProvider.GetRequiredService<IOptions<HaloPsaApiClientOptions>>();
-        var client = serviceProvider.GetRequiredService<ApiClient>();
+        var client = serviceProvider.GetRequiredService<HaloPsaApiClient>();
 
         options.Value.AuthUrl.Should().Be("https://action.halo.local/auth/");
         options.Value.ApiUrl.Should().Be("https://action.halo.local/api/");

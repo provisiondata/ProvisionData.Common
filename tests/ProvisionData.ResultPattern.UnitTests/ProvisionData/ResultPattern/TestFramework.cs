@@ -1,4 +1,4 @@
-// Provision Data Libraries
+// Provision Data Application Framework
 // Copyright (C) 2026 Provision Data Systems Inc.
 //
 // This program is free software: you can redistribute it and/or modify it under the terms of
@@ -19,64 +19,6 @@ using ProvisionData.Testing;
 
 namespace ProvisionData.ResultPattern;
 
-public sealed partial class NotFoundError : Error { }
-
-public sealed partial class TransactionError : Error
-{
-    public TransactionFailureReason Reason { get; init; }
-    public String TransactionId { get; init; }
-}
-
-public enum TransactionFailureReason
-{
-    InsufficientFunds,
-    CardExpired,
-    InvalidCardNumber,
-    NetworkError,
-    UnknownError
-}
-
-/// <summary>
-/// Example of a domain-specific error in a consuming application.
-/// This demonstrates how the generator handles errors defined outside the core library.
-/// </summary>
-public sealed partial class OrderNotFoundError : Error
-{
-    /// <summary>
-    /// The unique identifier of the order that was not found.
-    /// </summary>
-    public String OrderId { get; init; }
-}
-
-/// <summary>
-/// Example of an error with multiple properties.
-/// </summary>
-public sealed partial class InventoryInsufficientError : Error
-{
-    /// <summary>
-    /// The product SKU that has insufficient inventory.
-    /// </summary>
-    public String ProductSku { get; init; }
-
-    /// <summary>
-    /// The requested quantity.
-    /// </summary>
-    public Int32 RequestedQuantity { get; init; }
-
-    /// <summary>
-    /// The available quantity in inventory.
-    /// </summary>
-    public Int32 AvailableQuantity { get; init; }
-}
-
-/// <summary>
-/// Example of an error with no additional properties.
-/// </summary>
-public sealed partial class DatabaseConnectionError : Error
-{
-    // No additional properties - just uses the base description
-}
-
 public class ResultPatternIntegrationTestFixture : IntegrationTestFixture
 {
     protected override void ConfigureConfiguration(IConfigurationBuilder builder)
@@ -87,7 +29,7 @@ public class ResultPatternIntegrationTestFixture : IntegrationTestFixture
 
     protected override void ConfigureServices(IServiceCollection services, IConfiguration configuration)
     {
-        services.AddResultPattern();
+        //services.AddResultPattern();
     }
 
     protected override ValueTask InitializeFixtureAsync(IServiceProvider services)

@@ -1,4 +1,4 @@
-// ProvisionData.Common
+// Provision Data Application Framework
 // Copyright (C) 2026 Provision Data Systems Inc.
 //
 // This program is free software: you can redistribute it and/or modify it under the terms of
@@ -18,7 +18,7 @@ using Microsoft.Extensions.DependencyInjection;
 using ProvisionData.Data;
 using ProvisionData.Testing;
 
-namespace ProvisionData.Dapper.Tests;
+namespace ProvisionData.Dapper;
 
 public class ColumnMappingTestFixture : IntegrationTestFixture
 {

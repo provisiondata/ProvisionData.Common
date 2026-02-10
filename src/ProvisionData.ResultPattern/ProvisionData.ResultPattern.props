@@ -1,0 +1,7 @@
+<Project>
+    <ItemGroup>
+        <Analyzer Include="$(MSBuildThisPackageRoot)analyzers/dotnet/cs/ProvisionData.ResultPattern.Generators.dll" />
+        <Analyzer Include="$(MSBuildThisPackageRoot)analyzers/dotnet/cs/ProvisionData.ResultPattern.Generators.CodeFixes.dll" />
+        <Analyzer Include="$(MSBuildThisPackageRoot)analyzers/dotnet/cs/ProvisionData.ResultPattern.Generators.Shared.dll" />
+    </ItemGroup>
+</Project>

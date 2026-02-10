@@ -1,4 +1,4 @@
-// Provision Data Libraries
+// Provision Data Application Framework
 // Copyright (C) 2026 Provision Data Systems Inc.
 //
 // This program is free software: you can redistribute it and/or modify it under the terms of
@@ -14,6 +14,5 @@
 
 using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo("ProvisionData.ResultPattern.CustomErrors.Tests")]
+[assembly: InternalsVisibleTo("ProvisionData.ResultPattern.Generators.UnitTests")]
 [assembly: InternalsVisibleTo("ProvisionData.ResultPattern.UnitTests")]
-[assembly: InternalsVisibleTo("ProvisionData.Testing.Integration.Examples")]

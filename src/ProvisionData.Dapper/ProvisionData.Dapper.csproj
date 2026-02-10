@@ -1,28 +1,39 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <RootNamespace>ProvisionData</RootNamespace>
+        <RootNamespace />
         <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
 
         <!-- NuGet package metadata -->
         <PackageId>ProvisionData.Dapper</PackageId>
-        <Title>Provision Data Dapper Mapper</Title>
         <Description>Provides simple mapping of properties to database columns for use by Dapper.</Description>
         <PackageTags>Dapper,Mapping</PackageTags>
         <PackageReadmeFile>./README.md</PackageReadmeFile>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <IsPackable>true</IsPackable>
-        <IsTrimmable>False</IsTrimmable>
+        <ErrorReport>send</ErrorReport>
+        <IncludeSymbols>true</IncludeSymbols>
+        <IncludeSource>true</IncludeSource>
+
+        <!-- Project Specific -->
         <IsAotCompatible>True</IsAotCompatible>
-        <IsPublishable>False</IsPublishable>
+        <IsTrimmable>False</IsTrimmable>
+
+        <!-- NerdBank.GitVersioning -->
+        <NBGV_ThisAssemblyNamespace>ProvisionData.Dapper.Versioning</NBGV_ThisAssemblyNamespace>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Dapper" />
+        <None Include="./README.md" Pack="true" PackagePath="/" />
     </ItemGroup>
 
-    <ItemGroup>
-        <None Include="./README.md" Pack="true" PackagePath="/" />
+	<Target Name="CopyPackage" AfterTargets="Pack">
+		<Message Text="Copying $(OutputPath)$(PackageId).$(PackageVersion).nupkg to $(ProjectDir)..\..\LocalPackages" Importance="High" />
+		<Copy SourceFiles="$(OutputPath)$(PackageId).$(PackageVersion).nupkg" DestinationFolder="$(ProjectDir)..\..\LocalPackages" />
+	</Target>
+
+	<ItemGroup>
+        <PackageReference Include="Dapper" />
     </ItemGroup>
 
 </Project>

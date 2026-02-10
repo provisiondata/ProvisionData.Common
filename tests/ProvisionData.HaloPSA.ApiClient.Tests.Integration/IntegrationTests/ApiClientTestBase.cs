@@ -1,4 +1,4 @@
-// Provision Data HaloPSA API Client
+// Provision Data Application Framework
 // Copyright (C) 2026 Provision Data Systems Inc.
 //
 // This program is free software: you can redistribute it and/or modify it under the terms of
@@ -13,12 +13,13 @@
 // program. If not, see <https://www.gnu.org/licenses/>.
 
 using Bogus;
+using ProvisionData.HaloPSA.ApiClient;
 using ProvisionData.Testing;
 
 namespace ProvisionData.HaloPSA.IntegrationTests;
 
 public class ApiClientTestBase(ApiClientTestFixture fixture, ITestOutputHelper testOutputHelper)
-    : IntegrationTestBase<ApiClient, ApiClientTestFixture>(fixture, testOutputHelper)
+    : IntegrationTestBase<HaloPsaApiClient, ApiClientTestFixture>(fixture, testOutputHelper)
 {
     private readonly ApiClientTestFixture _fixture = fixture;
 

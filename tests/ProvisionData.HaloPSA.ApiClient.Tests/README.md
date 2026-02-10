@@ -54,7 +54,7 @@ public void Constructor_ShouldInitialize_WithValidParameters()
 {
     // Arrange
     var tokenProviderMock = new Mock<IAuthTokenProvider>();
-    var loggerMock = new Mock<ILogger<ApiClient>>();
+    var loggerMock = new Mock<ILogger<HaloPsaApiClient>>();
     var optionsMock = new Mock<IOptions<HaloPsaApiClientOptions>>();
     var timeProviderMock = new Mock<TimeProvider>();
     var fieldMappingProviderMock = new Mock<IFieldMappingProvider>();
@@ -94,7 +94,7 @@ public class ApiClientTests(ApiClientTestFixture fixture, ITestOutputHelper test
     public async Task Client_ShouldAuthenticate()
     {
         // Arrange
-        var client = Services.GetRequiredService<ApiClient>();
+        var client = Services.GetRequiredService<HaloPsaApiClient>();
 
         // Act
         var info = await client.GetInstanceInfoAsync(CancellationToken.None);

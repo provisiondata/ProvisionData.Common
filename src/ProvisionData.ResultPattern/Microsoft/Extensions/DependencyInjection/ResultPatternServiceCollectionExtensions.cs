@@ -1,4 +1,4 @@
-// Provision Data Libraries
+// Provision Data Application Framework
 // Copyright (C) 2026 Provision Data Systems Inc.
 //
 // This program is free software: you can redistribute it and/or modify it under the terms of
@@ -12,11 +12,8 @@
 // You should have received a copy of the GNU Affero General Public License along with this
 // program. If not, see <https://www.gnu.org/licenses/>.
 
-using Microsoft.Extensions.Options;
-using ProvisionData.ResultPattern;
+using Microsoft.AspNetCore.Mvc;
 using ProvisionData.ResultPattern.Infrastructure;
-using System.Text.Json;
-using System.Text.Json.Serialization.Metadata;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -34,37 +31,21 @@ public static class ResultPatternServiceCollectionExtensions
     /// Adds result pattern services to the specified service collection.
     /// </summary>
     /// <param name="services">The service collection to add the result pattern services to.</param>
-    /// <param name="options">An optional action to configure the result pattern o.</param>
     /// <returns>The updated service collection.</returns>
-    public static IServiceCollection AddResultPattern(this IServiceCollection services, Action<ResultPatternOptions>? options = null)
+    public static IServiceCollection AddResultPattern(this IServiceCollection services)
     {
-        services.Configure<ResultPatternOptions>(o =>
+        services.ConfigureHttpJsonOptions(options =>
         {
-            var json = o.JsonSerializerOptions;
-
-            json.TypeInfoResolverChain.Insert(0, ResultPatternJsonSerializerContext.Default);
-
-            json.TypeInfoResolverChain.Insert(1, new DefaultJsonTypeInfoResolver
-            {
-                Modifiers =
-                {
-                    ti => ErrorJsonPolymorphism.Apply(ti)
-                }
-            });
+            options.SerializerOptions.Converters.Add(new ErrorJsonConverter());
+            options.SerializerOptions.Converters.Add(new ResultJsonConverter());
+            options.SerializerOptions.Converters.Add(new ResultOfTJsonConverterFactory());
         });
 
-        services.PostConfigure<JsonSerializerOptions>(o =>
+        services.Configure<JsonOptions>(options =>
         {
-            var rp = services.BuildServiceProvider().GetRequiredService<IOptions<ResultPatternOptions>>().Value;
-
-            // Merge your JSON settings into ASP.NET's
-            foreach (var resolver in rp.JsonSerializerOptions.TypeInfoResolverChain)
-            {
-                if (!o.TypeInfoResolverChain.Contains(resolver))
-                {
-                    o.TypeInfoResolverChain.Add(resolver);
-                }
-            }
+            options.JsonSerializerOptions.Converters.Add(new ResultJsonConverter());
+            options.JsonSerializerOptions.Converters.Add(new ErrorJsonConverter());
+            options.JsonSerializerOptions.Converters.Add(new ResultOfTJsonConverterFactory());
         });
 
         return services;

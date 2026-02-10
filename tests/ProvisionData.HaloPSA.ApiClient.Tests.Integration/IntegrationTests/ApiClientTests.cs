@@ -1,4 +1,4 @@
-// Provision Data Libraries
+// Provision Data Application Framework
 // Copyright (C) 2026 Provision Data Systems Inc.
 //
 // This program is free software: you can redistribute it and/or modify it under the terms of
@@ -14,6 +14,7 @@
 
 using Flurl;
 using Microsoft.Extensions.DependencyInjection;
+using ProvisionData.HaloPSA.ApiClient;
 using ProvisionData.HaloPSA.DTO;
 
 namespace ProvisionData.HaloPSA.IntegrationTests;
@@ -30,7 +31,7 @@ public class ApiClientTests(ApiClientTestFixture fixture, ITestOutputHelper test
     public async Task Client_ShouldAuthenticate()
     {
         // Arrange
-        var client = Services.GetRequiredService<ApiClient>();
+        var client = Services.GetRequiredService<HaloPsaApiClient>();
 
         // Act
         var info = await client.GetInstanceInfoAsync(CancellationToken.None);

@@ -21,7 +21,7 @@ namespace ProvisionData.HaloPSA;
 /// </summary>
 /// <remarks>
 /// <para>
-/// This partial class contains types used directly by the ApiClient methods.
+/// This partial class contains types used directly by the HaloPsaApiClient methods.
 /// When you run the model generator, it will create <c>ApiJsonSerializerContext.g.cs</c>
 /// which adds all generated model types as a partial class extension.
 /// </para>

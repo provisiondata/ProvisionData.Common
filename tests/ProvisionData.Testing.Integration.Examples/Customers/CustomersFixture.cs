@@ -1,4 +1,4 @@
-// ProvisionData.Common
+// Provision Data Application Framework
 // Copyright (C) 2026 Provision Data Systems Inc.
 //
 // This program is free software: you can redistribute it and/or modify it under the terms of
@@ -15,8 +15,9 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using ProvisionData.Testing.Integration.Examples;
 
-namespace ProvisionData.Testing.Integration.Examples.Customers;
+namespace ProvisionData.Testing.Customers;
 
 // Fixture
 public class CustomersFixture : IntegrationTestFixture

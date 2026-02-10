@@ -1,9 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Worker">
 
     <PropertyGroup>
-        <RootNamespace>ProvisionData.HaloPSA.ModelGenerator</RootNamespace>
+        <RootNamespace />
         <TargetFramework>net10.0</TargetFramework>
+
+        <!-- NuGet package metadata -->
         <IsPackable>false</IsPackable>
+        <IsAotCompatible>false</IsAotCompatible>
+        <IsTrimmable>false</IsTrimmable>
+
+        <!-- NerdBank.GitVersioning -->
+        <NBGV_ThisAssemblyNamespace>ProvisionData.HaloPSA.ApiClient.ModelGenerator.Versioning</NBGV_ThisAssemblyNamespace>
     </PropertyGroup>
 
     <ItemGroup>

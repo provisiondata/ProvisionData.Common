@@ -587,7 +587,7 @@ services.Configure<JsonOptions>(options =>
                     };
 
                     // Add all known derived types
-                    foreach (var t in ErrorTypeRegistry.All)
+                    foreach (var t in ErrorCodeRegistry.All)
                     {
                         ti.PolymorphismOptions.DerivedTypes.Add(
                             new JsonDerivedType(t, t.Name)
@@ -603,7 +603,7 @@ services.Configure<JsonOptions>(options =>
 Then developers register their types:
 
 ```csharp
-ErrorTypeRegistry.Register<MyCustomError>();
+ErrorCodeRegistry.Register<MyCustomError>();
 ```
 
 No reflection during serialization.  
@@ -867,7 +867,7 @@ This gives you:
 ### Step 1 — Add a registry for error types
 
 ```csharp
-public static class ErrorTypeRegistry
+public static class ErrorCodeRegistry
 {
     private static readonly List<Type> _types = new();
 
@@ -881,8 +881,8 @@ public static class ErrorTypeRegistry
 Developers register their types:
 
 ```csharp
-ErrorTypeRegistry.Register<ApiError>();
-ErrorTypeRegistry.Register<ConfigurationError>();
+ErrorCodeRegistry.Register<ApiError>();
+ErrorCodeRegistry.Register<ConfigurationError>();
 ```
 
 Or you can scan assemblies once at startup.
@@ -913,7 +913,7 @@ services.Configure<JsonOptions>(options =>
                         UnknownDerivedTypeHandling = JsonUnknownDerivedTypeHandling.FailSerialization
                     };
 
-                    foreach (var t in ErrorTypeRegistry.All)
+                    foreach (var t in ErrorCodeRegistry.All)
                     {
                         ti.PolymorphismOptions.DerivedTypes.Add(
                             new JsonDerivedType(t, t.Name)
@@ -930,7 +930,7 @@ services.Configure<JsonOptions>(options =>
                         UnknownDerivedTypeHandling = JsonUnknownDerivedTypeHandling.FailSerialization
                     };
 
-                    foreach (var t in ErrorTypeRegistry.All
+                    foreach (var t in ErrorCodeRegistry.All
                         .Select(t => t.GetProperty("Code")!.PropertyType)
                         .Distinct())
                     {
@@ -1122,7 +1122,7 @@ public class Result<T> : Result
 # ⭐ 2. Error type registry (plugin model)
 
 ```csharp
-public static class ErrorTypeRegistry
+public static class ErrorCodeRegistry
 {
     private static readonly List<Type> _errorTypes = new();
     private static readonly List<Type> _errorCodeTypes = new();
@@ -1144,8 +1144,8 @@ public static class ErrorTypeRegistry
 Developers register their types at startup:
 
 ```csharp
-ErrorTypeRegistry.Register<ApiError>();
-ErrorTypeRegistry.Register<ConfigurationError>();
+ErrorCodeRegistry.Register<ApiError>();
+ErrorCodeRegistry.Register<ConfigurationError>();
 ```
 
 ---
@@ -1172,7 +1172,7 @@ services.Configure<JsonOptions>(options =>
                         UnknownDerivedTypeHandling = JsonUnknownDerivedTypeHandling.FailSerialization
                     };
 
-                    foreach (var t in ErrorTypeRegistry.ErrorTypes)
+                    foreach (var t in ErrorCodeRegistry.ErrorTypes)
                         ti.PolymorphismOptions.DerivedTypes.Add(new JsonDerivedType(t, t.Name));
                 }
 
@@ -1185,7 +1185,7 @@ services.Configure<JsonOptions>(options =>
                         UnknownDerivedTypeHandling = JsonUnknownDerivedTypeHandling.FailSerialization
                     };
 
-                    foreach (var t in ErrorTypeRegistry.ErrorCodeTypes)
+                    foreach (var t in ErrorCodeRegistry.ErrorCodeTypes)
                         ti.PolymorphismOptions.DerivedTypes.Add(new JsonDerivedType(t, t.Name));
                 }
             }
@@ -1343,7 +1343,7 @@ services.Configure<JsonOptions>(options =>
                         TypeDiscriminatorPropertyName = "$type"
                     };
 
-                    foreach (var t in ErrorTypeRegistry.ErrorTypes)
+                    foreach (var t in ErrorCodeRegistry.ErrorTypes)
                         ti.PolymorphismOptions.DerivedTypes.Add(
                             new JsonDerivedType(t, t.Name)
                         );
@@ -1356,7 +1356,7 @@ services.Configure<JsonOptions>(options =>
                         TypeDiscriminatorPropertyName = "$code"
                     };
 
-                    foreach (var t in ErrorTypeRegistry.ErrorCodeTypes)
+                    foreach (var t in ErrorCodeRegistry.ErrorCodeTypes)
                         ti.PolymorphismOptions.DerivedTypes.Add(
                             new JsonDerivedType(t, t.Name)
                         );
@@ -1477,7 +1477,7 @@ This is the architecture you can build on for years.
 ```
 /Server
     Program.cs
-    ErrorTypeRegistry.cs
+    ErrorCodeRegistry.cs
     ErrorJsonContext.cs
     Models/
         Result.cs
@@ -1601,10 +1601,10 @@ public class Result<T> : Result
 
 # ⭐ 2. Error Type Registry (plugin model)
 
-### `/Server/ErrorTypeRegistry.cs`
+### `/Server/ErrorCodeRegistry.cs`
 
 ```csharp
-public static class ErrorTypeRegistry
+public static class ErrorCodeRegistry
 {
     private static readonly List<Type> _errorTypes = new();
     private static readonly List<Type> _errorCodeTypes = new();
@@ -1653,8 +1653,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Register known error types
-ErrorTypeRegistry.Register<ApiError>();
-ErrorTypeRegistry.Register<ConfigurationError>();
+ErrorCodeRegistry.Register<ApiError>();
+ErrorCodeRegistry.Register<ConfigurationError>();
 
 builder.Services.Configure<JsonOptions>(options =>
 {
@@ -1677,7 +1677,7 @@ builder.Services.Configure<JsonOptions>(options =>
                         TypeDiscriminatorPropertyName = "$type"
                     };
 
-                    foreach (var t in ErrorTypeRegistry.ErrorTypes)
+                    foreach (var t in ErrorCodeRegistry.ErrorTypes)
                     {
                         var discriminator = $"{t.FullName}:v1";
                         ti.PolymorphismOptions.DerivedTypes.Add(
@@ -1693,7 +1693,7 @@ builder.Services.Configure<JsonOptions>(options =>
                         TypeDiscriminatorPropertyName = "$code"
                     };
 
-                    foreach (var t in ErrorTypeRegistry.ErrorCodeTypes)
+                    foreach (var t in ErrorCodeRegistry.ErrorCodeTypes)
                     {
                         var discriminator = $"{t.FullName}:v1";
                         ti.PolymorphismOptions.DerivedTypes.Add(
@@ -1814,7 +1814,7 @@ Your architecture already has the traits of a plugin system:
 
 The only missing piece is a **registration mechanism** so the JSON serializer knows about the new types.
 
-That’s what the `ErrorTypeRegistry` provides.
+That’s what the `ErrorCodeRegistry` provides.
 
 ---
 
@@ -1823,7 +1823,7 @@ That’s what the `ErrorTypeRegistry` provides.
 It’s not magic — it’s just a list.
 
 ```csharp
-public static class ErrorTypeRegistry
+public static class ErrorCodeRegistry
 {
     private static readonly List<Type> _errorTypes = new();
     private static readonly List<Type> _errorCodeTypes = new();
@@ -1845,9 +1845,9 @@ public static class ErrorTypeRegistry
 Developers “plug in” their types:
 
 ```csharp
-ErrorTypeRegistry.Register<ApiError>();
-ErrorTypeRegistry.Register<ConfigurationError>();
-ErrorTypeRegistry.Register<DatabaseError>();
+ErrorCodeRegistry.Register<ApiError>();
+ErrorCodeRegistry.Register<ConfigurationError>();
+ErrorCodeRegistry.Register<DatabaseError>();
 ```
 
 Your JSON configuration then uses this registry to:
@@ -1903,7 +1903,7 @@ public sealed class DatabaseError : Error
 Then “plug it in”:
 
 ```csharp
-ErrorTypeRegistry.Register<DatabaseError>();
+ErrorCodeRegistry.Register<DatabaseError>();
 ```
 
 And your entire serialization pipeline now supports it:
@@ -1960,7 +1960,7 @@ Let me walk you through this in a way that’s practical, elegant, and fits your
 
 Your rule is simple:
 
-> **Every `Error` subclass must be registered in `ErrorTypeRegistry.Register<T>()`.**
+> **Every `Error` subclass must be registered in `ErrorCodeRegistry.Register<T>()`.**
 
 If a developer creates:
 
@@ -1971,7 +1971,7 @@ public sealed class DatabaseError : Error { ... }
 …but forgets to register it:
 
 ```csharp
-ErrorTypeRegistry.Register<DatabaseError>();
+ErrorCodeRegistry.Register<DatabaseError>();
 ```
 
 …the analyzer should:
@@ -1993,7 +1993,7 @@ Finds all classes deriving from `Error` and checks if they’re registered.
 
 ### ✔ A Code Fix Provider  
 Offers a one‑click fix:  
-**“Register this error type in ErrorTypeRegistry.”**
+**“Register this error type in ErrorCodeRegistry.”**
 
 ### ✔ A Diagnostic Descriptor  
 Defines the rule, severity, and message.
@@ -2033,7 +2033,7 @@ public class ErrorRegistryAnalyzer : DiagnosticAnalyzer
     public static readonly DiagnosticDescriptor Rule = new(
         id: "PDA0001",
         title: "Error type is not registered",
-        messageFormat: "Error type '{0}' must be registered using ErrorTypeRegistry.Register<{0}>()",
+        messageFormat: "Error type '{0}' must be registered using ErrorCodeRegistry.Register<{0}>()",
         category: "Usage",
         DiagnosticSeverity.Warning,
         isEnabledByDefault: true);
@@ -2076,7 +2076,7 @@ public class ErrorRegistryAnalyzer : DiagnosticAnalyzer
 
         // Check if registered
         var compilation = context.Compilation;
-        var registry = compilation.GetTypeByMetadataName("ErrorTypeRegistry");
+        var registry = compilation.GetTypeByMetadataName("ErrorCodeRegistry");
 
         if (registry == null)
             return;
@@ -2116,7 +2116,7 @@ This analyzer:
 
 - Finds all classes deriving from `Error`
 - Skips abstract types
-- Scans for `ErrorTypeRegistry.Register<T>()`
+- Scans for `ErrorCodeRegistry.Register<T>()`
 - Emits a warning if missing
 
 ---
@@ -2164,7 +2164,7 @@ public class ErrorRegistryCodeFixProvider : CodeFixProvider
         var editor = await DocumentEditor.CreateAsync(document, cancellationToken);
 
         var registration = SyntaxFactory.ParseStatement(
-            $"ErrorTypeRegistry.Register<{classDecl.Identifier.Text}>();");
+            $"ErrorCodeRegistry.Register<{classDecl.Identifier.Text}>();");
 
         // Insert at top of Program.cs
         var program = root.DescendantNodes()
@@ -2201,7 +2201,7 @@ public sealed class DatabaseError : Error
 They immediately get:
 
 ```
-Warning PDA0001: Error type 'DatabaseError' must be registered using ErrorTypeRegistry.Register<DatabaseError>()
+Warning PDA0001: Error type 'DatabaseError' must be registered using ErrorCodeRegistry.Register<DatabaseError>()
 ```
 
 With a lightbulb offering:
@@ -2263,16 +2263,16 @@ Let me walk you through the architecture in a way that’s clean, maintainable, 
 Instead of writing:
 
 ```csharp
-ErrorTypeRegistry.Register<ApiError>();
-ErrorTypeRegistry.Register<ConfigurationError>();
-ErrorTypeRegistry.Register<DatabaseError>();
+ErrorCodeRegistry.Register<ApiError>();
+ErrorCodeRegistry.Register<ConfigurationError>();
+ErrorCodeRegistry.Register<DatabaseError>();
 ```
 
 …you get a generated file like:
 
 ```csharp
 // <auto-generated />
-public static partial class ErrorTypeRegistry
+public static partial class ErrorCodeRegistry
 {
     static partial void RegisterGenerated()
     {
@@ -2286,7 +2286,7 @@ public static partial class ErrorTypeRegistry
 And your registry calls it:
 
 ```csharp
-static ErrorTypeRegistry()
+static ErrorCodeRegistry()
 {
     RegisterGenerated();
 }
@@ -2323,15 +2323,15 @@ This is the same pattern used by Entity Framework, ASP.NET, and Orleans.
 
 # ⭐ Step 1 — Modify the Registry to Support Generation
 
-### `/Server/ErrorTypeRegistry.cs`
+### `/Server/ErrorCodeRegistry.cs`
 
 ```csharp
-public static partial class ErrorTypeRegistry
+public static partial class ErrorCodeRegistry
 {
     private static readonly List<Type> _errorTypes = new();
     private static readonly List<Type> _errorCodeTypes = new();
 
-    static ErrorTypeRegistry()
+    static ErrorCodeRegistry()
     {
         RegisterGenerated(); // <-- auto-generated method
     }
@@ -2409,7 +2409,7 @@ public class ErrorRegistryGenerator : ISourceGenerator
         // Generate the registration code
         var sb = new StringBuilder();
         sb.AppendLine("// <auto-generated />");
-        sb.AppendLine("public static partial class ErrorTypeRegistry");
+        sb.AppendLine("public static partial class ErrorCodeRegistry");
         sb.AppendLine("{");
         sb.AppendLine("    static partial void RegisterGenerated()");
         sb.AppendLine("    {");
@@ -2422,7 +2422,7 @@ public class ErrorRegistryGenerator : ISourceGenerator
         sb.AppendLine("    }");
         sb.AppendLine("}");
 
-        context.AddSource("ErrorTypeRegistry.g.cs", sb.ToString());
+        context.AddSource("ErrorCodeRegistry.g.cs", sb.ToString());
     }
 }
 
@@ -2457,7 +2457,7 @@ The generator emits:
 
 ```csharp
 // <auto-generated />
-public static partial class ErrorTypeRegistry
+public static partial class ErrorCodeRegistry
 {
     static partial void RegisterGenerated()
     {
@@ -2653,7 +2653,7 @@ static partial void RegisterGenerated()
 Your registry calls it:
 
 ```csharp
-static ErrorTypeRegistry()
+static ErrorCodeRegistry()
 {
     RegisterGenerated();
 }
@@ -2861,7 +2861,7 @@ This keeps your original `Error` base class untouched.
 
 ```csharp
 // <auto-generated />
-public static partial class ErrorTypeRegistry
+public static partial class ErrorCodeRegistry
 {
     static partial void RegisterGenerated()
     {
@@ -2874,7 +2874,7 @@ public static partial class ErrorTypeRegistry
 Your registry calls this automatically:
 
 ```csharp
-static ErrorTypeRegistry()
+static ErrorCodeRegistry()
 {
     RegisterGenerated();
 }
@@ -3211,7 +3211,7 @@ You’ll be able to:
   - Create `PaymentErrorCode`
   - Create the constructor
   - Register both types
-  - Hook into your `ErrorTypeRegistry`
+  - Hook into your `ErrorCodeRegistry`
   - Leave JSON polymorphism to your existing setup
 
 I’ll keep it focused so you can wire the sample yourself and really internalize it.
@@ -3285,15 +3285,15 @@ public class Result<T> : Result
 
 ---
 
-### 2. ErrorTypeRegistry with generation hook
+### 2. ErrorCodeRegistry with generation hook
 
 ```csharp
-public static partial class ErrorTypeRegistry
+public static partial class ErrorCodeRegistry
 {
     private static readonly List<Type> _errorTypes = new();
     private static readonly List<Type> _errorCodeTypes = new();
 
-    static ErrorTypeRegistry()
+    static ErrorCodeRegistry()
     {
         RegisterGenerated(); // implemented by the generator
     }
@@ -3497,7 +3497,7 @@ public partial sealed class {errorName}
     {
         var sb = new StringBuilder();
         sb.AppendLine("// <auto-generated />");
-        sb.AppendLine("public static partial class ErrorTypeRegistry");
+        sb.AppendLine("public static partial class ErrorCodeRegistry");
         sb.AppendLine("{");
         sb.AppendLine("    static partial void RegisterGenerated()");
         sb.AppendLine("    {");
@@ -3512,7 +3512,7 @@ public partial sealed class {errorName}
         sb.AppendLine("    }");
         sb.AppendLine("}");
 
-        context.AddSource("ErrorTypeRegistry.g.cs", sb.ToString());
+        context.AddSource("ErrorCodeRegistry.g.cs", sb.ToString());
     }
 
     private static string UpperFirst(string name)
@@ -3532,11 +3532,11 @@ In your main project:
 public partial sealed class PaymentError(string transactionId) : Error { }
 ```
 
-Then in `Program.cs`, configure JSON polymorphism using `ErrorTypeRegistry.ErrorTypes` / `ErrorCodeTypes` as we discussed earlier.
+Then in `Program.cs`, configure JSON polymorphism using `ErrorCodeRegistry.ErrorTypes` / `ErrorCodeTypes` as we discussed earlier.
 
 ---
 
-If you wire this up and then inspect the generated files (`ErrorCodes.g.cs`, `ErrorConstructors.g.cs`, `ErrorTypeRegistry.g.cs`), you’ll see exactly how everything hangs together—which is perfect for really grokking the model.
+If you wire this up and then inspect the generated files (`ErrorCodes.g.cs`, `ErrorConstructors.g.cs`, `ErrorCodeRegistry.g.cs`), you’ll see exactly how everything hangs together—which is perfect for really grokking the model.
 
 Once you’ve got this running, we can iterate: refine primary‑constructor handling, add JSON context generation, then later layer in multi‑version discriminators for vNext.
 
@@ -3770,7 +3770,7 @@ public partial sealed class {errorName}
     {
         var sb = new StringBuilder();
         sb.AppendLine("// <auto-generated />");
-        sb.AppendLine("public static partial class ErrorTypeRegistry");
+        sb.AppendLine("public static partial class ErrorCodeRegistry");
         sb.AppendLine("{");
         sb.AppendLine("    static partial void RegisterGenerated()");
         sb.AppendLine("    {");
@@ -3785,7 +3785,7 @@ public partial sealed class {errorName}
         sb.AppendLine("    }");
         sb.AppendLine("}");
 
-        context.AddSource("ErrorTypeRegistry.g.cs", sb.ToString());
+        context.AddSource("ErrorCodeRegistry.g.cs", sb.ToString());
     }
 
     private static string UpperFirst(string name)
@@ -4006,7 +4006,7 @@ A module initializer is a method that:
 
 This means:
 
-### ✔ You don’t need a static constructor in `ErrorTypeRegistry`  
+### ✔ You don’t need a static constructor in `ErrorCodeRegistry`  
 ### ✔ You don’t need a partial method hook  
 ### ✔ You don’t need developers to call anything  
 ### ✔ The generator can inject a module initializer that registers all error types automatically
@@ -4029,8 +4029,8 @@ public static class __ErrorRegistryInitializer
     [ModuleInitializer]
     public static void Init()
     {
-        ErrorTypeRegistry.Register<PaymentError>();
-        ErrorTypeRegistry.Register<PaymentErrorCode>();
+        ErrorCodeRegistry.Register<PaymentError>();
+        ErrorCodeRegistry.Register<PaymentErrorCode>();
         // …and every other error type
     }
 }
@@ -4053,13 +4053,13 @@ Just pure compile‑time magic.
 # ⭐ Why This Is Better Than the Partial‑Method Approach
 
 ### Partial‑method approach:
-- Requires a static constructor in `ErrorTypeRegistry`
+- Requires a static constructor in `ErrorCodeRegistry`
 - Requires a partial method declaration
 - Requires the generator to fill in that method
 - Works fine, but adds ceremony
 
 ### Module initializer approach:
-- Requires **no changes** to your existing `ErrorTypeRegistry`
+- Requires **no changes** to your existing `ErrorCodeRegistry`
 - Generator injects a single initializer class
 - The initializer runs automatically
 - The registry stays clean and untouched
@@ -4073,7 +4073,7 @@ This is the cleanest possible architecture.
 Instead of:
 
 ```csharp
-public static partial class ErrorTypeRegistry
+public static partial class ErrorCodeRegistry
 {
     static partial void RegisterGenerated()
     {
@@ -4094,10 +4094,10 @@ internal static class __ErrorRegistryInitializer
     [ModuleInitializer]
     public static void Init()
     {
-        ErrorTypeRegistry.Register<PaymentError>();
-        ErrorTypeRegistry.Register<PaymentErrorCode>();
-        ErrorTypeRegistry.Register<ConfigurationError>();
-        ErrorTypeRegistry.Register<ConfigurationErrorCode>();
+        ErrorCodeRegistry.Register<PaymentError>();
+        ErrorCodeRegistry.Register<PaymentErrorCode>();
+        ErrorCodeRegistry.Register<ConfigurationError>();
+        ErrorCodeRegistry.Register<ConfigurationErrorCode>();
         // etc...
     }
 }
@@ -4214,7 +4214,7 @@ This is going to be *chef’s kiss* clean.
 >     [System.Runtime.CompilerServices.ModuleInitializer]
 >     internal static void Initialize()
 >     {
->         ProvisionData.ResultPattern.ErrorTypeRegistry.Register<PaymentError>();
+>         ProvisionData.ResultPattern.ErrorCodeRegistry.Register<PaymentError>();
 >     }
 > }
 > 
@@ -4325,7 +4325,7 @@ internal static class ErrorTypeRegistryInitializer
     [System.Runtime.CompilerServices.ModuleInitializer]
     internal static void Initialize()
     {
-        ProvisionData.ResultPattern.ErrorTypeRegistry.Register<PaymentError>();
+        ProvisionData.ResultPattern.ErrorCodeRegistry.Register<PaymentError>();
     }
 }
 ```
@@ -4750,12 +4750,12 @@ public class Result<T> : Result
 }
 ```
 
-**`ErrorTypeRegistry.cs`**
+**`ErrorCodeRegistry.cs`**
 
 ```csharp
 namespace ProvisionData.ResultPattern;
 
-public static class ErrorTypeRegistry
+public static class ErrorCodeRegistry
 {
     private static readonly List<Type> _errorTypes = new();
     private static readonly List<Type> _errorCodeTypes = new();
@@ -5025,7 +5025,7 @@ public sealed partial class {errorName}
         {
             var fullName = error.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)
                 .Replace("global::", "");
-            sb.AppendLine($"        ProvisionData.ResultPattern.ErrorTypeRegistry.Register<{fullName}>();");
+            sb.AppendLine($"        ProvisionData.ResultPattern.ErrorCodeRegistry.Register<{fullName}>();");
         }
 
         sb.AppendLine("    }");
@@ -6650,7 +6650,7 @@ This confirms your fallback behavior.
 Call:
 
 ```csharp
-foreach (var t in ErrorTypeRegistry.ErrorTypes)
+foreach (var t in ErrorCodeRegistry.ErrorTypes)
     Console.WriteLine(t.FullName);
 ```
 
@@ -8601,6 +8601,233 @@ If you want, I can help you add:
 Just say the word and I’ll expand the script.
 
 ---
+
+> This is a continuation of our previous conversation regarding my ProvisionData.ResultPattern project. I think the
+> previous one got too long because I kept crashing you when I tried to ask another question. Ready to get back to work?
+
+Absolutely, Doug — I’m right here with you and fully ready to dive back into the ProvisionData.ResultPattern universe. Fresh thread, clean slate, same shared brainwave we’ve been riding through analyzers, generators, and packaging quirks.
+
+Wherever you want to pick things up — diagnostics propagation, multi-targeting, the workspace assembly gremlins, or refining the developer experience — I’m game. Just point me at the next knot you want untangled and we’ll get it humming again.
+
+If you want, I can also recap where we left off in the last conversation so we can re‑establish the mental stack.
+
+> I am using GitHub Actions. Here is my current workflow:
+> 
+> ```yml
+> name: Test and Publish
+> 
+> on:
+>   push:
+>     branches: [ main ]
+>     tags:
+>       - 'v*'
+>   pull_request:
+>     branches: [ main ]
+> 
+> jobs:
+>   build-test-pack-publish:
+>     runs-on: [ self-hosted, Fast ]
+>     permissions:
+>       contents: read
+>       id-token: write  # enable GitHub OIDC token issuance for this job
+> 
+>     steps:
+> 
+>       - name: Checkout
+>         uses: actions/checkout@v4
+>         with:
+>           fetch-depth: 0
+>           
+>       - name: Restore
+>         run: dotnet restore
+> 
+>       - name: Build
+>         run: dotnet build --configuration Release --no-restore /p:PublicRelease=true
+> 
+>       - name: Test
+>         run: dotnet test --configuration Release --no-build --verbosity normal --filter "FullyQualifiedName!~Integration"
+> 
+>       - name: Pack
+>         run: dotnet pack --configuration Release --no-build --output ./artifacts /p:ContinuousIntegrationBuild=true /p:PublicRelease=true
+> 
+>       - name: Save Artifacts
+>         uses: actions/upload-artifact@v4
+>         with:
+>           name: nuget
+>           path: |
+>             artifacts/*.nupkg
+>             artifacts/*.snupkg
+> 
+>       # Get a short-lived NuGet API key
+>       - name: NuGet login (OIDC → temp API key)
+>         if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
+>         uses: NuGet/login@v1
+>         id: login
+>         with:
+>           user: ${{ secrets.NUGET_USER }} # Environment Secret
+> 
+>       - name: Publish NuGet packages
+>         if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
+>         shell: pwsh
+>         run: |
+>           Get-ChildItem artifacts -Filter *.nupkg | ForEach-Object {
+>             dotnet nuget push $_.FullName `
+>               --skip-duplicate `
+>               --api-key "${{ steps.login.outputs.NUGET_API_KEY }}" `
+>               --source https://api.nuget.org/v3/index.json              
+>           }
+> ```
+> 
+> I do not need tags or automatic version bumping as NerdBank.GitVersioning takes care of that for me every time I push to main. (Dangerous! I know! I will switch to pull requests shortly.) What would be great though is for it to commit after switching to Publish Mode. I sign all my commits and tags so it would need to account for that. I am not opposed to putting my password in each time as that is probably a good *Sanity Check* before I go all the way.
+
+Oh yes — this is exactly the kind of workflow‑level refinement I love digging into with you. And you’re right: once you’re using NBGV, tags and manual version bumps become noise. The *real* missing piece is:  
+
+**When NBGV flips the repo into “public release mode,” you want that change committed and signed automatically — but only after *you* explicitly approve it with your signing password.**
+
+Let’s break down what’s actually happening under the hood and then design a workflow that respects your security model, your signing requirements, and your desire for a “sanity check” before publishing.
+
+---
+
+# 🧩 What NBGV Does During Publish Mode
+
+When you run:
+
+```
+nbgv prepare-release
+```
+
+or when you push to `main` with `PublicRelease=true`, NBGV may:
+
+- Update `version.json`
+- Add a release tag (if configured)
+- Potentially modify other versioning metadata
+
+These changes **exist only in the working directory** unless you commit them.
+
+Right now, your workflow builds and publishes packages using the *modified* version.json, but the repo never gets updated — meaning the next build may think it’s still in prerelease mode.
+
+So yes: committing the NBGV‑modified files is the right move.
+
+---
+
+# 🖋️ The Challenge: Signed Commits in GitHub Actions
+
+You sign all commits and tags. That means:
+
+- GitHub Actions cannot sign on your behalf unless you give it your private key (you shouldn’t)
+- You want a manual password prompt as a sanity check
+- You’re okay with approving the commit locally before the publish happens
+
+This leads to a clean, safe workflow:
+
+---
+
+# ✔️ Recommended Pattern: “Prepare Release → Commit Locally → Push → CI Publishes”
+
+This is the safest and most ergonomic flow:
+
+### **1. Locally, you run:**
+
+```
+nbgv prepare-release
+git add version.json
+git commit -S -m "Prepare release"
+git push
+```
+
+You sign the commit with your key, entering your password — perfect sanity check.
+
+### **2. GitHub Actions sees the push to main and publishes the package.**
+
+This keeps your signing key *off* the CI machine and ensures you always explicitly approve a release.
+
+---
+
+# 🧠 But… If You *Really* Want CI to Commit for You
+
+You can do it — but with constraints:
+
+- GitHub Actions cannot sign commits with your GPG key unless you give it your private key (not recommended)
+- GitHub Actions *can* create unsigned commits
+- GitHub Actions *can* create signed commits using GitHub’s “SSH signing” or “OIDC signing,” but those are **not your key**, so they won’t match your existing signature chain
+
+If you’re okay with CI making **unsigned** commits that you later sign in a follow‑up commit, we can automate it.
+
+If you want CI to sign using **your** key, you must provide:
+
+- Your private key
+- Your passphrase (as a secret)
+
+You said you’re *not opposed* to entering your password each time — but GitHub Actions cannot prompt you interactively. It can only use secrets.
+
+So the only way to have CI sign commits with your key is:
+
+- Store your private key in GitHub Secrets
+- Store your passphrase in GitHub Secrets
+- Import the key during the workflow
+- Use `git commit -S`
+
+This is secure *enough* if your repo is private and your secrets are tightly controlled, but it’s still a meaningful risk.
+
+---
+
+# 🧱 If You Want CI to Commit the NBGV Changes (Unsigned)
+
+Here’s the minimal patch to your workflow:
+
+```yml
+      - name: Commit NBGV changes
+        if: github.ref == 'refs/heads/main'
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+
+          if git status --porcelain | grep .; then
+            git add .
+            git commit -m "Apply NBGV public release changes"
+            git push
+          else
+            echo "No changes to commit"
+          fi
+```
+
+This:
+
+- Detects if NBGV modified anything
+- Commits it
+- Pushes it back to main
+
+But again: **this commit will not be signed**.
+
+---
+
+# 🧱 If You Want CI to Commit the NBGV Changes (Signed with Your Key)
+
+I can give you the full workflow block for that too — but only if you explicitly confirm you want to store your private key + passphrase in GitHub Secrets.
+
+It works beautifully, but it’s a real security decision.
+
+---
+
+# 🧭 My Recommendation (Developer‑Experience + Security Sweet Spot)
+
+Given your style — thoughtful, ergonomic, and safety‑first — I think the best flow is:
+
+### **You sign the release commit locally. CI publishes.**
+
+It keeps your signing chain intact, avoids secret sprawl, and gives you the sanity check you want.
+
+But I’m happy to help you implement any of the three patterns.
+
+---
+
+If you want, I can sketch out the exact workflow for the signed‑commit‑in‑CI version so you can evaluate it.
+
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------
+**Below this point is interaction with other Copilot instances. The Windows Copilot started crashing but I really needed to carry on.**
+-------------------------------------------------------------------------------------------------------------------------------------------------
 
 > It was working before, but now I am getting the following error when I try to build the ProvisionData.ResultPattern project.
 >

@@ -1,4 +1,4 @@
-// Provision Data Libraries
+// Provision Data Application Framework
 // Copyright (C) 2026 Provision Data Systems Inc.
 //
 // This program is free software: you can redistribute it and/or modify it under the terms of
@@ -12,6 +12,7 @@
 // You should have received a copy of the GNU Affero General Public License along with this
 // program. If not, see <https://www.gnu.org/licenses/>.
 
+using System.Text.Json;
 using System.Text.Json.Serialization.Metadata;
 
 namespace ProvisionData.ResultPattern.Infrastructure;
@@ -26,8 +27,7 @@ public static class ErrorJsonPolymorphism
     /// <summary>
     /// Supports internal fuctionality and is not intended for public use.
     /// </summary>
-    public static void Register(Action<JsonTypeInfo> hook)
-        => Hooks.Add(hook);
+    public static void Register(Action<JsonTypeInfo> hook) => Hooks.Add(hook);
 
     /// <summary>
     /// Supports internal fuctionality and is not intended for public use.
@@ -39,4 +39,22 @@ public static class ErrorJsonPolymorphism
             hook(ti);
         }
     }
+}
+
+/// <summary>
+/// A JSON type info resolver that applies polymorphism configuration for Error and ErrorCode types.
+/// </summary>
+internal sealed class ResultPatternPolymorphismResolver : IJsonTypeInfoResolver
+{
+    private readonly DefaultJsonTypeInfoResolver _resolver = new()
+    {
+        Modifiers =
+        {
+            ErrorJsonPolymorphism.Apply
+        }
+    };
+
+    /// <inheritdoc />
+    public JsonTypeInfo? GetTypeInfo(Type type, JsonSerializerOptions options)
+        => _resolver.GetTypeInfo(type, options);
 }

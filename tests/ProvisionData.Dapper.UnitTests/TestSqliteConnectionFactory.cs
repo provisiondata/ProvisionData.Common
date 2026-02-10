@@ -1,4 +1,4 @@
-// ProvisionData.Common
+// Provision Data Application Framework
 // Copyright (C) 2026 Provision Data Systems Inc.
 //
 // This program is free software: you can redistribute it and/or modify it under the terms of
@@ -16,7 +16,7 @@ using Microsoft.Data.Sqlite;
 using ProvisionData.Data;
 using System.Data;
 
-namespace ProvisionData.Dapper.Tests;
+namespace ProvisionData.Dapper;
 
 public class TestSqliteConnectionFactory : IDbConnectionFactory
 {

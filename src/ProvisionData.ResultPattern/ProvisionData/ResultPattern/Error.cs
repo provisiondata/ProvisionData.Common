@@ -1,4 +1,4 @@
-// Provision Data Libraries
+// Provision Data Application Framework
 // Copyright (C) 2026 Provision Data Systems Inc.
 //
 // This program is free software: you can redistribute it and/or modify it under the terms of
@@ -52,12 +52,4 @@ public class Error
     /// <returns>True if this error is of the specified type; otherwise, false.</returns>
     public Boolean IsErrorType<TError>() where TError : Error
         => this is TError;
-
-    //// Exists for Unit Testing
-    //internal static Error NotFound(String description)
-    //    => new NotFoundError(description);
-
-    //// Exists for Unit Testing
-    //internal static Error PaymentError(TransactionFailureReason reason, String transactionId, String description)
-    //    => new TransactionError(reason, transactionId, description);
 }

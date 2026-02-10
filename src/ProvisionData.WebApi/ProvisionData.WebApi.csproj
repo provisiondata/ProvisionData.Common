@@ -6,22 +6,29 @@
 
         <!-- NuGet package metadata -->
         <PackageId>ProvisionData.WebApi</PackageId>
-        <Title>Provision Data Library</Title>
-        <Description>Enables using the Result pattern in ASP.NET Core applications.</Description>
         <PackageTags></PackageTags>
         <PackageReadmeFile>./README.md</PackageReadmeFile>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <IsPackable>true</IsPackable>
-        <IsTrimmable>True</IsTrimmable>
+        <ErrorReport>send</ErrorReport>
+        <IncludeSymbols>true</IncludeSymbols>
+        <IncludeSource>true</IncludeSource>
+        <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+
+        <!-- Project Specific -->
         <IsAotCompatible>True</IsAotCompatible>
-        <IsPublishable>False</IsPublishable>
+        <IsTrimmable>False</IsTrimmable>
+
+        <!-- NerdBank.GitVersioning -->
+        <NBGV_ThisAssemblyNamespace>ProvisionData.WebApi.Versioning</NBGV_ThisAssemblyNamespace>
     </PropertyGroup>
 
     <ItemGroup>
-        <FrameworkReference Include="Microsoft.AspNetCore.App" />
+        <None Include="./README.md" Pack="true" PackagePath="/" />
     </ItemGroup>
 
     <ItemGroup>
-        <None Include="./README.md" Pack="true" PackagePath="/" />
+        <FrameworkReference Include="Microsoft.AspNetCore.App" />
     </ItemGroup>
 
     <ItemGroup>

@@ -1,4 +1,4 @@
-// Provision Data Libraries
+// Provision Data Application Framework
 // Copyright (C) 2026 Provision Data Systems Inc.
 //
 // This program is free software: you can redistribute it and/or modify it under the terms of
@@ -44,6 +44,7 @@ public class Result
     /// <param name="isSuccess">Indicates whether the operation was successful.</param>
     /// <param name="error">The error associated with the result. Must be <see cref="Result.None"/> for successful results.</param>
     /// <exception cref="ArgumentException">Thrown when the success state and error state are inconsistent.</exception>
+    [JsonConstructor]
     protected Result(Boolean isSuccess, Error error)
     {
         if (isSuccess && error != None)
@@ -69,10 +70,10 @@ public class Result
     /// <summary>
     /// Creates a successful result containing the specified value.
     /// </summary>
-    /// <typeparam name="TValue">The type of the value to be stored in the result.</typeparam>
+    /// <typeparam name="TDto">The type of the value to be stored in the result.</typeparam>
     /// <param name="value">The value to include in the successful result. Can be null for reference types.</param>
     /// <returns>A <see cref="Result{TValue}"/> representing a successful operation with the provided value.</returns>
-    public static Result<TValue> Success<TValue>(TValue value) => Result<TValue>.Success(value);
+    public static Result<TDto> Success<TDto>(TDto value) => Result<TDto>.Success(value);
 
     /// <summary>
     /// Creates a failed result with the specified error.
@@ -95,24 +96,24 @@ public class Result
 }
 
 /// <summary>
-/// Represents the result of an operation that returns a value of type <typeparamref name="TValue"/>, either successful or failed.
+/// Represents the result of an operation that returns a value of type <typeparamref name="TDto"/>, either successful or failed.
 /// </summary>
-/// <typeparam name="TValue">The type of value returned by a successful operation.</typeparam>
+/// <typeparam name="TDto">The type of value returned by a successful operation.</typeparam>
 [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
-public class Result<TValue> : Result
+public class Result<TDto> : Result
 {
     /// <summary>
     /// Gets or sets the value for JSON serialization.
     /// </summary>
     [JsonPropertyName("value")]
     [JsonInclude]
-    protected TValue? ValueStorage { get; init; }
+    protected TDto? ValueStorage { get; init; }
 
     /// <summary>
     /// Gets the value returned by a successful operation.
     /// </summary>
     [JsonIgnore]
-    public TValue Value => IsSuccess
+    public TDto Value => IsSuccess
         ? ValueStorage!
         : default!;
 
@@ -123,13 +124,13 @@ public class Result<TValue> : Result
     /// <param name="value">The value of the successful result.</param>
     /// <param name="error">The error of the failed result. Must be <see cref="Result.None"/> for successful results.</param>
     [JsonConstructor]
-    private Result(Boolean isSuccess, TValue value, Error error) : base(isSuccess, error)
+    private Result(Boolean isSuccess, TDto value, Error error) : base(isSuccess, error)
     {
         ValueStorage = value;
     }
 
     ///// <summary>
-    ///// Initializes a new failed instance of the <see cref="Result{TValue}"/> class.
+    ///// Initializes a new failed instance of the <see cref="Result{TDto}"/> class.
     ///// </summary>
     ///// <param name="error">The error of the failed result.</param>
     //private Result(Error error) : base(false, error)
@@ -142,24 +143,24 @@ public class Result<TValue> : Result
     /// </summary>
     /// <param name="value">The value of the successful result.</param>
     /// <returns>A successful <see cref="Result{TValue}"/>.</returns>
-    public static Result<TValue> Success(TValue value) => new(true, value, None);
+    public static Result<TDto> Success(TDto value) => new(true, value, None);
 
     /// <summary>
     /// Creates a failed result with the specified error.
     /// </summary>
     /// <param name="error">The error for the failed result.</param>
     /// <returns>A failed <see cref="Result{TValue}"/>.</returns>
-    public static new Result<TValue> Failure(Error error) => new(false, default!, error);
+    public static new Result<TDto> Failure(Error error) => new(false, default!, error);
 
     /// <summary>
     /// Implicit conversion from a value to a successful <see cref="Result{TValue}"/>.
     /// </summary>
     /// <param name="value">The value to convert.</param>
-    public static implicit operator Result<TValue>(TValue value) => Success(value);
+    public static implicit operator Result<TDto>(TDto value) => Success(value);
 
     /// <summary>
     /// Implicit conversion from an <see cref="Error"/> to a failed <see cref="Result{TValue}"/>.
     /// </summary>
     /// <param name="error">The error to convert.</param>
-    public static implicit operator Result<TValue>(Error error) => Failure(error);
+    public static implicit operator Result<TDto>(Error error) => Failure(error);
 }

@@ -1,29 +1,37 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<RootNamespace />
-		<TargetFrameworks>net8.0;net10.0</TargetFrameworks>
+    <PropertyGroup>
+        <RootNamespace />
+        <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
 
-		<!-- NuGet package metadata -->
-		<PackageId>ProvisionData.Common</PackageId>
-		<Title>Provision Data Core Library</Title>
-		<Description>Basic classes and utilities used across all PDSI projects.</Description>
-		<PackageTags></PackageTags>
-		<PackageReadmeFile>./README.md</PackageReadmeFile>
-		<GenerateDocumentationFile>false</GenerateDocumentationFile>
-		<IsPackable>true</IsPackable>
-		<IsAotCompatible>false</IsAotCompatible>
-		<IsTrimmable>true</IsTrimmable>
-	</PropertyGroup>
+        <!-- NuGet package metadata -->
+        <PackageId>ProvisionData.Common</PackageId>
+        <PackageTags></PackageTags>
+        <PackageReadmeFile>./README.md</PackageReadmeFile>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <IsPackable>true</IsPackable>
+        <ErrorReport>send</ErrorReport>
+        <IncludeSymbols>true</IncludeSymbols>
+        <IncludeSource>true</IncludeSource>        
 
-	<ItemGroup>
-		<None Include="./README.md" Pack="true" PackagePath="/" />
-	</ItemGroup>
+        <!-- Project Specific -->
+        <IsAotCompatible>false</IsAotCompatible>
+        <IsTrimmable>true</IsTrimmable>
 
-	<ItemGroup>
-		<EmbeddedResource Include="ILLink.Descriptors.xml">
-			<LogicalName>ILLink.Descriptors.xml</LogicalName>
-		</EmbeddedResource>
-	</ItemGroup>
+        <!-- NerdBank.GitVersioning -->
+        <NBGV_ThisAssemblyNamespace>ProvisionData.Versioning</NBGV_ThisAssemblyNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="./README.md" Pack="true" PackagePath="/" />
+        <EmbeddedResource Include="ILLink.Descriptors.xml">
+            <LogicalName>ILLink.Descriptors.xml</LogicalName>
+        </EmbeddedResource>
+    </ItemGroup>
+
+    <Target Name="CopyPackage" AfterTargets="Pack">
+        <Message Text="Copying $(OutputPath)$(PackageId).$(PackageVersion).nupkg to $(ProjectDir)..\..\LocalPackages" Importance="High" />
+        <Copy SourceFiles="$(OutputPath)$(PackageId).$(PackageVersion).nupkg" DestinationFolder="$(ProjectDir)..\..\LocalPackages" />
+    </Target>
 
 </Project>

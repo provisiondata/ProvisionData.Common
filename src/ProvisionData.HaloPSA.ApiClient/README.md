@@ -172,7 +172,7 @@ The client uses an extension method pattern for organizing API endpoints by reso
 public static class YourResourceExtensions
 {
     public static async Task<YourModel> GetYourResourceAsync(
-        this ApiClient apiClient, 
+        this HaloPsaApiClient apiClient, 
         Int32 id, 
         CancellationToken cancellationToken = default)
     {

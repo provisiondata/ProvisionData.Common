@@ -1,4 +1,4 @@
-// Provision Data HaloPSA API Client
+// Provision Data Application Framework
 // Copyright (C) 2026 Provision Data Systems Inc.
 //
 // This program is free software: you can redistribute it and/or modify it under the terms of
@@ -12,8 +12,8 @@
 // You should have received a copy of the GNU Affero General Public License along with this
 // program. If not, see <https://www.gnu.org/licenses/>.
 
-using ProvisionData.HaloPSA.ModelGenerator.Models;
-using ProvisionData.HaloPSA.ModelGenerator.Services;
+using ProvisionData.HaloPSA.ApiClient.ModelGenerator.Models;
+using ProvisionData.HaloPSA.ApiClient.ModelGenerator.Services;
 
 namespace ProvisionData.HaloPSA.UnitTests;
 

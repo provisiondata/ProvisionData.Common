@@ -1,4 +1,4 @@
-// ProvisionData.Common
+// Provision Data Application Framework
 // Copyright (C) 2026 Provision Data Systems Inc.
 //
 // This program is free software: you can redistribute it and/or modify it under the terms of
@@ -73,7 +73,7 @@ public abstract class IntegrationTestBase<TFixture>
     /// <summary>
     /// Releases managed resources used by the test.
     /// </summary>
-    protected async override ValueTask DisposeAsyncCore()
+    protected override async ValueTask DisposeAsyncCore()
     {
         if (Fixture is IAsyncTestFixture asyncFixture)
         {

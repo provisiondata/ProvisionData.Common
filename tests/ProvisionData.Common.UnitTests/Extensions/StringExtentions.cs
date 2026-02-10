@@ -1,4 +1,4 @@
-// ProvisionData.Common
+// Provision Data Application Framework
 // Copyright (C) 2026 Provision Data Systems Inc.
 //
 // This program is free software: you can redistribute it and/or modify it under the terms of
@@ -12,10 +12,9 @@
 // You should have received a copy of the GNU Affero General Public License along with this
 // program. If not, see <https://www.gnu.org/licenses/>.
 
-using ProvisionData.Extensions;
 using System.Diagnostics.CodeAnalysis;
 
-namespace ProvisionData.UnitTests.Extensions;
+namespace ProvisionData.Extensions;
 
 public class StringExtentions
 {
