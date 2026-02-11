@@ -33,8 +33,8 @@
     <Folder Name="/tests/">
         <Project Path="tests/ProvisionData.Common.UnitTests/ProvisionData.Common.UnitTests.csproj" />
         <Project Path="tests/ProvisionData.Dapper.UnitTests/ProvisionData.Dapper.UnitTests.csproj" />
-        <Project Path="tests/ProvisionData.HaloPSA.ApiClient.Tests.Integration/ProvisionData.HaloPSA.ApiClient.IntegrationTests.csproj" Id="e237d8c8-a9af-44cb-b75c-80d781c912f0" />
-        <Project Path="tests/ProvisionData.HaloPSA.ApiClient.Tests/ProvisionData.HaloPSA.ApiClient.UnitTests.csproj" />
+        <Project Path="tests/ProvisionData.HaloPSA.ApiClient.IntegrationTests/ProvisionData.HaloPSA.ApiClient.IntegrationTests.csproj" Id="e237d8c8-a9af-44cb-b75c-80d781c912f0" />
+        <Project Path="tests/ProvisionData.HaloPSA.ApiClient.UnitTests/ProvisionData.HaloPSA.ApiClient.UnitTests.csproj" />
         <Project Path="tests/ProvisionData.ResultPattern.Generators.UnitTests/ProvisionData.ResultPattern.Generators.UnitTests.csproj" />
         <Project Path="tests/ProvisionData.ResultPattern.UnitTests.CustomErrors/ProvisionData.ResultPattern.UnitTests.CustomErrors.csproj" Id="18170d7d-e8bd-4b8f-b7d1-ae2eaad7b8d2" />
         <Project Path="tests/ProvisionData.ResultPattern.UnitTests/ProvisionData.ResultPattern.UnitTests.csproj" Id="29a78309-20b8-49e9-8486-df3554340843" />

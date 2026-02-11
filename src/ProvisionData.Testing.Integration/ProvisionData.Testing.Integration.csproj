@@ -17,9 +17,9 @@
         <!-- Project Specific -->
         <IsAotCompatible>true</IsAotCompatible>
         <IsTrimmable>false</IsTrimmable>
-		<OutputType>Exe</OutputType>
+        <OutputType>Exe</OutputType>
 
-		<!-- NerdBank.GitVersioning -->
+        <!-- NerdBank.GitVersioning -->
         <NBGV_ThisAssemblyNamespace>ProvisionData.Testing.Integration.Versioning</NBGV_ThisAssemblyNamespace>
     </PropertyGroup>
 
@@ -27,16 +27,11 @@
         <None Include="./README.md" Pack="true" PackagePath="/" />
     </ItemGroup>
 
-	<Target Name="CopyPackage" AfterTargets="Pack">
-		<Message Text="Copying $(OutputPath)$(PackageId).$(PackageVersion).nupkg to $(ProjectDir)..\..\LocalPackages" Importance="High" />
-		<Copy SourceFiles="$(OutputPath)$(PackageId).$(PackageVersion).nupkg" DestinationFolder="$(ProjectDir)..\..\LocalPackages" />
-	</Target>
+    <ItemGroup>
+        <Using Include="Xunit" />
+    </ItemGroup>
 
-	<ItemGroup>
-		<Using Include="Xunit" />
-	</ItemGroup>
-
-	<ItemGroup>
+    <ItemGroup>
         <PackageReference Include="coverlet.collector" />
         <PackageReference Include="Meziantou.Extensions.Logging.Xunit.v3" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" />

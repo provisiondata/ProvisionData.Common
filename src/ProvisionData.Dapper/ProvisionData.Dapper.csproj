@@ -27,12 +27,7 @@
         <None Include="./README.md" Pack="true" PackagePath="/" />
     </ItemGroup>
 
-	<Target Name="CopyPackage" AfterTargets="Pack">
-		<Message Text="Copying $(OutputPath)$(PackageId).$(PackageVersion).nupkg to $(ProjectDir)..\..\LocalPackages" Importance="High" />
-		<Copy SourceFiles="$(OutputPath)$(PackageId).$(PackageVersion).nupkg" DestinationFolder="$(ProjectDir)..\..\LocalPackages" />
-	</Target>
-
-	<ItemGroup>
+    <ItemGroup>
         <PackageReference Include="Dapper" />
     </ItemGroup>
 

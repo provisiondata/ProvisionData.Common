@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<RootNamespace />
@@ -29,30 +29,30 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<None Include=".\README.md" Pack="true" PackagePath="/" />
+		<None Include=".\ProvisionData.ResultPattern.targets" Pack="true" PackagePath="buildTransitive" />
 		<None Include=".\ProvisionData.ResultPattern.props" Pack="true" PackagePath="build" />
 		<None Include="..\ProvisionData.ResultPattern.Generators\bin\$(Configuration)\netstandard2.0\ProvisionData.ResultPattern.Generators.dll" Pack="true" PackagePath="analyzers/dotnet/cs" />
 		<None Include="..\ProvisionData.ResultPattern.Generators.CodeFixes\bin\$(Configuration)\netstandard2.0\ProvisionData.ResultPattern.Generators.CodeFixes.dll" Pack="true" PackagePath="analyzers/dotnet/cs" />
 		<None Include="..\ProvisionData.ResultPattern.Generators.Shared\bin\$(Configuration)\netstandard2.0\ProvisionData.ResultPattern.Generators.Shared.dll" Pack="true" PackagePath="analyzers/dotnet/cs" />
 	</ItemGroup>
 
-	<Target Name="CopyPackage" AfterTargets="Pack">
-		<Message Text="Copying $(OutputPath)$(PackageId).$(PackageVersion).nupkg to $(ProjectDir)..\..\LocalPackages" Importance="High" />
-		<Copy SourceFiles="$(OutputPath)$(PackageId).$(PackageVersion).nupkg" DestinationFolder="$(ProjectDir)..\..\LocalPackages" />
-	</Target>
+	<ItemGroup>
+		<None Include=".\README.md" Pack="true" PackagePath="/" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<FrameworkReference Include="Microsoft.AspNetCore.App" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection" />
-		<PackageReference Include="Microsoft.Extensions.Http" />
-		<PackageReference Include="Microsoft.Extensions.Options" />
+		<!-- Link to GeneratorConsts so both runtime and generators can use it -->
+		<Compile Include="..\ProvisionData.ResultPattern.Generators\ProvisionData\ResultPattern\Generators\GeneratorConsts.cs" Link="ProvisionData\ResultPattern\Generators\GeneratorConsts.cs" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\ProvisionData.ResultPattern.Generators.Shared\ProvisionData.ResultPattern.Generators.Shared.csproj" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+		<PackageReference Include="Microsoft.Extensions.Http" />
+		<PackageReference Include="Microsoft.Extensions.Options" />
 	</ItemGroup>
 
 </Project>

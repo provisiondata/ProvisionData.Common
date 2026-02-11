@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-		<RootNamespace />
-		<TargetFrameworks>net8.0;net10.0</TargetFrameworks>
+        <RootNamespace />
+        <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
 
         <!-- NuGet package metadata -->
         <PackageId>ProvisionData.HaloPSA.ApiClient.Contracts</PackageId>
@@ -27,12 +27,7 @@
         <None Include="..\ProvisionData.HaloPSA.ApiClient\README.md" Pack="true" PackagePath="/" />
     </ItemGroup>
 
-	<Target Name="CopyPackage" AfterTargets="Pack">
-		<Message Text="Copying $(OutputPath)$(PackageId).$(PackageVersion).nupkg to $(ProjectDir)..\..\LocalPackages" Importance="High" />
-		<Copy SourceFiles="$(OutputPath)$(PackageId).$(PackageVersion).nupkg" DestinationFolder="$(ProjectDir)..\..\LocalPackages" />
-	</Target>
-
-	<ItemGroup>
+    <ItemGroup>
         <Using Include="System.Text.Json.Serialization" />
     </ItemGroup>
 

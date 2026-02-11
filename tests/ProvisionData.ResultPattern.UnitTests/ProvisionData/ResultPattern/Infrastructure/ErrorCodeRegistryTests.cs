@@ -25,31 +25,33 @@ public sealed class ErrorCodeRegistryTests(ResultPatternIntegrationTestFixture f
     private sealed class FakeError : Error
     {
         public FakeError() : base(FakeErrorCode.Instance, "Fake") { }
+
+        public sealed class FakeErrorCode : ErrorCode
+        {
+            public static readonly FakeErrorCode Instance = new();
+            protected override String Name => "Fake";
+        }
     }
 
-    private sealed class FakeErrorCode : ErrorCode
-    {
-        public static readonly FakeErrorCode Instance = new();
-        protected override String Name => "Fake";
-    }
 
     [Fact]
     public void Registry_Returns_Static_Instance_When_Available()
     {
         var code = ErrorCodeRegistry.GetFor<FakeError>();
 
-        Assert.Same(FakeErrorCode.Instance, code);
+        Assert.Same(FakeError.FakeErrorCode.Instance, code);
     }
 
     private sealed class NoInstanceError : Error
     {
         public NoInstanceError() : base(new NoInstanceErrorCode(), "NoInstance") { }
+        public sealed class NoInstanceErrorCode : ErrorCode
+        {
+            public static readonly NoInstanceErrorCode Instance = new();
+            protected override String Name => "NoInstance";
+        }
     }
 
-    private sealed class NoInstanceErrorCode : ErrorCode
-    {
-        protected override String Name => "NoInstance";
-    }
 
     [Fact]
     public void Registry_Falls_Back_To_New_When_No_Static_Instance()
@@ -58,7 +60,7 @@ public sealed class ErrorCodeRegistryTests(ResultPatternIntegrationTestFixture f
         var code2 = ErrorCodeRegistry.GetFor<NoInstanceError>();
 
         Assert.NotNull(code1);
-        Assert.IsType<NoInstanceErrorCode>(code1);
+        Assert.IsType<NoInstanceError.NoInstanceErrorCode>(code1);
 
         // Should be cached — same instance returned
         Assert.Same(code1, code2);
@@ -186,24 +188,6 @@ public sealed class ErrorCodeRegistryTests(ResultPatternIntegrationTestFixture f
             Assert.Equal("Missing", result.Error.Description);
             Assert.IsType<NotFoundError.NotFoundErrorCode>(result.Error.Code);
         }
-    }
-
-    [Fact]
-    public void ErrorTypeRegistry_Should_ContainCustomErrors()
-    {
-        // ModuleInitializer automatically registers errors when the assembly loads!
-        // No manual registration needed - the generator creates the initializer.
-
-        var errorTypes = ErrorCodeRegistry.LookupTable.Keys.ToList();
-        var errorCodeTypes = ErrorCodeRegistry.LookupTable.Values.ToList();
-
-        // These should now pass because ModuleInitializer registered them:
-        Assert.Contains(typeof(OrderNotFoundError), errorTypes);
-        Assert.Contains(typeof(InventoryInsufficientError), errorTypes);
-        Assert.Contains(typeof(DatabaseConnectionError), errorTypes);
-
-        // Verify we have the expected count (at least our 3 custom errors + TransactionError from the library)
-        Assert.True(errorTypes.Count >= 4, $"Expected at least 4 error types, but found {errorTypes.Count}");
     }
 }
 

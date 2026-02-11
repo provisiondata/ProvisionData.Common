@@ -48,8 +48,8 @@ public sealed partial class CustomErrorSourceGenerator/*(ILogger logger)*/ : IIn
         {
             ErrorCodesGenerator(spc, errors!);
             ErrorConstructorsGenerator(spc, errors!);
-            ErrorTypeRegistryGenerator(spc, errors!);
-            ErrorPolymorphismHookGenerator(spc, errors!);
+            //ErrorTypeRegistryGenerator(spc, errors!);
+            //ErrorPolymorphismHookGenerator(spc, errors!);
         });
     }
 
@@ -127,7 +127,7 @@ public sealed partial class CustomErrorSourceGenerator/*(ILogger logger)*/ : IIn
             }
 
             sb.AppendLine($"#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member");
-            sb.AppendLine($"    internal sealed class {codeName} : {GeneratorConsts.ResultPatternNamespace}.ErrorCode");
+            sb.AppendLine($"    internal sealed class {codeName} : global::{GeneratorConsts.ResultPatternNamespace}.ErrorCode");
             sb.AppendLine("    {");
             sb.AppendLine($"        public static readonly {codeName} Instance = new();");
             sb.AppendLine($"        protected override System.String Name => \"{errorName}\";");
@@ -167,8 +167,8 @@ public sealed partial class CustomErrorSourceGenerator/*(ILogger logger)*/ : IIn
 
             if (ns is not null)
             {
-                sb.AppendLine($"namespace {ns};");
-                //sb.AppendLine("{");
+                sb.AppendLine($"namespace {ns}");
+                sb.AppendLine("{");
             }
 
             sb.AppendLine($"#pragma warning disable CS1591 // Suppresses Missing XML comment for publicly visible type or member");
@@ -204,10 +204,10 @@ public sealed partial class CustomErrorSourceGenerator/*(ILogger logger)*/ : IIn
             sb.AppendLine("}");
             sb.AppendLine($"#pragma warning restore CS1591 // Restores Missing XML comment for publicly visible type or member");
 
-            //if (ns is not null)
-            //{
-            //    sb.AppendLine("}");
-            //}
+            if (ns is not null)
+            {
+                sb.AppendLine("}");
+            }
 
             sb.AppendLine();
         }
@@ -247,7 +247,7 @@ public sealed partial class CustomErrorSourceGenerator/*(ILogger logger)*/ : IIn
         {
             var fullName = error.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)
                 .Replace("global::", "");
-            sb.AppendLine($"            {GeneratorConsts.ResultPatternNamespace}.Infrastructure.{GeneratorConsts.ErrorTypeRegistryClassName}.Register<{fullName}>();");
+            sb.AppendLine($"            global::{GeneratorConsts.ResultPatternNamespace}.Infrastructure.{GeneratorConsts.ErrorTypeRegistryClassName}.Register<{fullName}>();");
         }
 
         sb.AppendLine("        }");
@@ -275,12 +275,12 @@ public sealed partial class CustomErrorSourceGenerator/*(ILogger logger)*/ : IIn
         sb.AppendLine("    internal static void Initialize()");
         sb.AppendLine("    {");
         sb.AppendLine("        Console.WriteLine(\"Initializing ErrorPolymorphism...\");");
-        sb.AppendLine($"        {GeneratorConsts.ResultPatternNamespace}.Infrastructure.{GeneratorConsts.ErrorJsonPolymorphismClassName}.Register(Configure);");
+        sb.AppendLine($"        global::{GeneratorConsts.ResultPatternNamespace}.Infrastructure.{GeneratorConsts.ErrorJsonPolymorphismClassName}.Register(Configure);");
         sb.AppendLine("    }");
         sb.AppendLine();
         sb.AppendLine("    private static void Configure(JsonTypeInfo ti)");
         sb.AppendLine("    {");
-        sb.AppendLine($"        if (ti.Type == typeof({GeneratorConsts.ResultPatternNamespace}.ErrorCode))");
+        sb.AppendLine($"        if (ti.Type == typeof(global::{GeneratorConsts.ResultPatternNamespace}.ErrorCode))");
         sb.AppendLine("        {");
         sb.AppendLine("            ti.PolymorphismOptions ??= new JsonPolymorphismOptions");
         sb.AppendLine("            {");

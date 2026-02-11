@@ -16,11 +16,11 @@ using Microsoft.CodeAnalysis;
 
 namespace ProvisionData.ResultPattern.Generators;
 
-internal static class ResultPatternDiagnosticDefinitions
+public static class ResultPatternDiagnosticDefinitions
 {
     public const String MissingAddResultPatternId = "PDRP0001";
 
-    internal static readonly DiagnosticDescriptor Missing_AddResultPattern_Invocation = new(
+    public static readonly DiagnosticDescriptor Missing_AddResultPattern_Invocation = new(
         id: MissingAddResultPatternId,
         title: "ResultPattern services are not configured",
         messageFormat: "ResultPattern types are used but AddResultPattern() is not called on IServiceCollection",

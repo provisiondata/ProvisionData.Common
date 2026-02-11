@@ -37,9 +37,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\..\src\ProvisionData.ResultPattern\ProvisionData.ResultPattern.csproj" />
-	  <ProjectReference Include="..\..\src\ProvisionData.Testing.Integration\ProvisionData.Testing.Integration.csproj" />
-	  <ProjectReference Include="..\ProvisionData.ResultPattern.UnitTests.CustomErrors\ProvisionData.ResultPattern.UnitTests.CustomErrors.csproj" />
+		<ProjectReference Include="..\..\src\ProvisionData.ResultPattern\ProvisionData.ResultPattern.csproj" />
+		<ProjectReference Include="..\..\src\ProvisionData.Testing.Integration\ProvisionData.Testing.Integration.csproj" />
 	</ItemGroup>
 
 </Project>

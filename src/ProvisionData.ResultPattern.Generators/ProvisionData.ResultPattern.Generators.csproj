@@ -1,42 +1,41 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <RootNamespace />
+	<PropertyGroup>
+		<RootNamespace />
 		<AssemblyName>ProvisionData.ResultPattern.Generators</AssemblyName>
-        <TargetFramework>netstandard2.0</TargetFramework>
+		<TargetFramework>netstandard2.0</TargetFramework>
 
-        <!-- NuGet package metadata -->
-        <PackageId>ProvisionData.ResultPattern.Generators</PackageId>
-        <Description>Code fixes for the Provision Data Result Pattern Library.</Description>
-        <PackageTags></PackageTags>
+		<!-- NuGet package metadata -->
+		<PackageId>ProvisionData.ResultPattern.Generators</PackageId>
+		<Description>Code fixes for the Provision Data Result Pattern Library.</Description>
+		<PackageTags></PackageTags>
 
-        <!--
+		<!--
 		These are settings specfic for analyzers/code fixes/source generators. We set IsPackable to false
 		to prevent packing this project as a separate NuGet package, but we still want to include the
 		assembly in the main package's analyzers folder.
 		-->
-        <Analyzer>true</Analyzer>
-        <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
-        <IsRoslynComponent>true</IsRoslynComponent>
-        <GenerateDocumentationFile>false</GenerateDocumentationFile>
-        <DevelopmentDependency>true</DevelopmentDependency>
-        <IncludeBuildOutput>false</IncludeBuildOutput>
-        <PrivateAssets>all</PrivateAssets>
-        <IsPackable>false</IsPackable>
-        <IsAotCompatible>false</IsAotCompatible>
-        <IsTrimmable>false</IsTrimmable>
+		<Analyzer>true</Analyzer>
+		<EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+		<IsRoslynComponent>true</IsRoslynComponent>
+		<GenerateDocumentationFile>false</GenerateDocumentationFile>
+		<DevelopmentDependency>true</DevelopmentDependency>
+		<IncludeBuildOutput>false</IncludeBuildOutput>
+		<PrivateAssets>all</PrivateAssets>
+		<IsPackable>false</IsPackable>
+		<IsAotCompatible>false</IsAotCompatible>
+		<IsTrimmable>false</IsTrimmable>
 
-        <!-- NerdBank.GitVersioning -->
-        <NBGV_ThisAssemblyNamespace>ProvisionData.ResultPattern.Generators.Versioning</NBGV_ThisAssemblyNamespace>
-    </PropertyGroup>
+		<!-- NerdBank.GitVersioning -->
+		<NBGV_ThisAssemblyNamespace>ProvisionData.ResultPattern.Generators.Versioning</NBGV_ThisAssemblyNamespace>
+	</PropertyGroup>
 
-    <ItemGroup>
-        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
-        <PackageReference Include="Microsoft.Extensions.Logging" />
-    </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Extensions.Logging" />
+	</ItemGroup>
 
-    <ItemGroup>
-        <ProjectReference Include="..\ProvisionData.ResultPattern.Generators.Shared\ProvisionData.ResultPattern.Generators.Shared.csproj" />
-    </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\ProvisionData.ResultPattern.Generators.Shared\ProvisionData.ResultPattern.Generators.Shared.csproj" PrivateAssets="all" />
+	</ItemGroup>
 
 </Project>

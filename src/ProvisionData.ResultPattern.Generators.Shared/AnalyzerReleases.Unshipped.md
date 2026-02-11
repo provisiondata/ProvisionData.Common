@@ -2,4 +2,4 @@
 
 Rule ID  | Category | Severity | Notes
 ---------|----------|----------|----------------------------------------------------------------------------------------
-PDRP0001 | Usage    | Disabled | PDA0001_MissingAddResultPattern, [Documentation](PDA0001_MDocumentation_Link)
+PDRP0001 | Usage    | Warning  | Missing_AddResultPattern_Invocation, [Documentation](https://github.com/provisiondata/ProvisionData.Common/blob/develop/docs/analyzers/PDRP0001.md)

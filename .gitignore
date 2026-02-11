@@ -331,3 +331,7 @@ ASALocalRun/
 
 # Solution specific files
 scratch.md
+
+LocalPackages/
+
+.github/copilot-instructions.md

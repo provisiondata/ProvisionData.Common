@@ -1,7 +1,10 @@
 <Project>
+    <PropertyGroup>
+        <ProvisionDataResultPatternAnalyzersPath>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\analyzers\dotnet\cs'))</ProvisionDataResultPatternAnalyzersPath>
+    </PropertyGroup>
     <ItemGroup>
-        <Analyzer Include="$(MSBuildThisPackageRoot)analyzers/dotnet/cs/ProvisionData.ResultPattern.Generators.dll" />
-        <Analyzer Include="$(MSBuildThisPackageRoot)analyzers/dotnet/cs/ProvisionData.ResultPattern.Generators.CodeFixes.dll" />
-        <Analyzer Include="$(MSBuildThisPackageRoot)analyzers/dotnet/cs/ProvisionData.ResultPattern.Generators.Shared.dll" />
+        <Analyzer Include="$(ProvisionDataResultPatternAnalyzersPath)\ProvisionData.ResultPattern.Generators.dll" />
+        <Analyzer Include="$(ProvisionDataResultPatternAnalyzersPath)\ProvisionData.ResultPattern.Generators.CodeFixes.dll" />
+        <Analyzer Include="$(ProvisionDataResultPatternAnalyzersPath)\ProvisionData.ResultPattern.Generators.Shared.dll" />
     </ItemGroup>
 </Project>

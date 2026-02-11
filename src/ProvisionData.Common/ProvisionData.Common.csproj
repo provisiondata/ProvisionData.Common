@@ -12,7 +12,7 @@
         <IsPackable>true</IsPackable>
         <ErrorReport>send</ErrorReport>
         <IncludeSymbols>true</IncludeSymbols>
-        <IncludeSource>true</IncludeSource>        
+        <IncludeSource>true</IncludeSource>
 
         <!-- Project Specific -->
         <IsAotCompatible>false</IsAotCompatible>
@@ -28,10 +28,5 @@
             <LogicalName>ILLink.Descriptors.xml</LogicalName>
         </EmbeddedResource>
     </ItemGroup>
-
-    <Target Name="CopyPackage" AfterTargets="Pack">
-        <Message Text="Copying $(OutputPath)$(PackageId).$(PackageVersion).nupkg to $(ProjectDir)..\..\LocalPackages" Importance="High" />
-        <Copy SourceFiles="$(OutputPath)$(PackageId).$(PackageVersion).nupkg" DestinationFolder="$(ProjectDir)..\..\LocalPackages" />
-    </Target>
 
 </Project>

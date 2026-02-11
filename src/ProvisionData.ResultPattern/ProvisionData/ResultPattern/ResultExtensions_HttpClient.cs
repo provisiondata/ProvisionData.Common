@@ -273,7 +273,7 @@ public static partial class ResultExtensions
 
             return new ApiError(FormatErrorMessage(response));
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             return new ApiError(FormatErrorMessage(response));
         }

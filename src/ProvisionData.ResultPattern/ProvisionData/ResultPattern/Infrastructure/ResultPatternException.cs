@@ -14,11 +14,18 @@
 
 namespace ProvisionData.ResultPattern.Infrastructure;
 
-internal class NotFoundError(ErrorCode code, String description) : Error(code, description)
+[Serializable]
+public class ResultPatternException : Exception
 {
-    internal sealed class NotFoundErrorCode : ErrorCode
+    protected ResultPatternException()
     {
-        public static readonly NotFoundErrorCode Instance = new();
-        protected override String Name => "NotFoundError";
+    }
+
+    public ResultPatternException(String? message) : base(message)
+    {
+    }
+
+    public ResultPatternException(String? message, Exception? innerException) : base(message, innerException)
+    {
     }
 }

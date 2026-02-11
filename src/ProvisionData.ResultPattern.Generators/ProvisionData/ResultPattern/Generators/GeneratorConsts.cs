@@ -14,9 +14,12 @@
 
 namespace ProvisionData.ResultPattern.Generators;
 
+/// <summary>
+/// Constants shared between the runtime library and code generators.
+/// </summary>
 internal class GeneratorConsts
 {
-    public const String ErrorCodeInstance = "Instance";
+    public const String ErrorCodeInstanceProperty = "Instance";
     public const String ErrorCodeProperty = "Code";
     public const String ErrorCodeSuffix = "Code";
     public const String ErrorJsonPolymorphismClassName = "ErrorJsonPolymorphism";

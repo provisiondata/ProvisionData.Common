@@ -1,0 +1,27 @@
+{
+  "folders": [
+    {
+      "name": "dev",
+      "path": "."
+    },
+    {
+      "name": "docs",
+      "path": "docs"
+    },
+    {
+      "name": "src",
+      "path": "src"
+    },
+    {
+      "name": "tests",
+      "path": "tests"
+    }
+  ],
+  "settings": {
+    "dotnet.defaultSolution": "ProvisionData.slnx",
+    "files.exclude": {
+      "**/bin": true,
+      "**/obj": true
+    }
+  }
+}

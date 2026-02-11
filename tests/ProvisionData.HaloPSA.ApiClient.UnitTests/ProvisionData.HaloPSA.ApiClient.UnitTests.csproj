@@ -6,8 +6,8 @@
 
         <IsTestProject>true</IsTestProject>
         <IsPackable>false</IsPackable>
-		<OutputType>Exe</OutputType>
-	</PropertyGroup>
+        <OutputType>Exe</OutputType>
+    </PropertyGroup>
 
     <ItemGroup>
         <Using Include="FluentAssertions" />
@@ -37,7 +37,6 @@
         <PackageReference Include="Microsoft.Extensions.TimeProvider.Testing" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" />
         <PackageReference Include="Moq" />
-		<PackageReference Include="ProvisionData.ResultPattern" />
         <PackageReference Include="Scrutor" />
         <PackageReference Include="xunit.analyzers">
             <PrivateAssets>all</PrivateAssets>
@@ -51,6 +50,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\..\src\ProvisionData.ResultPattern\ProvisionData.ResultPattern.csproj" />
         <ProjectReference Include="..\..\src\ProvisionData.HaloPSA.ApiClient\ProvisionData.HaloPSA.ApiClient.csproj" />
         <ProjectReference Include="..\..\src\ProvisionData.HaloPSA.ApiClient.Generator\ProvisionData.HaloPSA.ApiClient.ModelGenerator.csproj" />
     </ItemGroup>

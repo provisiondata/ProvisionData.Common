@@ -19,14 +19,28 @@ using ProvisionData.Testing;
 
 namespace ProvisionData.ResultPattern;
 
+/// <summary>
+/// The tests in this assembly are testing the compiled ProvisionData.ResultPattern assembly.
+/// They are not testing the project source code. If you are seeing unexpected results, make
+/// sure the ProvisionData.ResultPattern project has been compiled, packed, and copied to the
+/// LocalPackages folder in the solution root.
+/// </summary>
 public class ResultPatternIntegrationTestFixture : IntegrationTestFixture
 {
     protected override void ConfigureConfiguration(IConfigurationBuilder builder)
     {
-        // Removes the need for an appsettings.Testing.json file in the test project,
-        // since the ResultPattern tests don't require any configuration settings.
+        // This override suppresses the requirement for the appsettings.Testing.json file.
+        // These tests do not require any configuration settings at this time.
     }
 
+    /// <summary>
+    /// Registers the ResultPattern infrastructure. This is necessary to ensure that the
+    /// JsonConverters and other infrastructure are properly registered for the tests. If you
+    /// comment it out you should see a warning about using ResultPattern without registering
+    /// services, and many tests SHOULD fail due to missing converters.
+    /// </summary>
+    /// <param name="services">the service collection to which ResultPattern services will be added</param>
+    /// <param name="configuration">the configuration instance for the test fixture</param>
     protected override void ConfigureServices(IServiceCollection services, IConfiguration configuration)
     {
         services.AddResultPattern();
@@ -35,7 +49,10 @@ public class ResultPatternIntegrationTestFixture : IntegrationTestFixture
     protected override ValueTask InitializeFixtureAsync(IServiceProvider services)
     {
         var logger = services.GetRequiredService<ILogger<ResultPatternIntegrationTestFixture>>();
-        logger.LogInformation("Initializing ResultPattern integration test fixture.");
+        logger.LogInformation("""
+            Initializing ResultPattern integration test fixture. The module initializers in the
+            ProvisionData.ResultPattern.UnitTests.CustomErrors assembly should have run by now.
+            """);
 
         return ValueTask.CompletedTask;
     }

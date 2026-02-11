@@ -29,7 +29,7 @@ public class ResultPatternIntegrationTestFixture : IntegrationTestFixture
 
     protected override void ConfigureServices(IServiceCollection services, IConfiguration configuration)
     {
-        //services.AddResultPattern();
+        services.AddResultPattern();
     }
 
     protected override ValueTask InitializeFixtureAsync(IServiceProvider services)
