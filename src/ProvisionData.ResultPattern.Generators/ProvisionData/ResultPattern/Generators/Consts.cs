@@ -40,25 +40,17 @@ internal class Consts
     public const String FqInfrastructureNamespace = FqPatternNamespace + "." + Infrastructure;
     public const String FqRegistryType = FqInfrastructureNamespace + "." + Registry;
     public const String FqPolymorphismType = FqInfrastructureNamespace + "." + Polymorphism;
-
-    public const String ErrorPolymorphismInitializerClassName = "ErrorPolymorphismInitializer";
+    public const String PolymorphismInitializer = Polymorphism + Initializer;
 
     public const String RegistryInitializerType = Pattern + "_" + Registry + Initializer;
 
     public const String ConstructorFilename = Pattern + "_" + Constructor + Extension;
     public const String InitializerFilename = Pattern + "_" + Initializer + Extension;
+    public const String ErrorCodeFilename = Pattern + "_" + ErrorCode + Extension;
+
     public const String TypeDiscriminatorPropertyName = "TypeDiscriminatorPropertyName";
     public const String ErrorPolymorphismInitializerFilename = "ErrorPolymorphism" + Extension;
 
-
-
-    public const String ErrorCodeProperty = "Code";
-    public const String ErrorCodeSuffix = "Code";
-    public const String ErrorJsonPolymorphismClassName = "ErrorJsonPolymorphism";
-    public const String ErrorTypeRegistryClassName = "ErrorCodeRegistry";
-    public const String FullyQualifiedErrorTypeName = "global::ProvisionData.ResultPattern.Error";
-    public const String GeneratedErrorCodesFilename = Pattern + "_" + ErrorCode + Extension;
-
-    public const String SerivceCollectionExtensionMethod = "AddResultPattern";
-    public const String ResultPatternServiceCollectionExtensions = "ResultPatternServiceCollectionExtensions";
+    public const String SerivceCollectionExtensionMethod = "Add" + Pattern;
+    public const String ResultPatternServiceCollectionExtensions = Pattern + "ServiceCollectionExtensions";
 }

@@ -143,7 +143,7 @@ public sealed partial class SourceGenerator/*(ILogger logger)*/ : IIncrementalGe
             sb.AppendLine();
         }
 
-        context.AddSource(Consts.GeneratedErrorCodesFilename, sb.ToString());
+        context.AddSource(Consts.ErrorCodeFilename, sb.ToString());
     }
 
     private static void ErrorConstructorGenerator(SourceProductionContext context, ImmutableArray<INamedTypeSymbol> errors)
@@ -272,7 +272,7 @@ public sealed partial class SourceGenerator/*(ILogger logger)*/ : IIncrementalGe
         sb.AppendLine("using System.Runtime.CompilerServices;");
         sb.AppendLine("using System.Text.Json.Serialization.Metadata;");
         sb.AppendLine();
-        sb.AppendLine($"internal static class {Consts.ErrorPolymorphismInitializerClassName}");
+        sb.AppendLine($"internal static class {Consts.PolymorphismInitializer}");
         sb.AppendLine("{");
         sb.AppendLine("    [ModuleInitializer]");
         sb.AppendLine("    internal static void Initialize()");
