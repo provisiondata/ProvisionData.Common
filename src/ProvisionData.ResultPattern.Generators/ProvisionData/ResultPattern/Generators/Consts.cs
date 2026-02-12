@@ -33,14 +33,15 @@ internal class Consts
     public const String Register = "Register";
 
     public const String PatternNamespace = Company + "." + Pattern;
+    public const String PolymorphismInitializer = Polymorphism + Initializer; // PolymorphismInitializer
+
     public const String FqPatternNamespace = "global::" + PatternNamespace;
 
     public const String FqErrorType = FqPatternNamespace + "." + Error;
     public const String FqErrorCodeType = FqPatternNamespace + "." + ErrorCode;
     public const String FqInfrastructureNamespace = FqPatternNamespace + "." + Infrastructure;
     public const String FqRegistryType = FqInfrastructureNamespace + "." + Registry;
-    public const String FqPolymorphismType = FqInfrastructureNamespace + "." + Polymorphism;
-    public const String PolymorphismInitializer = Polymorphism + Initializer;
+    public const String FqPolymorphismType = FqInfrastructureNamespace + "." + PolymorphismInitializer;
 
     public const String RegistryInitializerType = Pattern + "_" + Registry + Initializer;
 

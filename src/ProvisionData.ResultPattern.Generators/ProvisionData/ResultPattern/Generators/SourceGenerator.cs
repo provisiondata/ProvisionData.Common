@@ -277,7 +277,7 @@ public sealed partial class SourceGenerator/*(ILogger logger)*/ : IIncrementalGe
         sb.AppendLine("    [ModuleInitializer]");
         sb.AppendLine("    internal static void Initialize()");
         sb.AppendLine("    {");
-        sb.AppendLine($"        {Consts.FqPolymorphismType}.{Consts.Register}(Configure);");
+        sb.AppendLine($"        {Consts.PolymorphismInitializer}.{Consts.Register}(Configure);");
         sb.AppendLine("    }");
         sb.AppendLine();
         sb.AppendLine("    private static void Configure(JsonTypeInfo ti)");
