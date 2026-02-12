@@ -26,7 +26,7 @@ namespace ProvisionData.ResultPattern.Generators;
 [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(ResultPatternConfigurationCodeFixProvider))]
 public sealed class ResultPatternConfigurationCodeFixProvider : CodeFixProvider
 {
-    public override ImmutableArray<String> FixableDiagnosticIds => [ResultPatternDiagnosticDefinitions.MissingAddResultPatternId];
+    public override ImmutableArray<String> FixableDiagnosticIds => [DiagnosticDescriptors.MissingAddResultPatternId];
 
     public override FixAllProvider GetFixAllProvider()
         => WellKnownFixAllProviders.BatchFixer;

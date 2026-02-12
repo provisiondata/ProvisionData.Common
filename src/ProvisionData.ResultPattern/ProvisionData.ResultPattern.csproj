@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<RootNamespace />
@@ -46,7 +46,7 @@
 
 	<ItemGroup>
 		<!-- Link to GeneratorConsts so both runtime and generators can use it -->
-		<Compile Include="..\ProvisionData.ResultPattern.Generators\ProvisionData\ResultPattern\Generators\GeneratorConsts.cs" Link="ProvisionData\ResultPattern\Generators\GeneratorConsts.cs" />
+		<Compile Include="..\ProvisionData.ResultPattern.Generators\ProvisionData\ResultPattern\Generators\Consts.cs" Link="ProvisionData\ResultPattern\Generators\Consts.cs" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -16,11 +16,23 @@ using Microsoft.CodeAnalysis;
 
 namespace ProvisionData.ResultPattern.Generators;
 
-public static class ResultPatternDiagnosticDefinitions
+public static class DiagnosticDescriptors
 {
     public const String MissingAddResultPatternId = "PDRP0001";
+    public const String ErrorTypesMustHaveSingleStringConstructorId = "PDRP0002";
 
     public static readonly DiagnosticDescriptor Missing_AddResultPattern_Invocation = new(
+        id: MissingAddResultPatternId,
+        title: "ResultPattern services are not configured",
+        messageFormat: "ResultPattern types are used but AddResultPattern() is not called on IServiceCollection",
+        category: "Usage",
+        defaultSeverity: DiagnosticSeverity.Warning,
+        isEnabledByDefault: true,
+        description: "Call services.AddResultPattern() during service registration to enable ResultPattern JSON polymorphism and error handling.",
+        customTags: [WellKnownDiagnosticTags.CompilationEnd]
+    );
+
+    public static readonly DiagnosticDescriptor DerivedErrorTypesMustHaveSingleStringConstructor = new(
         id: MissingAddResultPatternId,
         title: "ResultPattern services are not configured",
         messageFormat: "ResultPattern types are used but AddResultPattern() is not called on IServiceCollection",

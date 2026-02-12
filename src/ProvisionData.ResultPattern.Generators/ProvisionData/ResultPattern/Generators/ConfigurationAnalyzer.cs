@@ -21,10 +21,9 @@ using System.Collections.Immutable;
 namespace ProvisionData.ResultPattern.Generators;
 
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
-public sealed class ResultPatternConfigurationAnalyzer : DiagnosticAnalyzer
+public sealed class ConfigurationAnalyzer : DiagnosticAnalyzer
 {
-
-    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => [ResultPatternDiagnosticDefinitions.Missing_AddResultPattern_Invocation];
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => [DiagnosticDescriptors.Missing_AddResultPattern_Invocation];
 
     public override void Initialize(AnalysisContext context)
     {
@@ -51,8 +50,8 @@ public sealed class ResultPatternConfigurationAnalyzer : DiagnosticAnalyzer
                 return;
             }
 
-            if (symbol.Name == "AddResultPattern" &&
-                symbol.ContainingType?.Name == "ResultPatternServiceCollectionExtensions")
+            if (symbol.Name == Consts.SerivceCollectionExtensionMethod &&
+                symbol.ContainingType?.Name == Consts.ResultPatternServiceCollectionExtensions)
             {
                 addResultPatternCalled = true;
             }
@@ -69,7 +68,7 @@ public sealed class ResultPatternConfigurationAnalyzer : DiagnosticAnalyzer
             var symbol = syntaxContext.SemanticModel.GetSymbolInfo(identifier).Symbol;
             if (symbol is ITypeSymbol typeSymbol)
             {
-                if (typeSymbol.ContainingNamespace?.ToDisplayString().StartsWith(GeneratorConsts.ResultPatternNamespace) is true)
+                if (typeSymbol.ContainingNamespace?.ToDisplayString().StartsWith(Consts.PatternNamespace) is true)
                 {
                     usedResultPatternTypes = true;
                 }
@@ -82,7 +81,7 @@ public sealed class ResultPatternConfigurationAnalyzer : DiagnosticAnalyzer
             {
                 // Report once on the assembly
                 var location = Location.None;
-                var diagnostic = Diagnostic.Create(ResultPatternDiagnosticDefinitions.Missing_AddResultPattern_Invocation, location);
+                var diagnostic = Diagnostic.Create(DiagnosticDescriptors.Missing_AddResultPattern_Invocation, location);
                 endContext.ReportDiagnostic(diagnostic);
             }
         });

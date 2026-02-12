@@ -81,54 +81,63 @@ public static class ErrorCodeRegistry
 
     private static readonly Type ErrorType = typeof(Error);
     private static readonly Type ErrorCodeType = typeof(ErrorCode);
+    private const String NotEmpty = "Not Empty";
+
     private static ErrorCode CreateInstance(Type errorType)
     {
-        // 0. Validate that the provided type is a subclass of Error
-        if (!ErrorType.IsAssignableFrom(errorType))
+        // Validate that the provided type is a subclass of Error
+        if (ErrorType.IsAssignableFrom(errorType))
         {
-            throw new ArgumentException($"The errorType must be of a type assignable to '{ErrorType.FullName}'.");
+            throw new ArgumentException($"Type '{errorType.FullName}' must derive from '{ErrorType.FullName}'", nameof(errorType));
         }
 
-        // 1. Find the Error.Code property
-        var errorCodeProp = errorType.GetProperty(GeneratorConsts.ErrorCodeProperty, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
-            ?? throw new InvalidOperationException($"Type '{errorType.FullName}' does not contain a '{GeneratorConsts.ErrorCodeProperty}' property.");
-
-        // 1.5 Validate that the Code property is of a type assignable to ErrorCode
-        var errorCodeType = errorCodeProp.PropertyType;
-        if (!ErrorCodeType.IsAssignableFrom(errorCodeType))
-        {
-            throw new ArgumentException($"The '{GeneratorConsts.ErrorCodeProperty}' property on type '{errorType.FullName}' must be of a type assignable to '{ErrorCodeType.FullName}'.");
-        }
-
-        // 2. Find the static Instance property on the ErrorCode ErrorType
-        var errorCodeInstanceProp = errorCodeType.GetProperty(GeneratorConsts.ErrorCodeInstanceProperty, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly | BindingFlags.Static);
-        if (errorCodeInstanceProp is not null)
-        {
-            try
-            {
-                // Use the singleton instance
-                return (ErrorCode)errorCodeInstanceProp.GetValue(null)!;
-            }
-            catch (Exception ex)
-            {
-                throw new ResultPatternException($"Retrieving the '{GeneratorConsts.ErrorCodeInstanceProperty}' property value from '{errorCodeType.FullName}' failed.", ex);
-            }
-        }
+        // Find the Code property
+        var errorCodeProp = errorType.GetProperty(Consts.ErrorCode, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
+            ?? throw new ArgumentException($"Type '{errorType.FullName}' must have a '{Consts.ErrorCode}' property.", nameof(errorType));
 
         try
         {
-            // 3. Fallback: Create a new instance. The error code type should be simple and have a parameterless
-            // constructor, so this should be safe. Just means that there will be two instances of the error code.
-            // The one created here and the one assigned to the ErrorCode.Instance property. Or maybe not, since
-            // we were unable to retrieve it. That might mean that it is a custom error and we may not be able
-            // deserialize it properly, but at least we can create an instance to return here.
+            // Create an instance of the errorType
+            var error = Activator.CreateInstance(errorType, NotEmpty);
 
-            // ToDo: When we introduce StrictMode, this should throw instead of playing nice.
-            return (ErrorCode)Activator.CreateInstance(errorCodeType)!;
+            // Get the value of the Code property
+            var codeValue = errorCodeProp.GetValue(error)
+                ?? throw new ArgumentException($"Type '{errorType.FullName}' must have a non-null '{Consts.ErrorCode}' property value.", nameof(errorType));
+
+            // Get the type of the ErrorCode
+            var errorCodeType = codeValue.GetType();
+            if (ErrorCodeType.IsAssignableFrom(errorCodeType))
+            {
+                throw new ArgumentException($"The '{Consts.ErrorCode}' property of type '{errorType.FullName}' must be a derivative of {ErrorCodeType.FullName}.", nameof(errorType));
+            }
+
+            // Get the Instance property
+            var instanceProp = errorCodeType.GetField(Consts.Instance, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
+            if (instanceProp is null)
+            {
+                // Fallback: Create a new instance. The error code type should be simple and have a parameterless
+                // constructor, so this should be safe. Just means that there will be two instances of the error code.
+                // The one created here and the one assigned to the ErrorCode.Instance property. Or maybe not, since
+                // we were unable to retrieve it. That might mean that it is a custom error and we may not be able
+                // deserialize it properly, but at least we can create an instance to return here.
+                if (Activator.CreateInstance(errorCodeType) is ErrorCode fallback)
+                {
+                    return fallback;
+                }
+
+                throw new ArgumentException($"The type {errorType.FullName}.{errorCodeType.FullName} must have a static '{Consts.Instance}' field with a not-null value, or a parameterless constructor.", nameof(errorType));
+            }
+
+            // Get the value of the Instance property
+            if (instanceProp.GetValue(null) is not ErrorCode value)
+            {
+                throw new ArgumentException($"The static '{Consts.Instance}' field of type '{errorCodeType.FullName}' must be of type '{ErrorCodeType.FullName}'.", nameof(errorType));
+            }
+
+            return value;
         }
-        catch (Exception ex)
+        catch (MissingMethodException ex)
         {
-            // Cannot do anything because it is probably abstract. Just return.
             throw new ResultPatternException($"Registering {errorType.FullName} failed because {ErrorCodeType.FullName} could not be created.", ex);
         }
     }

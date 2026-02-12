@@ -22,14 +22,14 @@ using ThisAssembly = ProvisionData.ResultPattern.Generators.Versioning.ThisAssem
 namespace ProvisionData.ResultPattern.Generators;
 
 [Generator]
-public sealed partial class CustomErrorSourceGenerator/*(ILogger logger)*/ : IIncrementalGenerator
+public sealed partial class SourceGenerator/*(ILogger logger)*/ : IIncrementalGenerator
 {
     //private readonly ILogger _logger = logger;
 
     //[LoggerMessage(EventId = 0, Level = LogLevel.Critical, Message = "Could not open socket to `{HostName}`")]
     //public partial void CouldNotOpenSocket(String hostName);
 
-    private static String GeneratorName => nameof(@CustomErrorSourceGenerator);
+    private static String GeneratorName => nameof(SourceGenerator);
 
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
@@ -46,10 +46,10 @@ public sealed partial class CustomErrorSourceGenerator/*(ILogger logger)*/ : IIn
         // STEP 3: Generate code
         context.RegisterSourceOutput(collected, static (spc, errors) =>
         {
-            ErrorCodesGenerator(spc, errors!);
-            ErrorConstructorsGenerator(spc, errors!);
-            //ErrorTypeRegistryGenerator(spc, errors!);
-            //ErrorPolymorphismHookGenerator(spc, errors!);
+            ErrorCodeGenerator(spc, errors!);
+            ErrorConstructorGenerator(spc, errors!);
+            ErrorTypeRegistryGenerator(spc, errors!);
+            ErrorPolymorphismHookGenerator(spc, errors!);
         });
     }
 
@@ -74,7 +74,7 @@ public sealed partial class CustomErrorSourceGenerator/*(ILogger logger)*/ : IIn
         while (baseType is not null)
         {
             var fullName = baseType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
-            if (fullName == GeneratorConsts.FullyQualifiedErrorTypeName)
+            if (fullName == Consts.FqErrorType)
             {
                 return symbol;
             }
@@ -106,10 +106,10 @@ public sealed partial class CustomErrorSourceGenerator/*(ILogger logger)*/ : IIn
             """;
     }
 
-    private static void ErrorCodesGenerator(SourceProductionContext context, ImmutableArray<INamedTypeSymbol> errors)
+    private static void ErrorCodeGenerator(SourceProductionContext context, ImmutableArray<INamedTypeSymbol> errors)
     {
         var sb = new StringBuilder();
-        sb.AppendLine(Header(nameof(ErrorCodesGenerator)));
+        sb.AppendLine(Header(nameof(ErrorCodeGenerator)));
         foreach (var error in errors)
         {
 
@@ -118,18 +118,19 @@ public sealed partial class CustomErrorSourceGenerator/*(ILogger logger)*/ : IIn
                 : error.ContainingNamespace.ToDisplayString();
 
             var errorName = error.Name;
-            var codeName = errorName + GeneratorConsts.ErrorCodeSuffix;
+            var errorCodeName = errorName + Consts.ErrorCode;
 
             if (ns is not null)
             {
+                // Namespance of the type being generated
                 sb.AppendLine($"namespace {ns}");
                 sb.AppendLine("{");
             }
 
             sb.AppendLine($"#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member");
-            sb.AppendLine($"    internal sealed class {codeName} : global::{GeneratorConsts.ResultPatternNamespace}.ErrorCode");
+            sb.AppendLine($"    internal sealed class {errorCodeName} : {Consts.FqErrorCodeType}");
             sb.AppendLine("    {");
-            sb.AppendLine($"        public static readonly {codeName} Instance = new();");
+            sb.AppendLine($"        public static readonly {errorCodeName} Instance = new();");
             sb.AppendLine($"        protected override System.String Name => \"{errorName}\";");
             sb.AppendLine("    }");
             sb.AppendLine($"#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member");
@@ -142,13 +143,15 @@ public sealed partial class CustomErrorSourceGenerator/*(ILogger logger)*/ : IIn
             sb.AppendLine();
         }
 
-        context.AddSource(GeneratorConsts.GeneratedErrorCodesFilename, sb.ToString());
+        context.AddSource(Consts.GeneratedErrorCodesFilename, sb.ToString());
     }
 
-    private static void ErrorConstructorsGenerator(SourceProductionContext context, ImmutableArray<INamedTypeSymbol> errors)
+    private static void ErrorConstructorGenerator(SourceProductionContext context, ImmutableArray<INamedTypeSymbol> errors)
     {
         var sb = new StringBuilder();
-        sb.AppendLine(Header(nameof(ErrorConstructorsGenerator)));
+        sb.AppendLine(Header(nameof(ErrorConstructorGenerator)));
+
+        sb.AppendLine("using System;");
 
         foreach (var error in errors)
         {
@@ -156,8 +159,8 @@ public sealed partial class CustomErrorSourceGenerator/*(ILogger logger)*/ : IIn
                 ? null
                 : error.ContainingNamespace.ToDisplayString();
 
-            var errorName = error.Name;
-            var codeName = errorName + GeneratorConsts.ErrorCodeSuffix;
+            var errorType = error.Name;
+            var errorCodeType = errorType + Consts.ErrorCode;
 
             // Find all properties (typically marked with 'required')
             var properties = error.GetMembers()
@@ -172,11 +175,11 @@ public sealed partial class CustomErrorSourceGenerator/*(ILogger logger)*/ : IIn
             }
 
             sb.AppendLine($"#pragma warning disable CS1591 // Suppresses Missing XML comment for publicly visible type or member");
-            sb.AppendLine($"public sealed partial class {errorName}");
+            sb.AppendLine($"public sealed partial class {errorType}");
             sb.AppendLine("{");
 
             // Generate constructor
-            sb.AppendLine($"    public {errorName}(");
+            sb.AppendLine($"    public {errorType}(");
 
             // Build parameter list from properties
             var paramList = new List<String>();
@@ -190,7 +193,7 @@ public sealed partial class CustomErrorSourceGenerator/*(ILogger logger)*/ : IIn
             paramList.Add("System.String description");
 
             sb.AppendLine($"        {String.Join(",\r\n        ", paramList)})");
-            sb.AppendLine($"        : base({codeName}.Instance, description)");
+            sb.AppendLine($"        : base({errorCodeType}.Instance, description)");
             sb.AppendLine("    {");
 
             // Initialize properties from parameters
@@ -212,7 +215,7 @@ public sealed partial class CustomErrorSourceGenerator/*(ILogger logger)*/ : IIn
             sb.AppendLine();
         }
 
-        context.AddSource(GeneratorConsts.GeneratedErrorConstructorsFilename, sb.ToString());
+        context.AddSource(Consts.ConstructorFilename, sb.ToString());
     }
 
     private static void ErrorTypeRegistryGenerator(SourceProductionContext context, ImmutableArray<INamedTypeSymbol> errors)
@@ -236,7 +239,7 @@ public sealed partial class CustomErrorSourceGenerator/*(ILogger logger)*/ : IIn
         }
 
         sb.AppendLine("#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member");
-        sb.AppendLine($"    internal static class {GeneratorConsts.ErrorTypeRegistryInitializerClassName}");
+        sb.AppendLine($"    internal static class {Consts.RegistryInitializerType}");
         sb.AppendLine("    {");
         sb.AppendLine("        [System.Runtime.CompilerServices.ModuleInitializer]");
         sb.AppendLine("        internal static void Initialize()");
@@ -247,14 +250,14 @@ public sealed partial class CustomErrorSourceGenerator/*(ILogger logger)*/ : IIn
         {
             var fullName = error.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat)
                 .Replace("global::", "");
-            sb.AppendLine($"            global::{GeneratorConsts.ResultPatternNamespace}.Infrastructure.{GeneratorConsts.ErrorTypeRegistryClassName}.Register<{fullName}>();");
+            sb.AppendLine($"            {Consts.FqRegistryType}.{Consts.Register}<{fullName}>();");
         }
 
         sb.AppendLine("        }");
         sb.AppendLine("    }");
         sb.AppendLine("#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member");
 
-        context.AddSource(GeneratorConsts.ErrorTypeRegistryInitializerFilename, sb.ToString());
+        context.AddSource(Consts.InitializerFilename, sb.ToString());
     }
 
     private static void ErrorPolymorphismHookGenerator(SourceProductionContext context, ImmutableArray<INamedTypeSymbol> errors)
@@ -269,22 +272,21 @@ public sealed partial class CustomErrorSourceGenerator/*(ILogger logger)*/ : IIn
         sb.AppendLine("using System.Runtime.CompilerServices;");
         sb.AppendLine("using System.Text.Json.Serialization.Metadata;");
         sb.AppendLine();
-        sb.AppendLine($"internal static class {GeneratorConsts.ErrorPolymorphismInitializerClassName}");
+        sb.AppendLine($"internal static class {Consts.ErrorPolymorphismInitializerClassName}");
         sb.AppendLine("{");
         sb.AppendLine("    [ModuleInitializer]");
         sb.AppendLine("    internal static void Initialize()");
         sb.AppendLine("    {");
-        sb.AppendLine("        Console.WriteLine(\"Initializing ErrorPolymorphism...\");");
-        sb.AppendLine($"        global::{GeneratorConsts.ResultPatternNamespace}.Infrastructure.{GeneratorConsts.ErrorJsonPolymorphismClassName}.Register(Configure);");
+        sb.AppendLine($"        {Consts.FqPolymorphismType}.{Consts.Register}(Configure);");
         sb.AppendLine("    }");
         sb.AppendLine();
         sb.AppendLine("    private static void Configure(JsonTypeInfo ti)");
         sb.AppendLine("    {");
-        sb.AppendLine($"        if (ti.Type == typeof(global::{GeneratorConsts.ResultPatternNamespace}.ErrorCode))");
+        sb.AppendLine($"        if (ti.Type == typeof({Consts.FqErrorCodeType}))");
         sb.AppendLine("        {");
         sb.AppendLine("            ti.PolymorphismOptions ??= new JsonPolymorphismOptions");
         sb.AppendLine("            {");
-        sb.AppendLine($"                {GeneratorConsts.TypeDiscriminatorPropertyName} = \"$code\"");
+        sb.AppendLine($"                {Consts.TypeDiscriminatorPropertyName} = \"$code\"");
         sb.AppendLine("            };");
 
         foreach (var error in errors.Distinct(SymbolEqualityComparer.Default))
@@ -311,7 +313,7 @@ public sealed partial class CustomErrorSourceGenerator/*(ILogger logger)*/ : IIn
         sb.AppendLine("    }");
         sb.AppendLine("}");
 
-        context.AddSource(GeneratorConsts.ErrorPolymorphismInitializerFilename, sb.ToString());
+        context.AddSource(Consts.ErrorPolymorphismInitializerFilename, sb.ToString());
     }
 
     private static String UpperFirst(String name)

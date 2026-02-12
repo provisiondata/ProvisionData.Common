@@ -12,7 +12,6 @@
 // You should have received a copy of the GNU Affero General Public License along with this
 // program. If not, see <https://www.gnu.org/licenses/>.
 
-using ProvisionData.ResultPattern.Generators;
 using ProvisionData.ResultPattern.Infrastructure;
 using System.Reflection;
 
@@ -42,31 +41,43 @@ public class ErrorCodeRegistryTests
 
     private static readonly Type ErrorType = typeof(Error);
     private static readonly Type ErrorCodeType = typeof(ErrorCode);
+    private const String NotEmpty = "This is not an empty string.";
 
-    [Fact]
-    public void Error_Reflection_WorksAsExpected()
+    [Theory]
+    [InlineData(typeof(CustomError))]
+    [InlineData(typeof(DatabaseConnectionError))]
+    [InlineData(typeof(InventoryInsufficientError))]
+    [InlineData(typeof(OrderNotFoundError))]
+    [InlineData(typeof(TransactionError))]
+    public void Error_Reflection_WorksAsExpected(Type errorType)
     {
-        var errorType = typeof(CustomError);
+        // Validate that the provided type is a subclass of Error
+        ErrorType.IsAssignableFrom(errorType).Should().BeTrue($"Expected {errorType.FullName} to be a subclass of {ErrorType.FullName}");
 
-        // 0. Validate that the provided type is a subclass of Error
-        ErrorType.IsAssignableFrom(errorType).Should().BeTrue();
+        // Find the Code property
+        var errorCodeProp = errorType.GetProperty("Code", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+        errorCodeProp.Should().NotBeNull($"Expected {errorType.FullName} to have a 'Code' property");
 
-        // 1. Find the Error.Code property
-        var errorCodeProp = errorType.GetProperty(GeneratorConsts.ErrorCodeProperty, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
-        errorCodeProp.Should().NotBeNull();
+        // Create an instance of the errorType
+        var error = Activator.CreateInstance(errorType, NotEmpty);
 
-        // 1.5 Validate that the Code property is of a type assignable to ErrorCode
-        var errorCodeType = errorCodeProp.PropertyType;
-        ErrorCodeType.IsAssignableFrom(errorCodeType).Should().BeTrue();
+        // Get the value of the Code property
+        var codeValue = errorCodeProp.GetValue(error);
+        codeValue.Should().NotBeNull($"Expected {errorType.FullName} to have a non-null 'Code' property value");
 
-        // 2. Find the static Instance property on the ErrorCode ErrorType
-        var errorCodeInstanceProp = errorCodeType.GetProperty("Instance", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly | BindingFlags.Static);
-        errorCodeInstanceProp.Should().NotBeNull();
+        // Get the type of the ErrorCode
+        var errorCodeType = codeValue.GetType();
+        ErrorCodeType.IsAssignableFrom(errorCodeType).Should().BeTrue($"Expected {errorCodeType.FullName} to be a subclass of {ErrorCodeType.FullName}");
+        // Get the Instance property
+        var instanceProp = errorCodeType.GetField("Instance", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
+        instanceProp.Should().NotBeNull($"Expected {errorCodeType.FullName} to have a static 'Instance' field");
 
-        var value = errorCodeInstanceProp.GetValue(null) as ErrorCode;
-        value.Should().NotBeNull(because: $"The {errorCodeType.FullName} type should have a static Instance property that returns an instance of the error code.");
+        // Get the value of the Instance property
+        var value = instanceProp.GetValue(null) as ErrorCode;
+        value.Should().NotBeNull(because: $"{errorCodeType.FullName} Instance property should return an instance of the error code.");
 
         var fallback = Activator.CreateInstance(errorCodeType) as ErrorCode;
-        fallback.Should().NotBeNull(because: $"The {errorCodeType.FullName} type should have a parameterless constructor that can be used as a fallback if the Instance property is not properly implemented.");
+        fallback.Should().NotBeNull(because: $"{errorCodeType.FullName} type should have a parameterless constructor that can be used as a fallback if the Instance property is not properly implemented.");
+
     }
 }
