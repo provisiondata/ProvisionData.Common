@@ -14,7 +14,6 @@
 
 using Microsoft.Extensions.Options;
 using ProvisionData.HaloPSA.ApiClient.Generator;
-using ProvisionData.HaloPSA.ApiClient.ModelGenerator;
 using ProvisionData.HaloPSA.ApiClient.ModelGenerator.Models;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;

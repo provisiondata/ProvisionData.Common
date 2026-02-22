@@ -14,7 +14,7 @@
 
 using Bogus;
 using ProvisionData.HaloPSA.ApiClient;
-using ProvisionData.Testing;
+using TwoRivers.Testing;
 
 namespace ProvisionData.HaloPSA.IntegrationTests;
 

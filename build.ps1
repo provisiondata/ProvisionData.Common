@@ -6,7 +6,6 @@ param(
     [switch] $NoTests,
     [switch] $Publish,
     [switch] $Release,
-    [switch] $ResultPattern,
     [switch] $VerboseTests
 )
 
@@ -19,13 +18,6 @@ $TestRoot = "tests"
 $LocalPackages = ".\LocalPackages"
 $Configuration = if ($Release -or $Publish -or $DryRun) { "Release" } else { "Debug" }
 $treatWarningsAsErrors = if ($Configuration -eq "Release") { '/p:TreatWarningsAsErrors=true' } else { "" }
-
-$resultPatternProjects = @(
-    'ProvisionData.ResultPattern.Generators.Shared.csproj',
-    'ProvisionData.ResultPattern.Generators.csproj',
-    'ProvisionData.ResultPattern.Generators.CodeFixes.csproj',
-    'ProvisionData.ResultPattern.csproj'
-)
 
 $ignoredProjects = @(
     'ProvisionData.WebApi.csproj'
@@ -94,7 +86,7 @@ function Remove-BinObjFolders {
     }
 }
 
-if (-not $NoClean -or $Release -or $DryRun -or $Publish -or $ResultPattern) {
+if (-not $NoClean -or $Release -or $DryRun -or $Publish) {
     Write-Host "Cleaning projects..." -ForegroundColor Cyan
     Remove-BinObjFolders
 }
@@ -132,36 +124,13 @@ function Copy-PackageOutputs {
     }
 }
 
-ForEach ($projName in $resultPatternProjects) {
-    $projPath = Get-ChildItem -Path $SrcRoot -Recurse -Filter $projName | Select-Object -First 1
-    if ($projPath) {
-        Write-Host "`nBuilding $($projPath.FullName)..." -ForegroundColor Cyan
-        dotnet build $projPath.FullName --no-incremental -v:minimal $treatWarningsAsErrors
-        if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-    }
-    else {
-        Write-Host "Project $projName not found!" -ForegroundColor Red
-        exit 1
-    }
-}
-
-Write-Host "`nPacking ProvisionData.ResultPattern..." -ForegroundColor Cyan
-dotnet pack src\ProvisionData.ResultPattern\ProvisionData.ResultPattern.csproj -c $Configuration -p:PackageOutputPath="bin\$Configuration"
-if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-Copy-PackageOutputs -ProjectPath "src\ProvisionData.ResultPattern\ProvisionData.ResultPattern.csproj" -Configuration $Configuration -LocalPackages $LocalPackages
-Write-Host "`nResultPattern build and pack completed." -ForegroundColor Green
-
 #-----------------------------
 # Discover all projects (except build first)
 #-----------------------------
 Write-Host "`nDiscovering projects to build..." -ForegroundColor Cyan
 
-$allProjects = Get-ChildItem -Path $SrcRoot, $TestRoot -Recurse -Filter *.csproj |
-Where-Object { $_.Name -notin $resultPatternProjects -and $_.Name -notin $ignoredProjects -and $_.Name -notmatch 'Tests' }
-
-$resultPatterProjects = $allProjects | Where-Object { $_.Name -match 'ResultPattern' }
-
-$projectsToBuild = if ($ResultPattern) { $resultPatterProjects } else { $allProjects }
+$projectsToBuild = Get-ChildItem -Path $SrcRoot, $TestRoot -Recurse -Filter *.csproj |
+Where-Object { $_.Name -notin $ignoredProjects -and $_.Name -notmatch 'Tests' }
 
 if ($projectsToBuild.Count -gt 0) {
     #-----------------------------
@@ -184,7 +153,7 @@ if ($projectsToBuild.Count -gt 0) {
 #-----------------------------
 # Discover packable projects
 #-----------------------------
-if (-not $ResultPattern -or $Publish -or $DryRun) {
+if ($Publish -or $DryRun) {
     Write-Host "`nDiscovering packable projects..." -ForegroundColor Cyan
 
     $packableProjects = Get-ChildItem -Path $SrcRoot -Recurse -Filter *.csproj |
@@ -261,12 +230,10 @@ if ($NoTests -and -not $Publish -and -not $DryRun) {
 Write-Host "`nDiscovering test projects..." -ForegroundColor Cyan
 $allTestProjects = Get-ChildItem -Path $TestRoot -Recurse -Filter *.csproj
 $unitTests = $allTestProjects | Where-Object { $_.Name -notmatch "Integration" }
-$patternResultTests = $allTestProjects | Where-Object { $_.Name -match "ResultPattern" }
-# $integrationTests = $allTestProjects | Where-Object { $_.Name -match "Integration" }
 
 $shouldRunIntegration = $Integration -or $DryRun -or $Publish
 
-$testsToRun = if ($shouldRunIntegration) { $allTestProjects } elseif ($ResultPattern) { $patternResultTests } else { $unitTests }
+$testsToRun = if ($shouldRunIntegration) { $allTestProjects } else { $unitTests }
 
 #-----------------------------
 # Test runner helper

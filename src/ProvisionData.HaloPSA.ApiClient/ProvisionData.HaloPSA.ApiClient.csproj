@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <RootNamespace />
-        <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
+        <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
 
         <!-- NuGet package metadata -->
         <PackageId>ProvisionData.HaloPSA.ApiClient</PackageId>
@@ -37,6 +37,7 @@
         <PackageReference Include="Microsoft.Data.SqlClient" />
         <PackageReference Include="Microsoft.Extensions.Http" />
         <PackageReference Include="Polly" />
+        <PackageReference Include="TwoRivers.Core" />
     </ItemGroup>
 
     <ItemGroup>

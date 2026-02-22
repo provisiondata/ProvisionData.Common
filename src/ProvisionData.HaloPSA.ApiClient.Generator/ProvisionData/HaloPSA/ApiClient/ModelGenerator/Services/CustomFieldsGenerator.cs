@@ -13,7 +13,6 @@
 // program. If not, see <https://www.gnu.org/licenses/>.
 
 using Microsoft.Extensions.Options;
-using ProvisionData.HaloPSA.ApiClient.ModelGenerator;
 using ProvisionData.HaloPSA.ApiClient.ModelGenerator.Models;
 using System.Text;
 using System.Text.Json;

@@ -2,9 +2,9 @@
 
     <PropertyGroup>
         <RootNamespace>ProvisionData.HaloPSA</RootNamespace>
-        <TargetFramework>net10.0</TargetFramework>
+		<TargetFramework>net10.0</TargetFramework>
 
-        <IsTestProject>true</IsTestProject>
+		<IsTestProject>true</IsTestProject>
         <IsPackable>false</IsPackable>
 		<OutputType>Exe</OutputType>
 	</PropertyGroup>
@@ -39,8 +39,7 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
         </PackageReference>
         <PackageReference Include="FluentAssertions" />
-        <PackageReference Include="MartinCostello.Logging.XUnit.v3" />
-        <PackageReference Include="Meziantou.Extensions.Logging.Xunit" />
+        <PackageReference Include="Meziantou.Extensions.Logging.Xunit.v3" />
         <PackageReference Include="Microsoft.Extensions.Configuration.Json" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
         <PackageReference Include="Microsoft.Extensions.Hosting" />
@@ -48,6 +47,7 @@
         <PackageReference Include="Microsoft.NET.Test.Sdk" />
         <PackageReference Include="Moq" />
         <PackageReference Include="Scrutor" />
+		<PackageReference Include="TwoRivers.Testing" />
         <PackageReference Include="xunit.analyzers">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
@@ -62,7 +62,6 @@
     <ItemGroup>
         <ProjectReference Include="..\..\src\ProvisionData.HaloPSA.ApiClient\ProvisionData.HaloPSA.ApiClient.csproj" />
         <ProjectReference Include="..\..\src\ProvisionData.HaloPSA.ApiClient.Generator\ProvisionData.HaloPSA.ApiClient.ModelGenerator.csproj" />
-        <ProjectReference Include="..\..\src\ProvisionData.Testing.Integration\ProvisionData.Testing.Integration.csproj" />
     </ItemGroup>
 
 </Project>

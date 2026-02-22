@@ -2,9 +2,9 @@
 
     <PropertyGroup>
         <RootNamespace />
-        <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
+		<TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
 
-        <!-- NuGet package metadata -->
+		<!-- NuGet package metadata -->
         <PackageId>ProvisionData.HaloPSA.ApiClient.Contracts</PackageId>
         <Description>HaloPSA API Client for .NET providing typed models and client helpers.</Description>
         <PackageTags>HaloPSA;API;Client</PackageTags>

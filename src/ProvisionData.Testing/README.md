@@ -1,3 +1,0 @@
-# ProvisionData.Testing.Integration
-
-## Overview
