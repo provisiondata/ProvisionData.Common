@@ -17,6 +17,7 @@
         <File Path="docs/PUBLISHING.md" />
     </Folder>
     <Folder Name="/src/">
+        <File Path="docs/PUBLISHING.md" />
         <Project Path="src/ProvisionData.HaloPSA.ApiClient.Contracts/ProvisionData.HaloPSA.ApiClient.Contracts.csproj" />
         <Project Path="src/ProvisionData.HaloPSA.ApiClient.Generator/ProvisionData.HaloPSA.ApiClient.ModelGenerator.csproj" />
         <Project Path="src/ProvisionData.HaloPSA.ApiClient/ProvisionData.HaloPSA.ApiClient.csproj" />
