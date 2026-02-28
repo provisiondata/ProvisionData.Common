@@ -21,7 +21,6 @@
         <PackageProjectUrl>https://github.com/provisiondata/ProvisionData.Common</PackageProjectUrl>
         <RepositoryType>git</RepositoryType>
         <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
-        <ApplicationIcon>..\..\pdsi.ico</ApplicationIcon>
         <PackageIcon>pdsi.png</PackageIcon>
         <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
         <RepositoryBranch>main</RepositoryBranch>
